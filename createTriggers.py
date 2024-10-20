@@ -1,18 +1,14 @@
 import cx_Oracle
 import logging
 
-# Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-# Database connection configuration
 username = ''
 password = ''
 dsn = 'localhost:1523/pcse1p.data.uta.edu'
 
-# List of CREATE TRIGGER statements
 create_trigger_statements = [
-    # Trigger to check review eligibility
     """
     CREATE OR REPLACE TRIGGER trg_Check_Review_Eligibility
     BEFORE INSERT ON Dg_Ratings

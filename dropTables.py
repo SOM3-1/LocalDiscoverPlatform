@@ -9,6 +9,7 @@ password = ''
 dsn = 'localhost:1523/pcse1p.data.uta.edu'
 
 drop_table_statements = [
+    "DROP VIEW Vw_Travelers",
     "DROP TABLE Dg_Ratings CASCADE CONSTRAINTS",
     "DROP TABLE Dg_Bookings CASCADE CONSTRAINTS",
     "DROP TABLE Dg_Experience_Tags CASCADE CONSTRAINTS",

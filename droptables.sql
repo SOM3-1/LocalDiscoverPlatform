@@ -1,3 +1,6 @@
+-- Drop View
+DROP VIEW Vw_Travelers;
+
 -- Drop the Dg_Ratings table
 DROP TABLE Dg_Ratings CASCADE CONSTRAINTS;
 
