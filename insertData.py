@@ -7,8 +7,8 @@ import random
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-username = ''
-password = ''
+username = 'dxg6620'
+password = '
 dsn = 'localhost:1523/pcse1p.data.uta.edu'
 
 fake = Faker()
@@ -55,7 +55,8 @@ for i in range(1, 1001):
     )
     travelers_data.append(traveler)
 
-    num_preferences = random.randint(1, len(preference_options))
+    # Generate between 1 and 3 preferences for each traveler
+    num_preferences = random.randint(1, 3)
     selected_preferences = random.sample(preference_options, num_preferences)
     for preference in selected_preferences:
         preferences_data.append((traveler[0], preference))

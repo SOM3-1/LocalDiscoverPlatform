@@ -2,10 +2,7 @@
 DROP TRIGGER trg_Check_Review_Eligibility;
 
 -- Drop trigger to update Group_Size after a member is added
-DROP TRIGGER trg_Update_Group_Size_After_Insert;
-
--- Drop trigger to update Group_Size after a member is deleted
-DROP TRIGGER trg_Update_Group_Size_After_Delete;
+DROP TRIGGER trg_Update_Group_Size;
 
 -- Drop trigger to prevent the group leader from being added as a regular member
 DROP TRIGGER trg_Prevent_Leader_As_Member;

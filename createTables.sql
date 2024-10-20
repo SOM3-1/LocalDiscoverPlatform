@@ -11,7 +11,7 @@ CREATE TABLE Dg_Travelers (
     Phone VARCHAR2(15) UNIQUE NOT NULL
 );
 
--- Creating the Dg_Traveler_Preferences table
+-- Creating the Dg_Traveler_Preferences table with a unique constraint to prevent duplicate preferences
 CREATE TABLE Dg_Traveler_Preferences (
     T_ID VARCHAR2(20) REFERENCES Dg_Travelers(T_ID),
     Preference VARCHAR2(100),
@@ -72,7 +72,7 @@ CREATE TABLE Dg_Experience (
     Location VARCHAR2(100),
     Service_Provider_ID VARCHAR2(20) REFERENCES Dg_Service_Provider(Service_Provider_ID),
     Schedule_Date DATE,
-    Schedule_Time VARCHAR2(10) -- Using VARCHAR2 instead of TIME for compatibility
+    Schedule_Time VARCHAR2(10)
 );
 
 -- Creating the Dg_Experience_Tags table
@@ -92,7 +92,7 @@ CREATE TABLE Dg_Bookings (
     Amount_Paid NUMBER NOT NULL CHECK (Amount_Paid >= 0),
     Status VARCHAR2(20),
     Booking_Method VARCHAR2(50),
-    Payment_Status VARCHAR2(20)
+    Payment_Status VARCHAR2(20) DEFAULT 'Pending' -- Default payment status to 'Pending'
 );
 
 -- Creating the Dg_Ratings table
@@ -101,7 +101,20 @@ CREATE TABLE Dg_Ratings (
     Traveler_ID VARCHAR2(20) REFERENCES Dg_Travelers(T_ID),
     Experience_ID VARCHAR2(20) REFERENCES Dg_Experience(Experience_ID),
     Rating_Value NUMBER CHECK (Rating_Value BETWEEN 1 AND 10),
-    Review_Date_Time TIMESTAMP,
+    Review_Date_Time TIMESTAMP DEFAULT SYSDATE, -- Automatically set review date to current date
     Feedback VARCHAR2(500),
     Review_Title VARCHAR2(100)
 );
+
+-- Trigger to automatically mark booking as 'Completed' after the experience date
+CREATE OR REPLACE TRIGGER trg_Auto_Complete_Booking
+AFTER UPDATE OF Experience_Date ON Dg_Bookings
+FOR EACH ROW
+BEGIN
+    IF :NEW.Experience_Date < SYSDATE AND :OLD.Status != 'Completed' THEN
+        UPDATE Dg_Bookings
+        SET Status = 'Completed'
+        WHERE Booking_ID = :NEW.Booking_ID;
+    END IF;
+END;
+/

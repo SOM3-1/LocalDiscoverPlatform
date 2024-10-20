@@ -2,68 +2,92 @@
 CREATE OR REPLACE TRIGGER trg_Check_Review_Eligibility
 BEFORE INSERT ON Dg_Ratings
 FOR EACH ROW
+DECLARE
+    v_count NUMBER;
 BEGIN
     -- Ensure the booking exists and is marked as 'Completed'
-    IF NOT EXISTS (
-        SELECT 1
-        FROM Dg_Bookings
-        WHERE Traveler_ID = :NEW.Traveler_ID
-          AND Experience_ID = :NEW.Experience_ID
-          AND Status = 'Completed'
-    ) THEN
+    SELECT COUNT(*) INTO v_count
+    FROM Dg_Bookings
+    WHERE Traveler_ID = :NEW.Traveler_ID
+      AND Experience_ID = :NEW.Experience_ID
+      AND Status = 'Completed';
+
+    IF v_count = 0 THEN
         RAISE_APPLICATION_ERROR(-20001, 'Review can only be submitted for completed bookings.');
     END IF;
 END;
 /
 
--- Trigger to update Group_Size after a member is added
-CREATE OR REPLACE TRIGGER trg_Update_Group_Size_After_Insert
-AFTER INSERT ON Dg_Group_Members
-FOR EACH ROW
-BEGIN
-    UPDATE Dg_Groups
-    SET Group_Size = (SELECT COUNT(*) FROM Dg_Group_Members WHERE Group_ID = :NEW.Group_ID)
-    WHERE Group_ID = :NEW.Group_ID;
-END;
-/
+-- Compound trigger to update Group_Size after adding or removing a member
+CREATE OR REPLACE TRIGGER trg_Update_Group_Size
+FOR INSERT OR DELETE ON Dg_Group_Members
+COMPOUND TRIGGER
+    v_group_id VARCHAR2(20);
 
--- Trigger to update Group_Size after a member is deleted
-CREATE OR REPLACE TRIGGER trg_Update_Group_Size_After_Delete
-AFTER DELETE ON Dg_Group_Members
-FOR EACH ROW
+BEFORE EACH ROW IS
+BEGIN
+    IF INSERTING THEN
+        v_group_id := :NEW.Group_ID;
+    ELSIF DELETING THEN
+        v_group_id := :OLD.Group_ID;
+    END IF;
+END BEFORE EACH ROW;
+
+AFTER STATEMENT IS
 BEGIN
     UPDATE Dg_Groups
-    SET Group_Size = (SELECT COUNT(*) FROM Dg_Group_Members WHERE Group_ID = :OLD.Group_ID)
-    WHERE Group_ID = :OLD.Group_ID;
-END;
+    SET Group_Size = (SELECT COUNT(*) FROM Dg_Group_Members WHERE Group_ID = v_group_id)
+    WHERE Group_ID = v_group_id;
+END AFTER STATEMENT;
+END trg_Update_Group_Size;
 /
 
 -- Trigger to prevent the group leader from being added as a regular member
 CREATE OR REPLACE TRIGGER trg_Prevent_Leader_As_Member
 BEFORE INSERT ON Dg_Group_Members
 FOR EACH ROW
+DECLARE
+    v_group_leader_id VARCHAR2(20);
 BEGIN
-    IF :NEW.T_ID = (SELECT Group_Leader_T_ID FROM Dg_Groups WHERE Group_ID = :NEW.Group_ID) THEN
+    SELECT Group_Leader_T_ID INTO v_group_leader_id
+    FROM Dg_Groups
+    WHERE Group_ID = :NEW.Group_ID
+      AND Group_Leader_T_ID IS NOT NULL;
+
+    IF :NEW.T_ID = v_group_leader_id THEN
         RAISE_APPLICATION_ERROR(-20002, 'Group leader cannot be added as a regular member.');
     END IF;
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        NULL;
 END;
 /
 
--- Trigger to prevent duplicate preferences
+
+-- Compound trigger to prevent duplicate preferences
 CREATE OR REPLACE TRIGGER trg_Prevent_Duplicate_Preferences
-BEFORE INSERT ON Dg_Traveler_Preferences
-FOR EACH ROW
-DECLARE
-    v_count NUMBER;
+FOR INSERT ON Dg_Traveler_Preferences
+COMPOUND TRIGGER
+    TYPE PrefSet IS TABLE OF VARCHAR2(100) INDEX BY VARCHAR2(200);
+    preference_map PrefSet;
+
+BEFORE STATEMENT IS
 BEGIN
-    SELECT COUNT(*) INTO v_count
-    FROM Dg_Traveler_Preferences
-    WHERE T_ID = :NEW.T_ID AND Preference = :NEW.Preference;
-    
-    IF v_count > 0 THEN
+    preference_map := PrefSet();
+END BEFORE STATEMENT;
+
+BEFORE EACH ROW IS
+    v_key VARCHAR2(200);
+BEGIN
+    v_key := :NEW.T_ID || '|' || :NEW.Preference;
+
+    IF preference_map.EXISTS(v_key) THEN
         RAISE_APPLICATION_ERROR(-20003, 'Duplicate preference for the traveler is not allowed.');
+    ELSE
+        preference_map(v_key) := :NEW.Preference;
     END IF;
-END;
+END BEFORE EACH ROW;
+END trg_Prevent_Duplicate_Preferences;
 /
 
 -- Trigger to prevent bookings for past dates
@@ -95,11 +119,12 @@ FOR EACH ROW
 DECLARE
     v_count NUMBER;
 BEGIN
+    -- Check if a rating already exists for the traveler and experience
     SELECT COUNT(*) INTO v_count
     FROM Dg_Ratings
     WHERE Traveler_ID = :NEW.Traveler_ID
       AND Experience_ID = :NEW.Experience_ID;
-    
+
     IF v_count > 0 THEN
         RAISE_APPLICATION_ERROR(-20006, 'A rating for this experience by the traveler already exists.');
     END IF;
@@ -152,8 +177,8 @@ BEGIN
     SELECT Status INTO v_booking_status
     FROM Dg_Bookings
     WHERE Traveler_ID = :NEW.Traveler_ID
-    AND Experience_ID = :NEW.Experience_ID;
-    
+      AND Experience_ID = :NEW.Experience_ID;
+
     -- Ensure the booking status is 'Confirmed'
     IF v_booking_status != 'Confirmed' THEN
         RAISE_APPLICATION_ERROR(-20008, 'Reviews can only be submitted for confirmed bookings.');
@@ -161,32 +186,32 @@ BEGIN
 END;
 /
 
--- Trigger to automatically mark booking as 'Completed' after the experience date
-CREATE OR REPLACE TRIGGER trg_Auto_Complete_Booking
-AFTER UPDATE OF Experience_Date ON Dg_Bookings
+-- Trigger to prevent modifications to past bookings
+CREATE OR REPLACE TRIGGER trg_Prevent_Modifications_To_Past_Bookings
+BEFORE UPDATE OR DELETE ON Dg_Bookings
 FOR EACH ROW
 BEGIN
-    IF :NEW.Experience_Date < SYSDATE AND :OLD.Status != 'Completed' THEN
-        UPDATE Dg_Bookings
-        SET Status = 'Completed'
-        WHERE Booking_ID = :NEW.Booking_ID;
+    IF :OLD.Experience_Date < SYSDATE THEN
+        RAISE_APPLICATION_ERROR(-20018, 'Modifications to past bookings are not allowed.');
     END IF;
 END;
 /
 
--- Trigger to ensure guide availability for the booking date
+-- Trigger to check guide availability
 CREATE OR REPLACE TRIGGER trg_Check_Guide_Availability
 BEFORE INSERT ON Dg_Bookings
 FOR EACH ROW
 DECLARE
     v_available_count NUMBER;
 BEGIN
+    -- Check if the guide is available on the selected date for the experience
     SELECT COUNT(*) INTO v_available_count
     FROM Dg_Experience e
     JOIN Dg_Service_Provider s ON e.Service_Provider_ID = s.Service_Provider_ID
     WHERE e.Experience_ID = :NEW.Experience_ID
-    AND e.Schedule_Date = :NEW.Experience_Date;
-    
+      AND e.Schedule_Date = :NEW.Experience_Date;
+
+    -- If no guide is available, raise an error
     IF v_available_count = 0 THEN
         RAISE_APPLICATION_ERROR(-20009, 'The guide is not available on the selected date.');
     END IF;
@@ -222,14 +247,15 @@ BEGIN
 END;
 /
 
--- Trigger to prevent modifications to past bookings
-CREATE OR REPLACE TRIGGER trg_Prevent_Modifications_To_Past_Bookings
-BEFORE UPDATE OR DELETE ON Dg_Bookings
+-- Trigger to automatically mark booking as 'Completed' after the experience date
+CREATE OR REPLACE TRIGGER trg_Auto_Complete_Booking
+AFTER UPDATE OF Experience_Date ON Dg_Bookings
 FOR EACH ROW
 BEGIN
-    IF :OLD.Experience_Date < SYSDATE THEN
-        RAISE_APPLICATION_ERROR(-20018, 'Modifications to past bookings are not allowed.');
+    IF :NEW.Experience_Date < SYSDATE AND :OLD.Status != 'Completed' THEN
+        UPDATE Dg_Bookings
+        SET Status = 'Completed'
+        WHERE Booking_ID = :NEW.Booking_ID;
     END IF;
 END;
 /
-

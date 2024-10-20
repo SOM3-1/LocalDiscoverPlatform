@@ -2,13 +2,15 @@ import cx_Oracle
 import logging
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 # Database connection configuration
-username = ''
-password = ''
-dsn = 'localhost:1523/pcse1p.data.uta.edu'
+username = ""
+password = ""
+dsn = "localhost:1523/pcse1p.data.uta.edu"
 
 # Updated list of CREATE TABLE statements
 create_table_statements = [
@@ -92,7 +94,7 @@ create_table_statements = [
         Amount_Paid NUMBER NOT NULL CHECK (Amount_Paid >= 0),
         Status VARCHAR2(20),
         Booking_Method VARCHAR2(50),
-        Payment_Status VARCHAR2(20)
+        Payment_Status VARCHAR2(20) DEFAULT 'Pending' -- Set default payment status to 'Pending'
     )
     """,
     """
@@ -101,11 +103,11 @@ create_table_statements = [
         Traveler_ID VARCHAR2(20) REFERENCES Dg_Travelers(T_ID),
         Experience_ID VARCHAR2(20) REFERENCES Dg_Experience(Experience_ID),
         Rating_Value NUMBER CHECK (Rating_Value BETWEEN 1 AND 10),
-        Review_Date_Time TIMESTAMP,
+        Review_Date_Time TIMESTAMP DEFAULT SYSDATE, -- Set default review date to the current date
         Feedback VARCHAR2(500),
         Review_Title VARCHAR2(100)
     )
-    """
+    """,
 ]
 
 # Create view statement
