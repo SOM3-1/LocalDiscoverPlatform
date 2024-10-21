@@ -7,8 +7,8 @@ import random
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-username = 'dxg6620'
-password = '
+username = ''
+password = ''
 dsn = 'localhost:1523/pcse1p.data.uta.edu'
 
 fake = Faker()
@@ -55,11 +55,25 @@ for i in range(1, 1001):
     )
     travelers_data.append(traveler)
 
-    # Generate between 1 and 3 preferences for each traveler
     num_preferences = random.randint(1, 3)
     selected_preferences = random.sample(preference_options, num_preferences)
     for preference in selected_preferences:
         preferences_data.append((traveler[0], preference))
+
+service_providers_data = []
+for i in range(1, 301): 
+    service_provider = (
+        f"SP{i:05d}",
+        fake.company(),
+        fake.unique.email(),
+        fake.unique.phone_number()[:15],
+        fake.text(max_nb_chars=200),  # Bio
+        fake.street_address(),
+        fake.city(),
+        fake.zipcode(),
+        fake.country()
+    )
+    service_providers_data.append(service_provider)
 
 try:
     logger.info("Connecting to the database...")
@@ -95,6 +109,20 @@ try:
         batch = preferences_data[i:i + batch_size]
         cursor.executemany(insert_preferences_sql, batch)
         logger.info(f"Inserted {i + len(batch)} preferences")
+
+    insert_service_providers_sql = """
+    INSERT INTO Dg_Service_Provider (
+        Service_Provider_ID, Name, Email, Phone, Bio, Street, City, Zip, Country
+    ) VALUES (
+        :1, :2, :3, :4, :5, :6, :7, :8, :9
+    )
+    """
+    logger.info(f"Inserting service providers into the database...")
+
+    for i in range(0, len(service_providers_data), batch_size):
+        batch = service_providers_data[i:i + batch_size]
+        cursor.executemany(insert_service_providers_sql, batch)
+        logger.info(f"Inserted {i + len(batch)} service providers")
 
     connection.commit()
     logger.info("Database commit successful.")

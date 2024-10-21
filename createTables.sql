@@ -58,7 +58,7 @@ CREATE TABLE Dg_Service_Provider (
     Street VARCHAR2(100),
     City VARCHAR2(50),
     Zip VARCHAR2(10),
-    Country VARCHAR2(50)
+    Country VARCHAR2(100)
 );
 
 -- Creating the Dg_Experience table

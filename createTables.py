@@ -60,7 +60,7 @@ create_table_statements = [
         Street VARCHAR2(100),
         City VARCHAR2(50),
         Zip VARCHAR2(10),
-        Country VARCHAR2(50)
+        Country VARCHAR2(100)
     )
     """,
     """

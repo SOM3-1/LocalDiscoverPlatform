@@ -9,6 +9,20 @@ password = ''
 dsn = 'localhost:1523/pcse1p.data.uta.edu'
 
 drop_table_statements = [
+    "DROP TRIGGER trg_Check_Review_Eligibility",
+    "DROP TRIGGER trg_Update_Group_Size",
+    "DROP TRIGGER trg_Prevent_Leader_As_Member",
+    "DROP TRIGGER trg_Prevent_Duplicate_Preferences",
+    "DROP TRIGGER trg_Prevent_Past_Bookings",
+    "DROP TRIGGER trg_Default_Payment_Status",
+    "DROP TRIGGER trg_Prevent_Duplicate_Ratings",
+    "DROP TRIGGER trg_Prevent_Invalid_Cancellations",
+    "DROP TRIGGER trg_Set_Review_Date_Time",
+    "DROP TRIGGER trg_Check_Guide_Availability",
+    "DROP TRIGGER trg_Prevent_Modifications_To_Past_Bookings",
+    "DROP TRIGGER trg_Auto_Complete_Booking",
+    "DROP TRIGGER trg_Prevent_Rating_For_Canceled",
+    "DROP TRIGGER trg_Restrict_Booking_Modifications",
     "DROP VIEW Vw_Travelers",
     "DROP TABLE Dg_Ratings CASCADE CONSTRAINTS",
     "DROP TABLE Dg_Bookings CASCADE CONSTRAINTS",
@@ -18,7 +32,7 @@ drop_table_statements = [
     "DROP TABLE Dg_Group_Members CASCADE CONSTRAINTS",
     "DROP TABLE Dg_Groups CASCADE CONSTRAINTS",
     "DROP TABLE Dg_Traveler_Preferences CASCADE CONSTRAINTS",
-    "DROP TABLE Dg_Travelers CASCADE CONSTRAINTS"
+    "DROP TABLE Dg_Travelers CASCADE CONSTRAINTS",
 ]
 
 try:
@@ -27,7 +41,6 @@ try:
     cursor = connection.cursor()
     logger.info("Database connection established.")
 
-    # Execute each DROP TABLE statement
     for drop_table_sql in drop_table_statements:
         try:
             logger.info(f"Executing: {drop_table_sql}")

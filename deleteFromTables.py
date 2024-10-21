@@ -4,7 +4,7 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-username = 'dxg6620'
+username = ''
 password = '
 dsn = 'localhost:1523/pcse1p.data.uta.edu'
 

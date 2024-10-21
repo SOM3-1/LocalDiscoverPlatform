@@ -6,7 +6,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 # Database connection configuration
-username = 'dxg6620'
+username = ''
 password = '
 dsn = 'localhost:1523/pcse1p.data.uta.edu'
 
