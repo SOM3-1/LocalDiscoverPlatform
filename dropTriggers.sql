@@ -7,9 +7,6 @@ DROP TRIGGER trg_Update_Group_Size;
 -- Drop trigger to prevent the group leader from being added as a regular member
 DROP TRIGGER trg_Prevent_Leader_As_Member;
 
--- Drop trigger to prevent duplicate preferences
-DROP TRIGGER trg_Prevent_Duplicate_Preferences;
-
 -- Drop trigger to prevent bookings for past dates
 DROP TRIGGER trg_Prevent_Past_Bookings;
 

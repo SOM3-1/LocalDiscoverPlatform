@@ -63,33 +63,6 @@ EXCEPTION
 END;
 /
 
-
--- Compound trigger to prevent duplicate preferences
-CREATE OR REPLACE TRIGGER trg_Prevent_Duplicate_Preferences
-FOR INSERT ON Dg_Traveler_Preferences
-COMPOUND TRIGGER
-    TYPE PrefSet IS TABLE OF VARCHAR2(100) INDEX BY VARCHAR2(200);
-    preference_map PrefSet;
-
-BEFORE STATEMENT IS
-BEGIN
-    preference_map := PrefSet();
-END BEFORE STATEMENT;
-
-BEFORE EACH ROW IS
-    v_key VARCHAR2(200);
-BEGIN
-    v_key := :NEW.T_ID || '|' || :NEW.Preference;
-
-    IF preference_map.EXISTS(v_key) THEN
-        RAISE_APPLICATION_ERROR(-20003, 'Duplicate preference for the traveler is not allowed.');
-    ELSE
-        preference_map(v_key) := :NEW.Preference;
-    END IF;
-END BEFORE EACH ROW;
-END trg_Prevent_Duplicate_Preferences;
-/
-
 -- Trigger to prevent bookings for past dates
 CREATE OR REPLACE TRIGGER trg_Prevent_Past_Bookings
 BEFORE INSERT OR UPDATE ON Dg_Bookings

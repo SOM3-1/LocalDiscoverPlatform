@@ -6,8 +6,8 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-username = ""
-password = ""
+username = ''
+password = ''
 dsn = "localhost:1523/pcse1p.data.uta.edu"
 
 create_trigger_statements = [
@@ -73,32 +73,6 @@ create_trigger_statements = [
         WHEN NO_DATA_FOUND THEN
             NULL;
     END;
-    """,
-    # Compound trigger to prevent duplicate preferences
-    """
-    CREATE OR REPLACE TRIGGER trg_Prevent_Duplicate_Preferences
-    FOR INSERT ON Dg_Traveler_Preferences
-    COMPOUND TRIGGER
-        TYPE PrefSet IS TABLE OF VARCHAR2(100) INDEX BY VARCHAR2(200);
-        preference_map PrefSet;
-
-    BEFORE STATEMENT IS
-    BEGIN
-        preference_map := PrefSet();
-    END BEFORE STATEMENT;
-
-    BEFORE EACH ROW IS
-        v_key VARCHAR2(200);
-    BEGIN
-        v_key := :NEW.T_ID || '|' || :NEW.Preference;
-
-        IF preference_map.EXISTS(v_key) THEN
-            RAISE_APPLICATION_ERROR(-20003, 'Duplicate preference for the traveler is not allowed.');
-        ELSE
-            preference_map(v_key) := :NEW.Preference;
-        END IF;
-    END BEFORE EACH ROW;
-    END trg_Prevent_Duplicate_Preferences;
     """,
     # Trigger to prevent bookings for past dates
     """
@@ -236,6 +210,39 @@ BEGIN
     END IF;
 END;
 """,
+"""
+-- Trigger to validate that reviews can only be submitted for confirmed bookings
+CREATE OR REPLACE TRIGGER trg_Validate_Review_Status
+BEFORE INSERT ON Dg_Ratings
+FOR EACH ROW
+DECLARE
+    v_booking_status VARCHAR2(20);
+BEGIN
+    -- Get the booking status for the corresponding traveler and experience
+    SELECT Status INTO v_booking_status
+    FROM Dg_Bookings
+    WHERE Traveler_ID = :NEW.Traveler_ID
+      AND Experience_ID = :NEW.Experience_ID;
+
+    -- Ensure the booking status is 'Confirmed'
+    IF v_booking_status != 'Confirmed' THEN
+        RAISE_APPLICATION_ERROR(-20008, 'Reviews can only be submitted for confirmed bookings.');
+    END IF;
+END;
+""",
+"""
+CREATE OR REPLACE TRIGGER trg_Auto_Confirm_Booking
+AFTER UPDATE ON Dg_Bookings
+FOR EACH ROW
+BEGIN
+    IF :NEW.Payment_Status = 'Completed' AND :OLD.Payment_Status != 'Completed' THEN
+        UPDATE Dg_Bookings
+        SET Status = 'Confirmed'
+        WHERE Booking_ID = :NEW.Booking_ID;
+    END IF;
+END
+/
+"""
 ]
 
 try:

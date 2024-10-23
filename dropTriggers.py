@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 # Database connection configuration
 username = ''
-password = '
+password = ''
 dsn = 'localhost:1523/pcse1p.data.uta.edu'
 
 # List of DROP TRIGGER statements
@@ -15,7 +15,6 @@ drop_trigger_statements = [
     "DROP TRIGGER trg_Check_Review_Eligibility",
     "DROP TRIGGER trg_Update_Group_Size",
     "DROP TRIGGER trg_Prevent_Leader_As_Member",
-    "DROP TRIGGER trg_Prevent_Duplicate_Preferences",
     "DROP TRIGGER trg_Prevent_Past_Bookings",
     "DROP TRIGGER trg_Default_Payment_Status",
     "DROP TRIGGER trg_Prevent_Duplicate_Ratings",
@@ -25,7 +24,9 @@ drop_trigger_statements = [
     "DROP TRIGGER trg_Prevent_Modifications_To_Past_Bookings",
     "DROP TRIGGER trg_Auto_Complete_Booking",
     "DROP TRIGGER trg_Prevent_Rating_For_Canceled",
-    "DROP TRIGGER trg_Restrict_Booking_Modifications"
+    "DROP TRIGGER trg_Restrict_Booking_Modifications",
+    "DROP TRIGGER trg_Validate_Review_Status",
+    "DROP TRIGGER trg_Auto_Confirm_Booking"
 ]
 
 try:

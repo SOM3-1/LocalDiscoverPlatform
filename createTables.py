@@ -8,8 +8,8 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Database connection configuration
-username = ""
-password = ""
+username = ''
+password = ''
 dsn = "localhost:1523/pcse1p.data.uta.edu"
 
 # Updated list of CREATE TABLE statements
@@ -28,10 +28,16 @@ create_table_statements = [
     )
     """,
     """
-    CREATE TABLE Dg_Traveler_Preferences (
-        T_ID VARCHAR2(20) REFERENCES Dg_Travelers(T_ID),
-        Preference VARCHAR2(100),
-        PRIMARY KEY (T_ID, Preference)
+    CREATE TABLE Dg_Preferences (
+        Preference_ID VARCHAR2(20) PRIMARY KEY,
+        Preference_Name VARCHAR2(100) NOT NULL UNIQUE
+    )
+    """,
+    """
+   CREATE TABLE Dg_Traveler_Preferences (
+    T_ID VARCHAR2(20) REFERENCES Dg_Travelers(T_ID),
+    Preference_ID VARCHAR2(20) REFERENCES Dg_Preferences(Preference_ID),
+    PRIMARY KEY (T_ID, Preference_ID)
     )
     """,
     """
@@ -63,6 +69,42 @@ create_table_statements = [
         Country VARCHAR2(100)
     )
     """,
+
+    """
+    CREATE TABLE Dg_Activity_Types (
+        Activity_ID VARCHAR2(20) PRIMARY KEY,
+        Activity_Name VARCHAR2(50) NOT NULL
+    )""",
+
+    """
+    CREATE TABLE Dg_Service_Provider_Activities (
+        Service_Provider_ID VARCHAR2(20) REFERENCES Dg_Service_Provider(Service_Provider_ID),
+        Activity_ID VARCHAR2(20) REFERENCES Dg_Activity_Types(Activity_ID),
+        PRIMARY KEY (Service_Provider_ID, Activity_ID)
+    )""",
+
+    """
+    CREATE TABLE Dg_Availability_Schedule (
+        Schedule_ID VARCHAR2(20) PRIMARY KEY,
+        Service_Provider_ID VARCHAR2(20) REFERENCES Dg_Service_Provider(Service_Provider_ID),
+        Available_Date DATE NOT NULL
+    )""",
+
+    """
+    CREATE TABLE Dg_Schedule_Locations (
+        Schedule_ID VARCHAR2(20) REFERENCES Dg_Availability_Schedule(Schedule_ID),
+        Location VARCHAR2(100) NOT NULL,
+        PRIMARY KEY (Schedule_ID, Location)
+    )""",
+
+    """
+    CREATE TABLE Dg_Schedule_Times (
+        Schedule_ID VARCHAR2(20) REFERENCES Dg_Availability_Schedule(Schedule_ID),
+        Start_Time TIMESTAMP NOT NULL,
+        End_Time TIMESTAMP NOT NULL,
+        PRIMARY KEY (Schedule_ID, Start_Time)
+        )
+    """,
     """
     CREATE TABLE Dg_Experience (
         Experience_ID VARCHAR2(20) PRIMARY KEY,
@@ -71,10 +113,8 @@ create_table_statements = [
         Group_Availability VARCHAR2(50),
         Group_Size_Limits VARCHAR2(50),
         Pricing NUMBER CHECK (Pricing >= 0),
-        Location VARCHAR2(100),
         Service_Provider_ID VARCHAR2(20) REFERENCES Dg_Service_Provider(Service_Provider_ID),
-        Schedule_Date DATE,
-        Schedule_Time VARCHAR2(10)
+        Schedule_ID VARCHAR2(20) REFERENCES Dg_Availability_Schedule(Schedule_ID)
     )
     """,
     """

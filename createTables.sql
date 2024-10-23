@@ -11,11 +11,17 @@ CREATE TABLE Dg_Travelers (
     Phone VARCHAR2(15) UNIQUE NOT NULL
 );
 
+-- Creating the Dg_Preferences
+CREATE TABLE Dg_Preferences (
+    Preference_ID VARCHAR2(20) PRIMARY KEY,
+    Preference_Name VARCHAR2(100) NOT NULL UNIQUE
+);
+
 -- Creating the Dg_Traveler_Preferences table with a unique constraint to prevent duplicate preferences
 CREATE TABLE Dg_Traveler_Preferences (
     T_ID VARCHAR2(20) REFERENCES Dg_Travelers(T_ID),
-    Preference VARCHAR2(100),
-    PRIMARY KEY (T_ID, Preference)
+    Preference_ID VARCHAR2(20) REFERENCES Dg_Preferences(Preference_ID),
+    PRIMARY KEY (T_ID, Preference_ID)
 );
 
 -- Creating the view for calculating age dynamically
@@ -61,6 +67,41 @@ CREATE TABLE Dg_Service_Provider (
     Country VARCHAR2(100)
 );
 
+-- Creating the Dg_Activity_types table
+CREATE TABLE Dg_Activity_Types (
+    Activity_ID VARCHAR2(20) PRIMARY KEY,
+    Activity_Name VARCHAR2(50) NOT NULL
+);
+
+-- Creating the  Dg_Service_Provider_Activities table
+CREATE TABLE Dg_Service_Provider_Activities (
+    Service_Provider_ID VARCHAR2(20) REFERENCES Dg_Service_Provider(Service_Provider_ID),
+    Activity_ID VARCHAR2(20) REFERENCES Dg_Activity_Types(Activity_ID),
+    PRIMARY KEY (Service_Provider_ID, Activity_ID)
+);
+
+-- Creating the  Dg_Availability_Schedule table
+CREATE TABLE Dg_Availability_Schedule (
+    Schedule_ID VARCHAR2(20) PRIMARY KEY,
+    Service_Provider_ID VARCHAR2(20) REFERENCES Dg_Service_Provider(Service_Provider_ID),
+    Available_Date DATE NOT NULL
+);
+
+-- Creating the  Dg_Schedule_Locations table
+CREATE TABLE Dg_Schedule_Locations (
+    Schedule_ID VARCHAR2(20) REFERENCES Dg_Availability_Schedule(Schedule_ID),
+    Location VARCHAR2(100) NOT NULL,
+    PRIMARY KEY (Schedule_ID, Location)
+);
+
+-- Creating the  Dg_Schedule_Times table
+CREATE TABLE Dg_Schedule_Times (
+    Schedule_ID VARCHAR2(20) REFERENCES Dg_Availability_Schedule(Schedule_ID),
+    Start_Time TIMESTAMP NOT NULL,
+    End_Time TIMESTAMP NOT NULL,
+    PRIMARY KEY (Schedule_ID, Start_Time)
+);
+
 -- Creating the Dg_Experience table
 CREATE TABLE Dg_Experience (
     Experience_ID VARCHAR2(20) PRIMARY KEY,
@@ -69,10 +110,8 @@ CREATE TABLE Dg_Experience (
     Group_Availability VARCHAR2(50),
     Group_Size_Limits VARCHAR2(50),
     Pricing NUMBER CHECK (Pricing >= 0),
-    Location VARCHAR2(100),
     Service_Provider_ID VARCHAR2(20) REFERENCES Dg_Service_Provider(Service_Provider_ID),
-    Schedule_Date DATE,
-    Schedule_Time VARCHAR2(10)
+    Schedule_ID VARCHAR2(20) REFERENCES Dg_Availability_Schedule(Schedule_ID)
 );
 
 -- Creating the Dg_Experience_Tags table
@@ -105,16 +144,3 @@ CREATE TABLE Dg_Ratings (
     Feedback VARCHAR2(500),
     Review_Title VARCHAR2(100)
 );
-
--- Trigger to automatically mark booking as 'Completed' after the experience date
-CREATE OR REPLACE TRIGGER trg_Auto_Complete_Booking
-AFTER UPDATE OF Experience_Date ON Dg_Bookings
-FOR EACH ROW
-BEGIN
-    IF :NEW.Experience_Date < SYSDATE AND :OLD.Status != 'Completed' THEN
-        UPDATE Dg_Bookings
-        SET Status = 'Completed'
-        WHERE Booking_ID = :NEW.Booking_ID;
-    END IF;
-END;
-/
