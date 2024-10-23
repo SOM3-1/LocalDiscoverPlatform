@@ -8,8 +8,8 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Database connection configuration
-username = 'dxg6620'
-password = 'Dushyanth123'
+username = ''
+password = ''
 dsn = "localhost:1523/pcse1p.data.uta.edu"
 
 # Updated list of CREATE TABLE statements
