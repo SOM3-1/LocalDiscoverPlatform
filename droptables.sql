@@ -7,9 +7,6 @@ DROP TABLE Dg_Ratings CASCADE CONSTRAINTS;
 -- Drop the Dg_Bookings table
 DROP TABLE Dg_Bookings CASCADE CONSTRAINTS;
 
--- Drop the Dg_Activity_Types table
-DROP TABLE Dg_Activity_Types CASCADE CONSTRAINTS;
-
 -- Drop the Dg_Service_Provider_Activities table
 DROP TABLE Dg_Service_Provider_Activities CASCADE CONSTRAINTS;
 
@@ -41,7 +38,11 @@ DROP TABLE Dg_Groups CASCADE CONSTRAINTS;
 DROP TABLE Dg_Traveler_Preferences CASCADE CONSTRAINTS;
 
 -- Drop the Dg_Traveler_Preferences table
-DROP TABLE Dg_Preferences CASCADE CONSTRAINTS;
+DROP TABLE Dg_Interest_Categories CASCADE CONSTRAINTS;
 
 -- Drop the Dg_Travelers table
 DROP TABLE Dg_Travelers CASCADE CONSTRAINTS;
+
+-- Drop the Dg_Locations table
+DROP TABLE Dg_Locations CASCADE CONSTRAINTS;
+

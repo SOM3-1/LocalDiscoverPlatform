@@ -6,8 +6,8 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 # Database connection configuration
-username = ''
-password = ''
+username = 'dxg6620'
+password = 'Dushyanth123'
 dsn = 'localhost:1523/pcse1p.data.uta.edu'
 
 # List of DROP TRIGGER statements

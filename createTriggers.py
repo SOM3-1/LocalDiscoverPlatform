@@ -6,8 +6,8 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-username = ''
-password = ''
+username = 'dxg6620'
+password = 'Dushyanth123'
 dsn = "localhost:1523/pcse1p.data.uta.edu"
 
 create_trigger_statements = [
@@ -158,91 +158,91 @@ create_trigger_statements = [
         -- Check if the guide is available on the selected date for the experience
         SELECT COUNT(*) INTO v_available_count
         FROM Dg_Experience e
-        JOIN Dg_Service_Provider s ON e.Service_Provider_ID = s.Service_Provider_ID
+        JOIN Dg_Availability_Schedule s ON e.Schedule_ID = s.Schedule_ID
         WHERE e.Experience_ID = :NEW.Experience_ID
-        AND e.Schedule_Date = :NEW.Experience_Date;
+        AND s.Available_Date = :NEW.Experience_Date;
 
         -- If no guide is available, raise an error
         IF v_available_count = 0 THEN
             RAISE_APPLICATION_ERROR(-20009, 'The guide is not available on the selected date.');
         END IF;
     END;
-""",
+    """,
     # Trigger to restrict booking modifications within 48 hours of the experience date
     """
-CREATE OR REPLACE TRIGGER trg_Restrict_Booking_Modifications
-BEFORE UPDATE OR DELETE ON Dg_Bookings
-FOR EACH ROW
-BEGIN
-    IF :OLD.Experience_Date - SYSDATE <= 2 THEN
-        RAISE_APPLICATION_ERROR(-20016, 'Bookings cannot be modified within 48 hours of the scheduled date.');
-    END IF;
-END;
-""",
-    # Trigger to prevent ratings for canceled bookings
-    """
-CREATE OR REPLACE TRIGGER trg_Prevent_Rating_For_Canceled
-BEFORE INSERT ON Dg_Ratings
-FOR EACH ROW
-DECLARE
-    v_booking_status VARCHAR2(20);
-BEGIN
-    SELECT Status INTO v_booking_status
-    FROM Dg_Bookings
-    WHERE Traveler_ID = :NEW.Traveler_ID
-      AND Experience_ID = :NEW.Experience_ID;
-      
-    IF v_booking_status = 'Canceled' THEN
-        RAISE_APPLICATION_ERROR(-20017, 'Ratings cannot be submitted for canceled bookings.');
-    END IF;
-END;
-""",
+    CREATE OR REPLACE TRIGGER trg_Restrict_Booking_Modifications
+    BEFORE UPDATE OR DELETE ON Dg_Bookings
+    FOR EACH ROW
+    BEGIN
+        IF :OLD.Experience_Date - SYSDATE <= 2 THEN
+            RAISE_APPLICATION_ERROR(-20016, 'Bookings cannot be modified within 48 hours of the scheduled date.');
+        END IF;
+    END;
+    """,
+        # Trigger to prevent ratings for canceled bookings
+        """
+    CREATE OR REPLACE TRIGGER trg_Prevent_Rating_For_Canceled
+    BEFORE INSERT ON Dg_Ratings
+    FOR EACH ROW
+    DECLARE
+        v_booking_status VARCHAR2(20);
+    BEGIN
+        SELECT Status INTO v_booking_status
+        FROM Dg_Bookings
+        WHERE Traveler_ID = :NEW.Traveler_ID
+        AND Experience_ID = :NEW.Experience_ID;
+        
+        IF v_booking_status = 'Canceled' THEN
+            RAISE_APPLICATION_ERROR(-20017, 'Ratings cannot be submitted for canceled bookings.');
+        END IF;
+    END;
+    """,
     # Trigger to automatically mark booking as 'Completed' after the experience date
     """
-CREATE OR REPLACE TRIGGER trg_Auto_Complete_Booking
-AFTER UPDATE OF Experience_Date ON Dg_Bookings
-FOR EACH ROW
-BEGIN
-    IF :NEW.Experience_Date < SYSDATE AND :OLD.Status != 'Completed' THEN
-        UPDATE Dg_Bookings
-        SET Status = 'Completed'
-        WHERE Booking_ID = :NEW.Booking_ID;
-    END IF;
-END;
-""",
-"""
--- Trigger to validate that reviews can only be submitted for confirmed bookings
-CREATE OR REPLACE TRIGGER trg_Validate_Review_Status
-BEFORE INSERT ON Dg_Ratings
-FOR EACH ROW
-DECLARE
-    v_booking_status VARCHAR2(20);
-BEGIN
-    -- Get the booking status for the corresponding traveler and experience
-    SELECT Status INTO v_booking_status
-    FROM Dg_Bookings
-    WHERE Traveler_ID = :NEW.Traveler_ID
-      AND Experience_ID = :NEW.Experience_ID;
+    CREATE OR REPLACE TRIGGER trg_Auto_Complete_Booking
+    AFTER UPDATE OF Experience_Date ON Dg_Bookings
+    FOR EACH ROW
+    BEGIN
+        IF :NEW.Experience_Date < SYSDATE AND :OLD.Status != 'Completed' THEN
+            UPDATE Dg_Bookings
+            SET Status = 'Completed'
+            WHERE Booking_ID = :NEW.Booking_ID;
+        END IF;
+    END;
+    """,
+    """
+    -- Trigger to validate that reviews can only be submitted for confirmed bookings
+    CREATE OR REPLACE TRIGGER trg_Validate_Review_Status
+    BEFORE INSERT ON Dg_Ratings
+    FOR EACH ROW
+    DECLARE
+        v_booking_status VARCHAR2(20);
+    BEGIN
+        -- Get the booking status for the corresponding traveler and experience
+        SELECT Status INTO v_booking_status
+        FROM Dg_Bookings
+        WHERE Traveler_ID = :NEW.Traveler_ID
+        AND Experience_ID = :NEW.Experience_ID;
 
-    -- Ensure the booking status is 'Confirmed'
-    IF v_booking_status != 'Confirmed' THEN
-        RAISE_APPLICATION_ERROR(-20008, 'Reviews can only be submitted for confirmed bookings.');
-    END IF;
-END;
-""",
-"""
-CREATE OR REPLACE TRIGGER trg_Auto_Confirm_Booking
-AFTER UPDATE ON Dg_Bookings
-FOR EACH ROW
-BEGIN
-    IF :NEW.Payment_Status = 'Completed' AND :OLD.Payment_Status != 'Completed' THEN
-        UPDATE Dg_Bookings
-        SET Status = 'Confirmed'
-        WHERE Booking_ID = :NEW.Booking_ID;
-    END IF;
-END
-/
-"""
+        -- Ensure the booking status is 'Confirmed'
+        IF v_booking_status != 'Confirmed' THEN
+            RAISE_APPLICATION_ERROR(-20008, 'Reviews can only be submitted for confirmed bookings.');
+        END IF;
+    END;
+    """,
+    """
+    CREATE OR REPLACE TRIGGER trg_Auto_Confirm_Booking
+    AFTER UPDATE ON Dg_Bookings
+    FOR EACH ROW
+    BEGIN
+        IF :NEW.Payment_Status = 'Completed' AND :OLD.Payment_Status != 'Completed' THEN
+            UPDATE Dg_Bookings
+            SET Status = 'Confirmed'
+            WHERE Booking_ID = :NEW.Booking_ID;
+        END IF;
+    END
+    /
+    """
 ]
 
 try:

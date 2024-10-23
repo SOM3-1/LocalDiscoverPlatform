@@ -180,9 +180,9 @@ BEGIN
     -- Check if the guide is available on the selected date for the experience
     SELECT COUNT(*) INTO v_available_count
     FROM Dg_Experience e
-    JOIN Dg_Service_Provider s ON e.Service_Provider_ID = s.Service_Provider_ID
+    JOIN Dg_Availability_Schedule s ON e.Schedule_ID = s.Schedule_ID
     WHERE e.Experience_ID = :NEW.Experience_ID
-      AND e.Schedule_Date = :NEW.Experience_Date;
+      AND s.Available_Date = :NEW.Experience_Date;
 
     -- If no guide is available, raise an error
     IF v_available_count = 0 THEN
@@ -190,6 +190,7 @@ BEGIN
     END IF;
 END;
 /
+
 
 -- Trigger to restrict booking modifications within 48 hours of the experience date
 CREATE OR REPLACE TRIGGER trg_Restrict_Booking_Modifications

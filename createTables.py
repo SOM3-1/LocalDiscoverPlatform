@@ -8,12 +8,24 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Database connection configuration
-username = ''
-password = ''
+username = 'dxg6620'
+password = 'Dushyanth123'
 dsn = "localhost:1523/pcse1p.data.uta.edu"
 
 # Updated list of CREATE TABLE statements
 create_table_statements = [
+    """
+    CREATE TABLE Dg_Interest_Categories (
+        Category_ID VARCHAR2(20) PRIMARY KEY,
+        Category_Name VARCHAR2(100) NOT NULL UNIQUE
+    )
+    """,
+    """
+    CREATE TABLE Dg_Locations (
+        Location_ID VARCHAR2(20) PRIMARY KEY,
+        Location_Name VARCHAR2(100) NOT NULL UNIQUE
+    )
+    """,
     """
     CREATE TABLE Dg_Travelers (
         T_ID VARCHAR2(20) PRIMARY KEY,
@@ -22,21 +34,15 @@ create_table_statements = [
         DOB DATE NOT NULL,
         Demographic_Type VARCHAR2(50),
         Sex CHAR(1) CHECK (Sex IN ('M', 'F', 'O')),
-        Location VARCHAR2(100),
+        Location_ID VARCHAR2(20) REFERENCES Dg_Locations(Location_ID),
         Email VARCHAR2(50) UNIQUE NOT NULL,
         Phone VARCHAR2(15) UNIQUE NOT NULL
     )
     """,
     """
-    CREATE TABLE Dg_Preferences (
-        Preference_ID VARCHAR2(20) PRIMARY KEY,
-        Preference_Name VARCHAR2(100) NOT NULL UNIQUE
-    )
-    """,
-    """
    CREATE TABLE Dg_Traveler_Preferences (
     T_ID VARCHAR2(20) REFERENCES Dg_Travelers(T_ID),
-    Preference_ID VARCHAR2(20) REFERENCES Dg_Preferences(Preference_ID),
+    Preference_ID VARCHAR2(20) REFERENCES Dg_Interest_Categories(Category_ID),
     PRIMARY KEY (T_ID, Preference_ID)
     )
     """,
@@ -71,15 +77,9 @@ create_table_statements = [
     """,
 
     """
-    CREATE TABLE Dg_Activity_Types (
-        Activity_ID VARCHAR2(20) PRIMARY KEY,
-        Activity_Name VARCHAR2(50) NOT NULL
-    )""",
-
-    """
     CREATE TABLE Dg_Service_Provider_Activities (
         Service_Provider_ID VARCHAR2(20) REFERENCES Dg_Service_Provider(Service_Provider_ID),
-        Activity_ID VARCHAR2(20) REFERENCES Dg_Activity_Types(Activity_ID),
+        Activity_ID VARCHAR2(20) REFERENCES Dg_Interest_Categories(Category_ID),
         PRIMARY KEY (Service_Provider_ID, Activity_ID)
     )""",
 
@@ -93,8 +93,8 @@ create_table_statements = [
     """
     CREATE TABLE Dg_Schedule_Locations (
         Schedule_ID VARCHAR2(20) REFERENCES Dg_Availability_Schedule(Schedule_ID),
-        Location VARCHAR2(100) NOT NULL,
-        PRIMARY KEY (Schedule_ID, Location)
+        Location_ID VARCHAR2(20) REFERENCES Dg_Locations(Location_ID),
+        PRIMARY KEY (Schedule_ID, Location_ID)
     )""",
 
     """
@@ -102,8 +102,10 @@ create_table_statements = [
         Schedule_ID VARCHAR2(20) REFERENCES Dg_Availability_Schedule(Schedule_ID),
         Start_Time TIMESTAMP NOT NULL,
         End_Time TIMESTAMP NOT NULL,
-        PRIMARY KEY (Schedule_ID, Start_Time)
-        )
+        PRIMARY KEY (Schedule_ID, Start_Time),
+        CHECK (End_Time > Start_Time)
+    )
+
     """,
     """
     CREATE TABLE Dg_Experience (
@@ -111,7 +113,8 @@ create_table_statements = [
         Title VARCHAR2(100) NOT NULL,
         Description VARCHAR2(500),
         Group_Availability VARCHAR2(50),
-        Group_Size_Limits VARCHAR2(50),
+        Min_Group_Size NUMBER DEFAULT 0 CHECK (Min_Group_Size >= 0 AND Min_Group_Size <= 20),
+        Max_Group_Size NUMBER DEFAULT 20 CHECK (Max_Group_Size >= 0 AND Max_Group_Size <= 20),
         Pricing NUMBER CHECK (Pricing >= 0),
         Service_Provider_ID VARCHAR2(20) REFERENCES Dg_Service_Provider(Service_Provider_ID),
         Schedule_ID VARCHAR2(20) REFERENCES Dg_Availability_Schedule(Schedule_ID)
@@ -153,17 +156,18 @@ create_table_statements = [
 # Create view statement
 create_view_statement = """
 CREATE OR REPLACE VIEW Vw_Travelers AS
-SELECT T_ID, 
-       First_Name, 
-       Last_Name, 
-       DOB,
-       FLOOR(MONTHS_BETWEEN(SYSDATE, DOB) / 12) AS Age,
-       Demographic_Type, 
-       Sex, 
-       Location, 
-       Email, 
-       Phone
-FROM Dg_Travelers
+SELECT T.T_ID, 
+       T.First_Name, 
+       T.Last_Name, 
+       T.DOB,
+       FLOOR(MONTHS_BETWEEN(SYSDATE, T.DOB) / 12) AS Age,
+       T.Demographic_Type, 
+       T.Sex, 
+       L.Location_Name AS Location, -- Join with Dg_Locations to get the location name
+       T.Email, 
+       T.Phone
+FROM Dg_Travelers T
+LEFT JOIN Dg_Locations L ON T.Location_ID = L.Location_ID
 """
 
 try:

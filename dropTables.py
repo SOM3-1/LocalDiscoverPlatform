@@ -6,8 +6,8 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-username = ''
-password = ''
+username = 'dxg6620'
+password = 'Dushyanth123'
 dsn = "localhost:1523/pcse1p.data.uta.edu"
 
 drop_view_statements = [
@@ -17,7 +17,6 @@ drop_view_statements = [
 drop_table_statements = [
     "DROP TABLE Dg_Ratings CASCADE CONSTRAINTS",
     "DROP TABLE Dg_Bookings CASCADE CONSTRAINTS",
-    "DROP TABLE Dg_Activity_Types CASCADE CONSTRAINTS",
     "DROP TABLE Dg_Service_Provider_Activities CASCADE CONSTRAINTS",
     "DROP TABLE Dg_Availability_Schedule CASCADE CONSTRAINTS",
     "DROP TABLE Dg_Schedule_Locations CASCADE CONSTRAINTS",
@@ -28,8 +27,9 @@ drop_table_statements = [
     "DROP TABLE Dg_Group_Members CASCADE CONSTRAINTS",
     "DROP TABLE Dg_Groups CASCADE CONSTRAINTS",
     "DROP TABLE Dg_Traveler_Preferences CASCADE CONSTRAINTS",
-    "DROP TABLE Dg_Preferences CASCADE CONSTRAINTS",
+    "DROP TABLE Dg_Interest_Categories CASCADE CONSTRAINTS",
     "DROP TABLE Dg_Travelers CASCADE CONSTRAINTS",
+    "DROP TABLE Dg_Locations CASCADE CONSTRAINTS",
 ]
 
 try:
