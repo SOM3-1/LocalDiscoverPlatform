@@ -52,7 +52,7 @@ try:
     logger.info(f"Retrieved traveler count: {traveler_count}")
 
     # Determine the number of experiences based on traveler count (e.g., 1 experience for every 5 travelers)
-    num_experiences = max(1, traveler_count // 5)  # Ensure at least 1 experience is created
+    num_experiences = max(1, traveler_count // 5)
 
     # Step 2: Retrieve Service Provider IDs and their activities
     cursor.execute("""
@@ -78,19 +78,27 @@ try:
         raise ValueError("No schedules found. Cannot create experiences.")
     logger.info(f"Retrieved {len(schedule_ids)} schedules.")
 
+    # Step 4: Retrieve all available tags
+    cursor.execute("SELECT Tag_ID, Tag_Name FROM Dg_Tags")
+    tags = cursor.fetchall()
+    if not tags:
+        raise ValueError("No tags found. Cannot create experience tags.")
+    logger.info(f"Retrieved {len(tags)} tags.")
+
     # Shuffle the service provider activities to ensure random selection
     random.shuffle(service_provider_activities)
 
-    # Step 4: Generate and insert experiences
+    # Step 5: Generate and insert experiences
     experiences_data = []
+    experience_tags_data = []
 
     for i in range(num_experiences):
         experience_id = f"E{i+1:05d}"
         service_provider_id, activity_type = service_provider_activities[i]
-        title = generate_experience_title(activity_type)  # Generate a title based on the activity type
+        title = generate_experience_title(activity_type)
         description = f"Join us for an amazing {activity_type.lower()} where you will {fake.sentence(nb_words=10)}."
         group_availability, min_group_size, max_group_size = determine_group_availability()
-        pricing = round(random.uniform(100, 5000), 2)  # Random pricing between 50 and 500
+        pricing = round(random.uniform(100, 5000), 2)
         schedule_id = random.choice(schedule_ids)
 
         experiences_data.append((
@@ -98,6 +106,12 @@ try:
             min_group_size, max_group_size, pricing,
             service_provider_id, schedule_id
         ))
+
+        # Step 6: Assign 1-3 random tags to each experience
+        num_tags = random.randint(1, 3)
+        selected_tags = random.sample(tags, num_tags)
+        for tag_id, _ in selected_tags:
+            experience_tags_data.append((experience_id, tag_id))
 
     # Insert the generated experiences into the Dg_Experience table
     cursor.executemany("""
@@ -111,9 +125,16 @@ try:
     """, experiences_data)
     logger.info(f"Inserted {len(experiences_data)} experiences into the Dg_Experience table.")
 
+    # Insert the experience tags into the Dg_Experience_Tags table
+    cursor.executemany("""
+    INSERT INTO Dg_Experience_Tags (Experience_ID, Tag_ID)
+    VALUES (:1, :2)
+    """, experience_tags_data)
+    logger.info(f"Inserted {len(experience_tags_data)} tags into the Dg_Experience_Tags table.")
+
     # Commit the changes
     connection.commit()
-    logger.info("All experience records committed successfully.")
+    logger.info("All data inserted successfully.")
 
 except cx_Oracle.DatabaseError as e:
     logger.error(f"An error occurred: {e}")

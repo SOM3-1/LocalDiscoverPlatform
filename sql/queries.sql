@@ -137,3 +137,52 @@ LEFT JOIN
     Dg_Schedule_Times ST ON S.Schedule_ID = ST.Schedule_ID
 ORDER BY 
     E.Experience_ID, T.Tag_Name;
+
+--all expe details
+SELECT 
+    E.Title AS Experience_Name,
+    SP.Name AS Service_Provider_Name,
+    T.Tag_Name AS Tag,
+    S.Available_Date AS Schedule_Date,
+    ST.Start_Time AS Schedule_Start_Time,
+    ST.End_Time AS Schedule_End_Time
+FROM 
+    Dg_Experience E
+JOIN 
+    Dg_Service_Provider SP ON E.Service_Provider_ID = SP.Service_Provider_ID
+JOIN 
+    Dg_Experience_Tags ET ON E.Experience_ID = ET.Experience_ID
+JOIN 
+    Dg_Tags T ON ET.Tag_ID = T.Tag_ID
+JOIN 
+    Dg_Availability_Schedule S ON E.Schedule_ID = S.Schedule_ID
+JOIN 
+    Dg_Schedule_Times ST ON S.Schedule_ID = ST.Schedule_ID
+ORDER BY 
+    E.Title, T.Tag_Name;
+
+
+--tags concat
+SELECT 
+    E.Title AS Experience_Name,
+    SP.Name AS Service_Provider_Name,
+    LISTAGG(T.Tag_Name, ', ') WITHIN GROUP (ORDER BY T.Tag_Name) AS Tags,
+    S.Available_Date AS Schedule_Date,
+    ST.Start_Time AS Schedule_Start_Time,
+    ST.End_Time AS Schedule_End_Time
+FROM 
+    Dg_Experience E
+JOIN 
+    Dg_Service_Provider SP ON E.Service_Provider_ID = SP.Service_Provider_ID
+JOIN 
+    Dg_Experience_Tags ET ON E.Experience_ID = ET.Experience_ID
+JOIN 
+    Dg_Tags T ON ET.Tag_ID = T.Tag_ID
+JOIN 
+    Dg_Availability_Schedule S ON E.Schedule_ID = S.Schedule_ID
+JOIN 
+    Dg_Schedule_Times ST ON S.Schedule_ID = ST.Schedule_ID
+GROUP BY 
+    E.Title, SP.Name, S.Available_Date, ST.Start_Time, ST.End_Time
+ORDER BY 
+    E.Title;
