@@ -1,15 +1,15 @@
 import cx_Oracle
 import logging
+from credentials import netid, pwd, connection
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
-username = ''
-password = ''
-dsn = "localhost:1523/pcse1p.data.uta.edu"
-
+username = netid
+password = pwd
+dsn = connection
 
 drop_table_statements = [
     "DROP TABLE Dg_Ratings CASCADE CONSTRAINTS",
@@ -28,7 +28,10 @@ drop_table_statements = [
     "DROP TABLE Dg_Travelers CASCADE CONSTRAINTS",
     "DROP TABLE Dg_Locations CASCADE CONSTRAINTS",
     "DROP TABLE Dg_Group_Types CASCADE CONSTRAINTS",
-    "DROP TABLE Dg_Tags CASCADE CONSTRAINTS"
+    "DROP TABLE Dg_Tags CASCADE CONSTRAINTS",
+    "DROP TABLE Dg_Booking_Methods CASCADE CONSTRAINTS",
+    "DROP TABLE Dg_Booking_Status CASCADE CONSTRAINTS",
+    "DROP TABLE Dg_Payment_Status CASCADE CONSTRAINTS"
 ]
 
 try:

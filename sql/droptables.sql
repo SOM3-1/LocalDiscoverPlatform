@@ -46,10 +46,19 @@ DROP TABLE Dg_Travelers CASCADE CONSTRAINTS;
 -- Drop the Dg_Locations table
 DROP TABLE Dg_Locations CASCADE CONSTRAINTS;
 
--- Drop the Dg_Locations table
+-- Drop the Dg_Group_Types table
 DROP TABLE Dg_Group_Types CASCADE CONSTRAINTS;
 
--- Drop the Dg_Locations table
+-- Drop the Dg_Tags table
 DROP TABLE Dg_Tags CASCADE CONSTRAINTS;
+
+-- Drop the Dg_Booking_Methods table
+DROP TABLE Dg_Booking_Methods CASCADE CONSTRAINTS;
+
+-- Drop the Dg_Booking_Status table
+DROP TABLE Dg_Booking_Status CASCADE CONSTRAINTS;
+
+-- Drop the Dg_Payment_Status table
+DROP TABLE Dg_Payment_Status CASCADE CONSTRAINTS;
 
 

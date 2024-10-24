@@ -1,15 +1,16 @@
 import cx_Oracle
 import logging
-from mocks import preference_options, city_names, group_types, experience_tags
+from mocks import preference_options, city_names, group_types, experience_tags, payment_statuses, booking_statuses, booking_methods
+from credentials import netid, pwd, connection
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 # Database connection configuration
-username = ''
-password = ''
-dsn = "localhost:1523/pcse1p.data.uta.edu"
+username = netid
+password = pwd
+dsn = connection
 
 try:
     # Establish a connection to the database
@@ -42,7 +43,25 @@ try:
     cursor.executemany("INSERT INTO Dg_Tags (Tag_ID, Tag_Name) VALUES (:1, :2)", tags_data)
     logger.info(f"Inserted {len(tags_data)} experience tags into the Dg_Tags table.")
 
-    # Step 5: Commit the changes
+    # Step 5: Insert booking methods into the Dg_Booking_Methods table
+    logger.info("Inserting booking methods into the Dg_Booking_Methods table...")
+    booking_methods_data = [(f"BM{i+1:03d}", method) for i, method in enumerate(booking_methods)]
+    cursor.executemany("INSERT INTO Dg_Booking_Methods (Method_ID, Method_Name) VALUES (:1, :2)", booking_methods_data)
+    logger.info(f"Inserted {len(booking_methods_data)} booking methods.")
+
+    # Step 6: Insert booking statuses into the Dg_Booking_Status table
+    logger.info("Inserting booking statuses into the Dg_Booking_Status table...")
+    booking_statuses_data = [(f"BS{i+1:03d}", status) for i, status in enumerate(booking_statuses)]
+    cursor.executemany("INSERT INTO Dg_Booking_Status (Status_ID, Status_Name) VALUES (:1, :2)", booking_statuses_data)
+    logger.info(f"Inserted {len(booking_statuses_data)} booking statuses.")
+
+    # Step 7: Insert payment statuses into the Dg_Payment_Status table
+    logger.info("Inserting payment statuses into the Dg_Payment_Status table...")
+    payment_statuses_data = [(f"PS{i+1:03d}", status) for i, status in enumerate(payment_statuses)]
+    cursor.executemany("INSERT INTO Dg_Payment_Status (Payment_Status_ID, Payment_Status_Name) VALUES (:1, :2)", payment_statuses_data)
+    logger.info(f"Inserted {len(payment_statuses_data)} payment statuses.")
+
+    # Step 8: Commit the changes
     connection.commit()
     logger.info("All data inserted successfully.")
 

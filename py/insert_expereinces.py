@@ -3,15 +3,16 @@ import logging
 import random
 from faker import Faker
 from mocks import preference_options
+from credentials import netid, pwd, connection
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 # Database connection configuration
-username = ''
-password = ''
-dsn = "localhost:1523/pcse1p.data.uta.edu"
+username = netid
+password = pwd
+dsn = connection
 
 fake = Faker()
 

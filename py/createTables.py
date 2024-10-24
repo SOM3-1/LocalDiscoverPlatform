@@ -1,6 +1,6 @@
 import cx_Oracle
 import logging
-
+from credentials import netid, pwd, connection
 # Configure logging
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
@@ -8,9 +8,9 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Database connection configuration
-username = ''
-password = ''
-dsn = "localhost:1523/pcse1p.data.uta.edu"
+username = netid
+password = pwd
+dsn = connection
 
 # Updated list of CREATE TABLE statements
 create_table_statements = [
@@ -36,6 +36,21 @@ create_table_statements = [
         Group_Type_ID VARCHAR2(20) PRIMARY KEY,
         Group_Type_Name VARCHAR2(50) UNIQUE NOT NULL)
     """,
+    """
+    CREATE TABLE Dg_Booking_Methods (
+        Method_ID VARCHAR2(20) PRIMARY KEY,
+        Method_Name VARCHAR2(50) UNIQUE NOT NULL
+    )""",
+        """
+    CREATE TABLE Dg_Booking_Status (
+        Status_ID VARCHAR2(20) PRIMARY KEY,
+        Status_Name VARCHAR2(50) UNIQUE NOT NULL
+    )
+    """,
+        """CREATE TABLE Dg_Payment_Status (
+        Payment_Status_ID VARCHAR2(20) PRIMARY KEY,
+        Payment_Status_Name VARCHAR2(50) UNIQUE NOT NULL
+    )""",
     """
     CREATE TABLE Dg_Travelers (
         T_ID VARCHAR2(20) PRIMARY KEY,
@@ -84,28 +99,24 @@ create_table_statements = [
         Country VARCHAR2(100)
     )
     """,
-
     """
     CREATE TABLE Dg_Service_Provider_Activities (
         Service_Provider_ID VARCHAR2(20) REFERENCES Dg_Service_Provider(Service_Provider_ID),
         Activity_ID VARCHAR2(20) REFERENCES Dg_Interest_Categories(Category_ID),
         PRIMARY KEY (Service_Provider_ID, Activity_ID)
     )""",
-
     """
     CREATE TABLE Dg_Availability_Schedule (
         Schedule_ID VARCHAR2(20) PRIMARY KEY,
         Service_Provider_ID VARCHAR2(20) REFERENCES Dg_Service_Provider(Service_Provider_ID),
         Available_Date DATE NOT NULL
     )""",
-
     """
     CREATE TABLE Dg_Schedule_Locations (
         Schedule_ID VARCHAR2(20) REFERENCES Dg_Availability_Schedule(Schedule_ID),
         Location_ID VARCHAR2(20) REFERENCES Dg_Locations(Location_ID),
         PRIMARY KEY (Schedule_ID, Location_ID)
     )""",
-
     """
     CREATE TABLE Dg_Schedule_Times (
         Schedule_ID VARCHAR2(20) REFERENCES Dg_Availability_Schedule(Schedule_ID),
@@ -148,9 +159,9 @@ create_table_statements = [
         Date_Of_Booking DATE NOT NULL,
         Experience_Date DATE NOT NULL,
         Amount_Paid NUMBER NOT NULL CHECK (Amount_Paid >= 0),
-        Status VARCHAR2(20),
-        Booking_Method VARCHAR2(50),
-        Payment_Status VARCHAR2(20) DEFAULT 'Pending' -- Set default payment status to 'Pending'
+        Booking_Status_ID VARCHAR2(20) REFERENCES Dg_Booking_Status(Status_ID),
+        Booking_Method_ID VARCHAR2(20) REFERENCES Dg_Booking_Methods(Method_ID),
+        Payment_Status_ID VARCHAR2(20) DEFAULT 'Pending' REFERENCES Dg_Payment_Status(Payment_Status_ID)
     )
     """,
     """

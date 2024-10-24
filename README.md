@@ -1,3 +1,7 @@
+Here's how the updated `README` file should look, including instructions on using `run_scripts_insert.py` for inserting data in a single run:
+
+---
+
 ## README
 
 ### Prerequisites
@@ -70,7 +74,7 @@
 3. **Running the Python Scripts:**
 
    - **Add Database Credentials:**
-     - Edit the Python script to add your Omega username, password, and connection string.
+     - Edit the `credentials.py` file to enter your Omega username, password, and connection string.
      - Example:
        ```python
        username = 'your_username'
@@ -97,23 +101,63 @@
        python dropTriggers.py
        ```
 
+### Inserting Data in a Single Run
+
+If you want to insert all the necessary data into the database tables in a single run, you should use the `run_scripts_insert.py` script. This script automates the process of executing multiple insert scripts sequentially, populating all the required tables.
+
+To insert data in a single run, execute:
+   ```
+   python run_scripts_insert.py
+   ```
+
+Make sure that:
+   - The SSH tunnel is open.
+   - You have configured `credentials.py` with the correct database credentials.
+   - All insert scripts are present and properly configured.
+
 ### Available Scripts
 
-#### 1. `createTables.sql` and `createTables.py`
-   - These scripts are used to create the database tables.
-   - Use `.sql` files with SQL tools or `.py` files with Python.
+#### 1. `credentials.py`
+   - Stores database connection credentials such as the username, password, and connection string. **Remember to edit this file to enter your database credentials before running any scripts.**
 
-#### 2. `dropTables.sql` and `dropTables.py`
-   - These scripts drop all tables from the database.
-   - Use `.sql` files with SQL tools or `.py` files with Python.
+#### 2. `createTables.py`
+   - Creates the necessary database tables for the project. It contains the SQL commands to define the schema for each table.
 
-#### 3. `createTriggers.sql` and `createTriggers.py`
-   - These scripts create the triggers for the database.
-   - Use `.sql` files with SQL tools or `.py` files with Python.
+#### 3. `createTriggers.py`
+   - Creates triggers in the database. Triggers automatically execute specific actions in response to certain events on a table (e.g., insert, update, or delete operations).
 
-#### 4. `dropTriggers.sql` and `dropTriggers.py`
-   - These scripts drop all the triggers from the database.
-   - Use `.sql` files with SQL tools or `.py` files with Python.
+#### 4. `createViews.py`
+   - Creates views in the database, which are virtual tables representing the result of a query. Views can simplify data retrieval and improve query readability.
+
+#### 5. `dropTables.py`
+   - Drops (deletes) the tables from the database. Useful for cleaning up or resetting the schema.
+
+#### 6. `dropTriggers.py`
+   - Drops the triggers from the database, removing any automated actions set up in the database.
+
+#### 7. `dropViews.py`
+   - Drops the views from the database, removing any virtual tables created with `createViews.py`.
+
+#### 8. `insert_experiences.py`
+   - Inserts data into the `Dg_Experience` table. This script adds records for different experiences using data generated from the `mocks.py` file or other sources.
+
+#### 9. `insert_groups.py`
+   - Adds data to the table that manages group-related information, such as group bookings or categories.
+
+#### 10. `insert_lookup_tables.py`
+   - Populates the lookup tables with reference data used across different tables. The data for these tables is typically provided in `mocks.py`.
+
+#### 11. `insert_service_providers.py`
+   - Inserts records into the `Dg_Service_Providers` table, which stores information about service providers who offer various experiences.
+
+#### 12. `insert_travellers.py`
+   - Adds records to the `Dg_Travelers` table, representing travelers or users who participate in the experiences.
+
+#### 13. `mocks.py`
+   - Contains mock data used for populating the database. Includes lists of sample data such as city names, experience tags, categories, and other reference data.
+
+#### 14. `run_scripts_insert.py`
+   - Automates the process of running multiple insert scripts in a sequence to populate the database tables with initial data. **If you want to insert all the data in a single run, use this script.**
 
 ### Summary
 
@@ -121,6 +165,7 @@
   - An SSH tunnel is required for both SQL tools and Python scripts when running them from your local machine. This is because the Omega database is not directly accessible from outside.
 - **Option 1 (SQL Tools):** Run the `.sql` scripts using SQL*Plus, SQL Workbench, or SQL Developer with the SSH tunnel open.
 - **Option 2 (Python Scripts):** Run the `.py` scripts directly from the terminal. The SSH tunnel must be open, and the connection string should use `localhost` as the host.
+- **Single Run Data Insertion:** Use `run_scripts_insert.py` to insert all data in one go.
 
 ### Notes
 

@@ -118,3 +118,15 @@ experience_tags = [
     'Thrill', 'Travel', 'Beach', 'Mountain', 'City', 'Yoga', 'Meditation', 'Wildlife',
     'Camping', 'Road Trip', 'Water Sports', 'Cruise'
 ]
+
+booking_methods = [
+    'Online', 'Phone', 'In-Person', 'Travel Agent', 'Mobile App'
+]
+
+booking_statuses = [
+    'Confirmed', 'Cancelled', 'Pending',
+]
+
+payment_statuses = [
+    'Pending', 'Completed', 'Failed', 'Refunded'
+]

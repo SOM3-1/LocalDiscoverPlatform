@@ -23,6 +23,21 @@ CREATE TABLE Dg_Group_Types (
     Group_Type_Name VARCHAR2(50) UNIQUE NOT NULL
 );
 
+CREATE TABLE Dg_Booking_Methods (
+    Method_ID VARCHAR2(20) PRIMARY KEY,
+    Method_Name VARCHAR2(50) UNIQUE NOT NULL
+);
+
+CREATE TABLE Dg_Booking_Status (
+    Status_ID VARCHAR2(20) PRIMARY KEY,
+    Status_Name VARCHAR2(50) UNIQUE NOT NULL
+);
+
+CREATE TABLE Dg_Payment_Status (
+    Payment_Status_ID VARCHAR2(20) PRIMARY KEY,
+    Payment_Status_Name VARCHAR2(50) UNIQUE NOT NULL
+);
+
 -- Creating the Dg_Travelers table
 CREATE TABLE Dg_Travelers (
     T_ID VARCHAR2(20) PRIMARY KEY,
@@ -134,9 +149,9 @@ CREATE TABLE Dg_Bookings (
     Date_Of_Booking DATE NOT NULL,
     Experience_Date DATE NOT NULL,
     Amount_Paid NUMBER NOT NULL CHECK (Amount_Paid >= 0),
-    Status VARCHAR2(20),
-    Booking_Method VARCHAR2(50),
-    Payment_Status VARCHAR2(20) DEFAULT 'Pending' -- Default payment status to 'Pending'
+    Booking_Status_ID VARCHAR2(20) REFERENCES Dg_Booking_Status(Status_ID),
+    Booking_Method_ID VARCHAR2(20) REFERENCES Dg_Booking_Methods(Method_ID),
+    Payment_Status_ID VARCHAR2(20) DEFAULT 'Pending' REFERENCES Dg_Payment_Status(Payment_Status_ID)
 );
 
 -- Creating the Dg_Ratings table

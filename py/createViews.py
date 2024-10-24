@@ -1,14 +1,15 @@
 import cx_Oracle
 import logging
+from credentials import netid, pwd, connection
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 # Database connection configuration
-username = ''
-password = ''
-dsn = "localhost:1523/pcse1p.data.uta.edu"
+username = netid
+password = pwd
+dsn = connection
 
 # List of view creation statements
 view_statements = [
