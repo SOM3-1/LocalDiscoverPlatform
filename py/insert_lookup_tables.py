@@ -1,6 +1,6 @@
 import cx_Oracle
 import logging
-from mocks import preference_options, city_names
+from mocks import preference_options, city_names, group_types
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -30,7 +30,13 @@ try:
     cursor.executemany("INSERT INTO Dg_Interest_Categories (Category_ID, Category_Name) VALUES (:1, :2)", preference_data)
     logger.info(f"Inserted {len(preference_data)} preferences.")
 
-    # Step 3: Commit the changes
+    # Step 3: Insert group types into the Dg_Group_Types table
+    logger.info("Inserting group types into the Dg_Group_Types table...")
+    group_types_with_ids = [(f"GT{i+1:03d}", group_type) for i, group_type in enumerate(group_types)]
+    cursor.executemany("INSERT INTO Dg_Group_Types (Group_Type_ID, Group_Type_Name) VALUES (:1, :2)", group_types_with_ids)
+    logger.info(f"Inserted {len(group_types_with_ids)} group types.")
+
+    # Step 4: Commit the changes
     connection.commit()
     logger.info("All data inserted successfully.")
 

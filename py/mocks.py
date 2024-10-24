@@ -66,3 +66,24 @@ city_names_old = [
     "Davenport", "Edinburg", "Tuscaloosa", "Carmel", "Spokane Valley", "San Angelo", "Vacaville", 
     "Clinton"
 ]
+
+group_types = [
+    'Family',
+    'Friends',
+    'Corporate Team',
+    'Adventure',
+    'Social',
+    'Fitness',
+    'Hiking',
+    'Cultural',
+    'Wellness',
+    'Photography',
+    'Cooking',
+    'Music',
+    'Art',
+    'Travel',
+    'Gaming',
+    'Volunteering',
+    'Outdoor',
+    'Networking'
+]

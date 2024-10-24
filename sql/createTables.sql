@@ -11,6 +11,12 @@ CREATE TABLE Dg_Locations (
     Location_Name VARCHAR2(100) NOT NULL UNIQUE
 );
 
+-- Creating the Dg_Group_Types
+CREATE TABLE Dg_Group_Types (
+    Group_Type_ID VARCHAR2(20) PRIMARY KEY,
+    Group_Type_Name VARCHAR2(50) UNIQUE NOT NULL
+);
+
 -- Creating the Dg_Travelers table
 CREATE TABLE Dg_Travelers (
     T_ID VARCHAR2(20) PRIMARY KEY,
@@ -50,7 +56,7 @@ CREATE TABLE Dg_Groups (
     Group_ID VARCHAR2(20) PRIMARY KEY,
     Group_Name VARCHAR2(100),
     Group_Leader_T_ID VARCHAR2(20) REFERENCES Dg_Travelers(T_ID),
-    Group_Type VARCHAR2(50),
+    Group_Type_ID VARCHAR2(20) REFERENCES Dg_Group_Types(Group_Type_ID),
     Group_Size NUMBER DEFAULT 0
 );
 

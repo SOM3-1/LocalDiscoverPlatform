@@ -53,7 +53,7 @@ try:
     # Step 3: Insert travelers with a reference to Dg_Locations
     logger.info("Inserting travelers into the Dg_Travelers table...")
     travelers_data = []
-    for i in range(1, 101):  # Generate 100 travelers
+    for i in range(1, 1001):  # Generate 1000 travelers
         location_id = random.choice(location_ids)
         dob = fake.date_of_birth(minimum_age=18, maximum_age=80)
         demographic_type = get_demographic_type(dob)

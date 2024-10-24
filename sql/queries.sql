@@ -21,7 +21,7 @@ JOIN
 ORDER BY 
     t.T_ID, p.Category_Name;
 
-
+--service provider
 SELECT 
     sp.Service_Provider_ID,
     sp.Name,
@@ -53,3 +53,60 @@ LEFT JOIN
     Dg_Schedule_Times st ON asch.Schedule_ID = st.Schedule_ID
 ORDER BY 
     sp.Name, ic.Category_Name, asch.Available_Date, st.Start_Time;
+
+--group
+SELECT 
+    g.Group_ID,
+    g.Group_Name,
+    g.Group_Type,
+    g.Group_Leader_T_ID AS Leader_ID,
+    leader.First_Name AS Leader_First_Name,
+    leader.Last_Name AS Leader_Last_Name,
+    gm.T_ID AS Member_ID,
+    member.First_Name AS Member_First_Name,
+    member.Last_Name AS Member_Last_Name
+FROM 
+    Dg_Groups g
+JOIN 
+    Dg_Travelers leader ON g.Group_Leader_T_ID = leader.T_ID
+LEFT JOIN 
+    Dg_Group_Members gm ON g.Group_ID = gm.Group_ID
+LEFT JOIN 
+    Dg_Travelers member ON gm.T_ID = member.T_ID
+ORDER BY 
+    g.Group_ID;
+
+--travelers in group
+SELECT 
+    t.T_ID,
+    t.First_Name,
+    t.Last_Name,
+    t.Email,
+    gm.Group_ID
+FROM 
+    Dg_Group_Members gm
+JOIN 
+    Dg_Travelers t ON gm.T_ID = t.T_ID
+ORDER BY 
+    gm.Group_ID, t.T_ID;
+
+--eader and their group members
+SELECT 
+    g.Group_ID,
+    g.Group_Name,
+    leader.T_ID AS Leader_ID,
+    leader.First_Name AS Leader_First_Name,
+    leader.Last_Name AS Leader_Last_Name,
+    member.T_ID AS Member_ID,
+    member.First_Name AS Member_First_Name,
+    member.Last_Name AS Member_Last_Name
+FROM 
+    Dg_Groups g
+JOIN 
+    Dg_Travelers leader ON g.Group_Leader_T_ID = leader.T_ID
+JOIN 
+    Dg_Group_Members gm ON g.Group_ID = gm.Group_ID
+JOIN 
+    Dg_Travelers member ON gm.T_ID = member.T_ID
+ORDER BY 
+    g.Group_ID, member.T_ID;

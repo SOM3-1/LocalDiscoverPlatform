@@ -46,3 +46,6 @@ DROP TABLE Dg_Travelers CASCADE CONSTRAINTS;
 -- Drop the Dg_Locations table
 DROP TABLE Dg_Locations CASCADE CONSTRAINTS;
 
+-- Drop the Dg_Locations table
+DROP TABLE Dg_Group_Types CASCADE CONSTRAINTS;
+

@@ -30,6 +30,7 @@ drop_table_statements = [
     "DROP TABLE Dg_Interest_Categories CASCADE CONSTRAINTS",
     "DROP TABLE Dg_Travelers CASCADE CONSTRAINTS",
     "DROP TABLE Dg_Locations CASCADE CONSTRAINTS",
+    "DROP TABLE Dg_Group_Types CASCADE CONSTRAINTS"
 ]
 
 try:
