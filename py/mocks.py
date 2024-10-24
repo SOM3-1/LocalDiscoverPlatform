@@ -87,3 +87,34 @@ group_types = [
     'Outdoor',
     'Networking'
 ]
+
+experience_categories = [
+    "Hiking Adventure",
+    "Wine Tasting Tour",
+    "City Sightseeing",
+    "Cultural Heritage Tour",
+    "Cooking Class",
+    "Art Workshop",
+    "Yoga Retreat",
+    "Snorkeling Trip",
+    "Mountain Biking",
+    "Beach Relaxation",
+    "Wildlife Safari",
+    "Historical Landmark Visit",
+    "Photography Expedition",
+    "Kayaking Excursion",
+    "Meditation Retreat",
+    "Gastronomy Experience",
+    "Rock Climbing",
+    "Music Festival",
+    "Dance Workshop",
+    "Stargazing Experience"
+]
+
+experience_tags = [
+    'Relaxation', 'Adventure', 'Family', 'Outdoor', 'Culture', 'Luxury', 'Food', 'Fitness',
+    'Art', 'Music', 'History', 'Nature', 'Wellness', 'Nightlife', 'Shopping', 'Sports',
+    'Photography', 'Festival', 'Social', 'Exploration', 'Learning', 'Health', 'Leisure',
+    'Thrill', 'Travel', 'Beach', 'Mountain', 'City', 'Yoga', 'Meditation', 'Wildlife',
+    'Camping', 'Road Trip', 'Water Sports', 'Cruise'
+]

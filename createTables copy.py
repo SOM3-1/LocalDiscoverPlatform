@@ -8,34 +8,12 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Database connection configuration
-username = ''
-password = ''
+username = ""
+password = ""
 dsn = "localhost:1523/pcse1p.data.uta.edu"
 
 # Updated list of CREATE TABLE statements
 create_table_statements = [
-    """
-    CREATE TABLE Dg_Interest_Categories (
-        Category_ID VARCHAR2(20) PRIMARY KEY,
-        Category_Name VARCHAR2(100) NOT NULL UNIQUE
-    )
-    """,
-    """
-    CREATE TABLE Dg_Locations (
-        Location_ID VARCHAR2(20) PRIMARY KEY,
-        Location_Name VARCHAR2(100) NOT NULL UNIQUE
-    )
-    """,
-    """
-        CREATE TABLE Dg_Tags (
-        Tag_ID VARCHAR2(20) PRIMARY KEY,
-        Tag_Name VARCHAR2(50) UNIQUE NOT NULL
-    )""",
-    """
-        CREATE TABLE Dg_Group_Types (
-        Group_Type_ID VARCHAR2(20) PRIMARY KEY,
-        Group_Type_Name VARCHAR2(50) UNIQUE NOT NULL)
-    """,
     """
     CREATE TABLE Dg_Travelers (
         T_ID VARCHAR2(20) PRIMARY KEY,
@@ -44,15 +22,21 @@ create_table_statements = [
         DOB DATE NOT NULL,
         Demographic_Type VARCHAR2(50),
         Sex CHAR(1) CHECK (Sex IN ('M', 'F', 'O')),
-        Location_ID VARCHAR2(20) REFERENCES Dg_Locations(Location_ID),
+        Location VARCHAR2(100),
         Email VARCHAR2(50) UNIQUE NOT NULL,
         Phone VARCHAR2(15) UNIQUE NOT NULL
     )
     """,
     """
+    CREATE TABLE Dg_Preferences (
+        Preference_ID VARCHAR2(20) PRIMARY KEY,
+        Preference_Name VARCHAR2(100) NOT NULL UNIQUE
+    )
+    """,
+    """
    CREATE TABLE Dg_Traveler_Preferences (
     T_ID VARCHAR2(20) REFERENCES Dg_Travelers(T_ID),
-    Preference_ID VARCHAR2(20) REFERENCES Dg_Interest_Categories(Category_ID),
+    Preference_ID VARCHAR2(20) REFERENCES Dg_Preferences(Preference_ID),
     PRIMARY KEY (T_ID, Preference_ID)
     )
     """,
@@ -61,8 +45,9 @@ create_table_statements = [
         Group_ID VARCHAR2(20) PRIMARY KEY,
         Group_Name VARCHAR2(100),
         Group_Leader_T_ID VARCHAR2(20) REFERENCES Dg_Travelers(T_ID),
-        Group_Type_ID VARCHAR2(20) REFERENCES Dg_Group_Types(Group_Type_ID),
-        Group_Size NUMBER DEFAULT 0)
+        Group_Type VARCHAR2(50),
+        Group_Size NUMBER DEFAULT 0
+    )
     """,
     """
     CREATE TABLE Dg_Group_Members (
@@ -84,60 +69,25 @@ create_table_statements = [
         Country VARCHAR2(100)
     )
     """,
-
-    """
-    CREATE TABLE Dg_Service_Provider_Activities (
-        Service_Provider_ID VARCHAR2(20) REFERENCES Dg_Service_Provider(Service_Provider_ID),
-        Activity_ID VARCHAR2(20) REFERENCES Dg_Interest_Categories(Category_ID),
-        PRIMARY KEY (Service_Provider_ID, Activity_ID)
-    )""",
-
-    """
-    CREATE TABLE Dg_Availability_Schedule (
-        Schedule_ID VARCHAR2(20) PRIMARY KEY,
-        Service_Provider_ID VARCHAR2(20) REFERENCES Dg_Service_Provider(Service_Provider_ID),
-        Available_Date DATE NOT NULL
-    )""",
-
-    """
-    CREATE TABLE Dg_Schedule_Locations (
-        Schedule_ID VARCHAR2(20) REFERENCES Dg_Availability_Schedule(Schedule_ID),
-        Location_ID VARCHAR2(20) REFERENCES Dg_Locations(Location_ID),
-        PRIMARY KEY (Schedule_ID, Location_ID)
-    )""",
-
-    """
-    CREATE TABLE Dg_Schedule_Times (
-        Schedule_ID VARCHAR2(20) REFERENCES Dg_Availability_Schedule(Schedule_ID),
-        Start_Time TIMESTAMP NOT NULL,
-        End_Time TIMESTAMP NOT NULL,
-        PRIMARY KEY (Schedule_ID, Start_Time),
-        CHECK (End_Time > Start_Time)
-    )
-
-    """,
     """
     CREATE TABLE Dg_Experience (
         Experience_ID VARCHAR2(20) PRIMARY KEY,
         Title VARCHAR2(100) NOT NULL,
         Description VARCHAR2(500),
-        Group_Availability CHAR(1) CHECK (Group_Availability IN ('Y', 'N')), -- 'Y' for Yes, 'N' for No
-        Min_Group_Size NUMBER DEFAULT 0,
-        Max_Group_Size NUMBER DEFAULT 0,
+        Group_Availability VARCHAR2(50),
+        Group_Size_Limits VARCHAR2(50),
         Pricing NUMBER CHECK (Pricing >= 0),
+        Location VARCHAR2(100),
         Service_Provider_ID VARCHAR2(20) REFERENCES Dg_Service_Provider(Service_Provider_ID),
-        Schedule_ID VARCHAR2(20) REFERENCES Dg_Availability_Schedule(Schedule_ID),
-        CHECK (
-            (Group_Availability = 'Y' AND Min_Group_Size >= 2 AND Min_Group_Size <= 20 AND Max_Group_Size >= Min_Group_Size AND Max_Group_Size <= 20) OR
-            (Group_Availability = 'N' AND Min_Group_Size = 0 AND Max_Group_Size = 0)
-        )
+        Schedule_Date DATE,
+        Schedule_Time VARCHAR2(10)
     )
     """,
     """
     CREATE TABLE Dg_Experience_Tags (
         Experience_ID VARCHAR2(20) REFERENCES Dg_Experience(Experience_ID),
-        Tag_ID VARCHAR2(20) REFERENCES Dg_Tags(Tag_ID),
-        PRIMARY KEY (Experience_ID, Tag_ID)
+        Tag VARCHAR2(50),
+        PRIMARY KEY (Experience_ID, Tag)
     )
     """,
     """
@@ -166,6 +116,22 @@ create_table_statements = [
     """,
 ]
 
+# Create view statement
+create_view_statement = """
+CREATE OR REPLACE VIEW Vw_Travelers AS
+SELECT T_ID, 
+       First_Name, 
+       Last_Name, 
+       DOB,
+       FLOOR(MONTHS_BETWEEN(SYSDATE, DOB) / 12) AS Age,
+       Demographic_Type, 
+       Sex, 
+       Location, 
+       Email, 
+       Phone
+FROM Dg_Travelers
+"""
+
 try:
     # Establish a connection to the database
     logger.info("Connecting to the database...")
@@ -181,6 +147,14 @@ try:
             logger.info("Table created successfully.")
         except cx_Oracle.DatabaseError as e:
             logger.error(f"An error occurred while creating the table: {e}")
+
+    # Execute the CREATE VIEW statement
+    try:
+        logger.info(f"Executing: {create_view_statement.splitlines()[1].strip()}")
+        cursor.execute(create_view_statement)
+        logger.info("View created successfully.")
+    except cx_Oracle.DatabaseError as e:
+        logger.error(f"An error occurred while creating the view: {e}")
 
     # Commit the changes
     connection.commit()

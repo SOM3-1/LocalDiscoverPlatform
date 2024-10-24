@@ -10,9 +10,6 @@ username = ''
 password = ''
 dsn = "localhost:1523/pcse1p.data.uta.edu"
 
-drop_view_statements = [
-    "DROP VIEW Vw_Travelers"
-]
 
 drop_table_statements = [
     "DROP TABLE Dg_Ratings CASCADE CONSTRAINTS",
@@ -30,7 +27,8 @@ drop_table_statements = [
     "DROP TABLE Dg_Interest_Categories CASCADE CONSTRAINTS",
     "DROP TABLE Dg_Travelers CASCADE CONSTRAINTS",
     "DROP TABLE Dg_Locations CASCADE CONSTRAINTS",
-    "DROP TABLE Dg_Group_Types CASCADE CONSTRAINTS"
+    "DROP TABLE Dg_Group_Types CASCADE CONSTRAINTS",
+    "DROP TABLE Dg_Tags CASCADE CONSTRAINTS"
 ]
 
 try:
@@ -38,15 +36,6 @@ try:
     connection = cx_Oracle.connect(username, password, dsn)
     cursor = connection.cursor()
     logger.info("Database connection established.")
-
-    # Drop views
-    for drop_view_sql in drop_view_statements:
-        try:
-            logger.info(f"Executing: {drop_view_sql}")
-            cursor.execute(drop_view_sql)
-            logger.info("View dropped successfully.")
-        except cx_Oracle.DatabaseError as e:
-            logger.warning(f"View does not exist or could not be dropped: {e}")
 
     # Drop tables
     for drop_table_sql in drop_table_statements:

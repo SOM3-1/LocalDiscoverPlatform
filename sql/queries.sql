@@ -110,3 +110,30 @@ JOIN
     Dg_Travelers member ON gm.T_ID = member.T_ID
 ORDER BY 
     g.Group_ID, member.T_ID;
+
+--experience
+SELECT 
+    E.Experience_ID,
+    E.Title AS Experience_Title,
+    E.Description AS Experience_Description,
+    E.Group_Availability,
+    E.Min_Group_Size,
+    E.Max_Group_Size,
+    E.Pricing,
+    T.Tag_Name AS Tag,
+    S.Schedule_ID,
+    S.Available_Date,
+    ST.Start_Time,
+    ST.End_Time
+FROM 
+    Dg_Experience E
+LEFT JOIN 
+    Dg_Experience_Tags ET ON E.Experience_ID = ET.Experience_ID
+LEFT JOIN 
+    Dg_Tags T ON ET.Tag_ID = T.Tag_ID
+LEFT JOIN 
+    Dg_Availability_Schedule S ON E.Schedule_ID = S.Schedule_ID
+LEFT JOIN 
+    Dg_Schedule_Times ST ON S.Schedule_ID = ST.Schedule_ID
+ORDER BY 
+    E.Experience_ID, T.Tag_Name;

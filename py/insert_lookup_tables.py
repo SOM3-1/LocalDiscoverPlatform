@@ -1,6 +1,6 @@
 import cx_Oracle
 import logging
-from mocks import preference_options, city_names, group_types
+from mocks import preference_options, city_names, group_types, experience_tags
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -36,12 +36,20 @@ try:
     cursor.executemany("INSERT INTO Dg_Group_Types (Group_Type_ID, Group_Type_Name) VALUES (:1, :2)", group_types_with_ids)
     logger.info(f"Inserted {len(group_types_with_ids)} group types.")
 
-    # Step 4: Commit the changes
+    # Step 4: Insert experience tags into the Dg_Tags table
+    logger.info("Inserting experience tags into the Dg_Tags table...")
+    tags_data = [(f"T{i+1:03d}", tag) for i, tag in enumerate(experience_tags)]
+    cursor.executemany("INSERT INTO Dg_Tags (Tag_ID, Tag_Name) VALUES (:1, :2)", tags_data)
+    logger.info(f"Inserted {len(tags_data)} experience tags into the Dg_Tags table.")
+
+    # Step 5: Commit the changes
     connection.commit()
     logger.info("All data inserted successfully.")
 
 except cx_Oracle.DatabaseError as e:
     logger.error(f"An error occurred: {e}")
+    if connection:
+        connection.rollback()
 finally:
     # Clean up by closing the cursor and connection
     if cursor:

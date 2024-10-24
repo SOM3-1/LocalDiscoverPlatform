@@ -11,6 +11,12 @@ CREATE TABLE Dg_Locations (
     Location_Name VARCHAR2(100) NOT NULL UNIQUE
 );
 
+-- Creating the Dg_Tags
+CREATE TABLE Dg_Tags (
+    Tag_ID VARCHAR2(20) PRIMARY KEY,
+    Tag_Name VARCHAR2(50) UNIQUE NOT NULL
+);
+
 -- Creating the Dg_Group_Types
 CREATE TABLE Dg_Group_Types (
     Group_Type_ID VARCHAR2(20) PRIMARY KEY,
@@ -36,20 +42,6 @@ CREATE TABLE Dg_Traveler_Preferences (
     Preference_ID VARCHAR2(20) REFERENCES Dg_Interest_Categories(Category_ID),
     PRIMARY KEY (T_ID, Preference_ID)
 );
-
-CREATE OR REPLACE VIEW Vw_Travelers AS
-SELECT T.T_ID, 
-       T.First_Name, 
-       T.Last_Name, 
-       T.DOB,
-       FLOOR(MONTHS_BETWEEN(SYSDATE, T.DOB) / 12) AS Age,
-       T.Demographic_Type, 
-       T.Sex, 
-       L.Location_Name AS Location,
-       T.Email, 
-       T.Phone
-FROM Dg_Travelers T
-LEFT JOIN Dg_Locations L ON T.Location_ID = L.Location_ID;
 
 -- Creating the Dg_Groups table
 CREATE TABLE Dg_Groups (
@@ -112,22 +104,26 @@ CREATE TABLE Dg_Schedule_Times (
 
 -- Creating the Dg_Experience table
 CREATE TABLE Dg_Experience (
-    Experience_ID VARCHAR2(20) PRIMARY KEY,
-    Title VARCHAR2(100) NOT NULL,
-    Description VARCHAR2(500),
-    Group_Availability VARCHAR2(50),
-    Min_Group_Size NUMBER DEFAULT 0 CHECK (Min_Group_Size >= 0 AND Min_Group_Size <= 20),
-    Max_Group_Size NUMBER DEFAULT 20 CHECK (Max_Group_Size >= 0 AND Max_Group_Size <= 20),
-    Pricing NUMBER CHECK (Pricing >= 0),
-    Service_Provider_ID VARCHAR2(20) REFERENCES Dg_Service_Provider(Service_Provider_ID),
-    Schedule_ID VARCHAR2(20) REFERENCES Dg_Availability_Schedule(Schedule_ID)
-);
+        Experience_ID VARCHAR2(20) PRIMARY KEY,
+        Title VARCHAR2(100) NOT NULL,
+        Description VARCHAR2(500),
+        Group_Availability CHAR(1) CHECK (Group_Availability IN ('Y', 'N')), -- 'Y' for Yes, 'N' for No
+        Min_Group_Size NUMBER DEFAULT 0,
+        Max_Group_Size NUMBER DEFAULT 0,
+        Pricing NUMBER CHECK (Pricing >= 0),
+        Service_Provider_ID VARCHAR2(20) REFERENCES Dg_Service_Provider(Service_Provider_ID),
+        Schedule_ID VARCHAR2(20) REFERENCES Dg_Availability_Schedule(Schedule_ID),
+        CHECK (
+            (Group_Availability = 'Y' AND Min_Group_Size >= 2 AND Min_Group_Size <= 20 AND Max_Group_Size >= Min_Group_Size AND Max_Group_Size <= 20) OR
+            (Group_Availability = 'N' AND Min_Group_Size = 0 AND Max_Group_Size = 0)
+        )
+    );
 
 -- Creating the Dg_Experience_Tags table
 CREATE TABLE Dg_Experience_Tags (
     Experience_ID VARCHAR2(20) REFERENCES Dg_Experience(Experience_ID),
-    Tag VARCHAR2(50),
-    PRIMARY KEY (Experience_ID, Tag)
+    Tag_ID VARCHAR2(20) REFERENCES Dg_Tags(Tag_ID),
+    PRIMARY KEY (Experience_ID, Tag_ID)
 );
 
 -- Creating the Dg_Bookings table
