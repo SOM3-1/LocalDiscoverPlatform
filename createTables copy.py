@@ -95,7 +95,7 @@ create_table_statements = [
         Booking_ID VARCHAR2(20) PRIMARY KEY,
         Traveler_ID VARCHAR2(20) REFERENCES Dg_Travelers(T_ID),
         Experience_ID VARCHAR2(20) REFERENCES Dg_Experience(Experience_ID),
-        Date_Of_Booking DATE NOT NULL,
+        Date_Of_Booking TIMESTAMP NOT NULL,
         Experience_Date DATE NOT NULL,
         Amount_Paid NUMBER NOT NULL CHECK (Amount_Paid >= 0),
         Status VARCHAR2(20),
