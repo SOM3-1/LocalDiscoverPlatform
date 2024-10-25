@@ -16,6 +16,15 @@ dsn = connection
 
 fake = Faker()
 
+def ensure_four_digit_year(date_obj):
+    """
+    Ensures the date has a four-digit year. If the year is less than 100, 
+    adds 2000 to it, assuming it's from the current century.
+    """
+    if date_obj.year < 100:
+        date_obj = date_obj.replace(year=date_obj.year + 2000)
+    return date_obj
+
 def generate_phone_number():
     phone = fake.unique.phone_number()
     return phone[:15]  # Ensure the phone number does not exceed 15 characters
@@ -42,10 +51,11 @@ def generate_non_conflicting_schedule(existing_schedules, location_id, activity_
                     datetime_start=datetime.now() + timedelta(days=1),
                     datetime_end=datetime.now() + timedelta(weeks=4)
                 )
-            
-            # Random duration between 5 hours and 7 days
-            duration_hours = random.randint(5, 24 * 7)
-            end_time = start_time + timedelta(hours=duration_hours)
+
+            # Ensure the start and end times have four-digit years
+            start_time = ensure_four_digit_year(start_time)
+            duration_hours = random.randint(5, 24 * 7)  # Random duration between 5 hours and 7 days
+            end_time = ensure_four_digit_year(start_time + timedelta(hours=duration_hours))
 
             # Check for conflicts with existing schedules
             conflict = any(
@@ -137,7 +147,9 @@ try:
 
             # Add to activity, schedule, times, and locations data
             service_provider_activities_data.append((sp_id, activity_id))
-            activity_schedules_data.append((schedule_id, sp_id, start_time.date()))
+            # Fix date format before adding to the database
+            available_date = ensure_four_digit_year(start_time.date())
+            activity_schedules_data.append((schedule_id, sp_id, available_date.strftime('%Y-%m-%d')))
             schedule_times_data.append((schedule_id, start_time, end_time))
             schedule_locations_data.append((schedule_id, location_id))
             existing_activity_pairs.add((sp_id, activity_id))  # Track this pair

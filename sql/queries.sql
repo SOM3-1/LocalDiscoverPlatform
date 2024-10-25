@@ -762,7 +762,7 @@ GROUP BY
 ORDER BY 
     AverageRating DESC;
 
---Grooup booking analysis
+--Group booking analysis
 SELECT 
     gt.Group_Type_Name,
     COUNT(gm.Group_ID) AS NumberOfGroupBookings

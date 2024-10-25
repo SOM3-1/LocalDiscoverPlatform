@@ -177,3 +177,35 @@ Make sure that:
 
 - **SSH Tunnel Reminder:**
   - Always ensure that the SSH tunnel is open if you are running scripts from your local machine and connecting to Omega's database.
+
+
+### Order of Execution
+
+To ensure the database is set up correctly, follow these steps in the specified order:
+
+1. **Create Tables**
+   - Start by creating the necessary database tables. This defines the schema for each table that will be populated.
+
+2. **Lookup Tables**
+   - Populate lookup tables with reference data, such as booking statuses, payment methods, and categories.
+
+3. **Travelers**
+   - Insert traveler information, including personal details, preferences, and associated locations.
+
+4. **Traveler Groups**
+   - Set up traveler groups, including group categories and membership information.
+
+5. **Service Providers**
+   - Add service providers, including details about the services they offer.
+
+6. **Experiences**
+   - Insert data related to experiences, including schedules, pricing, and associated service providers.
+
+7. **Bookings**
+   - Populate the bookings table, associating travelers with their booked experiences.
+
+8. **Ratings**
+   - Insert traveler ratings and feedback for the experiences they've participated in.
+
+9. **Drop Tables**
+   - If needed, you can drop the tables to clean up the database. This step removes all the data and table definitions. 

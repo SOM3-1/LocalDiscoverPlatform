@@ -32,6 +32,12 @@ def is_duplicate_booking(cursor, traveler_id, experience_id, experience_date):
     """, (traveler_id, experience_id, experience_date.strftime('%Y-%m-%d')))
     return cursor.fetchone()[0] > 0  # Return True if a duplicate is found
 
+def ensure_four_digit_year(date_obj):
+    """Ensure the date has a four-digit year."""
+    if date_obj.year < 100:
+        date_obj = date_obj.replace(year=date_obj.year + 2000)
+    return date_obj
+
 try:
     # Establish a connection to the database
     logger.info("Connecting to the database...")
@@ -73,7 +79,7 @@ try:
         cursor.execute("""
             SELECT Available_Date FROM Dg_Availability_Schedule WHERE Schedule_ID = :1
         """, (schedule_id,))
-        available_dates = [row[0] for row in cursor.fetchall()]
+        available_dates = [ensure_four_digit_year(row[0]) for row in cursor.fetchall()]
 
         if not available_dates:
             continue  # Skip if no available dates for the schedule
@@ -86,18 +92,25 @@ try:
             hours=random.randint(0, 23), minutes=random.randint(0, 59), seconds=random.randint(0, 59)
         )
 
+        # Ensure the booking date has a four-digit year
+        date_of_booking = ensure_four_digit_year(date_of_booking)
+
         # Check for duplicate booking for the same traveler, experience, and date
         if is_duplicate_booking(cursor, traveler_id, experience_id, experience_date):
             continue  # Skip if a duplicate booking exists
 
-        # Randomly choose payment status and map it to corresponding booking status
-        payment_status = random.choice(list(payment_statuses.keys()))
-        if payment_status == 'Pending':
-            booking_status = 'Pending'
-        elif payment_status == 'Completed':
+        # Set booking status with a 70% probability of being 'Completed'
+        if random.random() < 0.7:
+            payment_status = 'Completed'
             booking_status = 'Confirmed'
-        elif payment_status in ['Failed', 'Refunded']:
-            booking_status = 'Cancelled'
+        else:
+            # Randomly select from other statuses (30% of cases)
+            payment_status = random.choice(['Pending', 'Failed', 'Refunded'])
+            if payment_status == 'Pending':
+                booking_status = 'Pending'
+            else:
+                # Both 'Failed' and 'Refunded' map to 'Cancelled' booking status
+                booking_status = 'Cancelled'
 
         # Get the corresponding status IDs
         payment_status_id = payment_statuses[payment_status]
