@@ -1,7 +1,3 @@
-Here's how the updated `README` file should look, including instructions on using `run_scripts_insert.py` for inserting data in a single run:
-
----
-
 ## README
 
 ### Prerequisites
