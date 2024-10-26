@@ -36,6 +36,34 @@ JOIN
 ORDER BY 
     gm.Group_ID, t.T_ID;
 
+---Travelers preference
+SELECT 
+    t.T_ID,
+    t.First_Name || ' ' || t.Last_Name AS Traveler_Name,
+    t.Email,
+    t.Phone,
+    ic.Category_Name AS Preference
+FROM 
+    Dg_Travelers t
+JOIN 
+    Dg_Traveler_Preferences tp ON t.T_ID = tp.T_ID
+JOIN 
+    Dg_Interest_Categories ic ON tp.Preference_ID = ic.Category_ID;
+
+---travelers with most bookings
+SELECT 
+    t.T_ID,
+    t.First_Name || ' ' || t.Last_Name AS Traveler_Name,
+    COUNT(b.Booking_ID) AS Total_Bookings
+FROM 
+    Dg_Travelers t
+JOIN 
+    Dg_Bookings b ON t.T_ID = b.Traveler_ID
+GROUP BY 
+    t.T_ID, t.First_Name, t.Last_Name
+ORDER BY 
+    Total_Bookings DESC;
+
 --- TRAVELERS QUERIES ENDS ---
 
 
@@ -142,9 +170,155 @@ LEFT JOIN
 ORDER BY 
     sp.Name, ic.Category_Name, asch.Available_Date, st.Start_Time;
 
+--- Service Provider Availability ---
+SELECT 
+    SP.Service_Provider_ID,
+    SP.Name AS Service_Provider_Name,
+    L.Location_Name,
+    S.Available_Date,
+    ST.Start_Time,
+    ST.End_Time
+FROM 
+    Dg_Service_Provider SP
+JOIN 
+    Dg_Availability_Schedule S ON SP.Service_Provider_ID = S.Service_Provider_ID
+JOIN 
+    Dg_Schedule_Locations SL ON S.Schedule_ID = SL.Schedule_ID
+JOIN 
+    Dg_Locations L ON SL.Location_ID = L.Location_ID
+JOIN 
+    Dg_Schedule_Times ST ON S.Schedule_ID = ST.Schedule_ID;
+
+--- Service Provider Experience List
+SELECT 
+    SP.Service_Provider_ID,
+    SP.Name AS Service_Provider_Name,
+    E.Experience_ID,
+    E.Title AS Experience_Title,
+    E.Pricing,
+    E.Group_Availability,
+    E.Min_Group_Size,
+    E.Max_Group_Size
+FROM 
+    Dg_Service_Provider SP
+JOIN 
+    Dg_Experience E ON SP.Service_Provider_ID = E.Service_Provider_ID;
+
+--Most booked service provider
+SELECT 
+    SP.Service_Provider_ID,
+    SP.Name AS Service_Provider_Name,
+    COUNT(B.Booking_ID) AS Bookings_Count
+FROM 
+    Dg_Service_Provider SP
+JOIN 
+    Dg_Experience E ON SP.Service_Provider_ID = E.Service_Provider_ID
+JOIN 
+    Dg_Bookings B ON E.Experience_ID = B.Experience_ID
+GROUP BY 
+    SP.Service_Provider_ID, SP.Name
+ORDER BY 
+    Bookings_Count DESC;
+
+---SP by location
+SELECT 
+    L.Location_Name,
+    COUNT(DISTINCT SP.Service_Provider_ID) AS Number_Of_Providers
+FROM 
+    Dg_Locations L
+JOIN 
+    Dg_Schedule_Locations SL ON L.Location_ID = SL.Location_ID
+JOIN 
+    Dg_Availability_Schedule S ON SL.Schedule_ID = S.Schedule_ID
+JOIN 
+    Dg_Service_Provider SP ON S.Service_Provider_ID = SP.Service_Provider_ID
+GROUP BY 
+    L.Location_Name;
+
+--- Top-Rated Experiences per Service Provider
+SELECT 
+    SP.Service_Provider_ID,
+    SP.Name AS Service_Provider_Name,
+    E.Experience_ID,
+    E.Title AS Experience_Title,
+    AVG(R.Rating_Value) AS Average_Rating
+FROM 
+    Dg_Service_Provider SP
+JOIN 
+    Dg_Experience E ON SP.Service_Provider_ID = E.Service_Provider_ID
+JOIN 
+    Dg_Ratings R ON E.Experience_ID = R.Experience_ID
+GROUP BY 
+    SP.Service_Provider_ID, SP.Name, E.Experience_ID, E.Title
+HAVING 
+    AVG(R.Rating_Value) >= 8;  -- Filter to show only highly rated experiences
+
+--- Service Provider Bookings Overview
+SELECT 
+    SP.Service_Provider_ID,
+    SP.Name AS Service_Provider_Name,
+    COUNT(B.Booking_ID) AS Total_Bookings
+FROM 
+    Dg_Service_Provider SP
+JOIN 
+    Dg_Experience E ON SP.Service_Provider_ID = E.Service_Provider_ID
+JOIN 
+    Dg_Bookings B ON E.Experience_ID = B.Experience_ID
+GROUP BY 
+    SP.Service_Provider_ID, SP.Name;
+
+--- Service Provider Ratings and Feedback
+SELECT 
+    SP.Service_Provider_ID,
+    SP.Name AS Service_Provider_Name,
+    AVG(R.Rating_Value) AS Average_Rating,
+    COUNT(R.Rating_ID) AS Number_Of_Ratings
+FROM 
+    Dg_Service_Provider SP
+JOIN 
+    Dg_Experience E ON SP.Service_Provider_ID = E.Service_Provider_ID
+JOIN 
+    Dg_Ratings R ON E.Experience_ID = R.Experience_ID
+GROUP BY 
+    SP.Service_Provider_ID, SP.Name;
+
+---Service Provider Availability Summary
+SELECT 
+    SP.Service_Provider_ID,
+    SP.Name AS Service_Provider_Name,
+    L.Location_Name,
+    S.Available_Date,
+    ST.Start_Time,
+    ST.End_Time
+FROM 
+    Dg_Service_Provider SP
+JOIN 
+    Dg_Availability_Schedule S ON SP.Service_Provider_ID = S.Service_Provider_ID
+JOIN 
+    Dg_Schedule_Locations SL ON S.Schedule_ID = SL.Schedule_ID
+JOIN 
+    Dg_Locations L ON SL.Location_ID = L.Location_ID
+JOIN 
+    Dg_Schedule_Times ST ON S.Schedule_ID = ST.Schedule_ID;
+
+--- Service Provider Details with Offered Activities
+SELECT 
+    SP.Service_Provider_ID,
+    SP.Name AS Service_Provider_Name,
+    SP.Email,
+    SP.Phone,
+    IC.Category_Name AS Activity
+FROM 
+    Dg_Service_Provider SP
+JOIN 
+    Dg_Service_Provider_Activities SPA ON SP.Service_Provider_ID = SPA.Service_Provider_ID
+JOIN 
+    Dg_Interest_Categories IC ON SPA.Activity_ID = IC.Category_ID;
+
+
+
 
 --- SERVICE PROVIDER ENDS ---
-
 
 
 
@@ -201,6 +375,22 @@ LEFT JOIN
 ORDER BY 
     E.Experience_ID, T.Tag_Name;
 
+---Expereince summary 
+SELECT 
+    E.Experience_ID,
+    E.Title,
+    E.Description,
+    E.Pricing,
+    SP.Name AS Service_Provider,
+    L.Location_Name AS Location
+FROM 
+    Dg_Experience E
+JOIN 
+    Dg_Service_Provider SP ON E.Service_Provider_ID = SP.Service_Provider_ID
+JOIN 
+    Dg_Schedule_Locations SL ON E.Schedule_ID = SL.Schedule_ID
+JOIN 
+    Dg_Locations L ON SL.Location_ID = L.Location_ID;
 
 
 --expereince tags concat
@@ -227,6 +417,23 @@ GROUP BY
     E.Title, SP.Name, S.Available_Date, ST.Start_Time, ST.End_Time
 ORDER BY 
     E.Title;
+
+---Experiences by Pricing Range
+SELECT 
+    CASE 
+        WHEN Pricing < 50 THEN 'Low'
+        WHEN Pricing BETWEEN 50 AND 200 THEN 'Medium'
+        ELSE 'High'
+    END AS Price_Range,
+    COUNT(e.Experience_ID) AS Number_Of_Experiences
+FROM 
+    Dg_Experience e
+GROUP BY 
+    CASE 
+        WHEN Pricing < 50 THEN 'Low'
+        WHEN Pricing BETWEEN 50 AND 200 THEN 'Medium'
+        ELSE 'High'
+    END;
 
 --- EXPERIENCE QUERY ENDS ---
 
@@ -261,6 +468,24 @@ JOIN
     Dg_Booking_Methods bm ON b.Booking_Method_ID = bm.Method_ID
 ORDER BY 
     b.Date_Of_Booking DESC;
+
+
+--- Booking and payment status
+SELECT 
+    B.Booking_ID,
+    T.First_Name || ' ' || T.Last_Name AS Traveler_Name,
+    E.Title AS Experience_Title,
+    B.Experience_Date,
+    B.Amount_Paid,
+    PS.Payment_Status_Name AS Payment_Status
+FROM 
+    Dg_Bookings B
+JOIN 
+    Dg_Travelers T ON B.Traveler_ID = T.T_ID
+JOIN 
+    Dg_Experience E ON B.Experience_ID = E.Experience_ID
+JOIN 
+    Dg_Payment_Status PS ON B.Payment_Status_ID = PS.Payment_Status_ID;
 
 --Atleast one booking for a traveler
 SELECT 
@@ -350,8 +575,6 @@ GROUP BY
 ORDER BY 
     NumberOfBookings DESC;
 
-
-
 --Cancelled bookings
 SELECT 
     sp.Service_Provider_ID,
@@ -394,6 +617,28 @@ GROUP BY
 ORDER BY 
     NumberOfCancelledBookings DESC;
 
+-- All the traveler who has booked 
+SELECT 
+    t.T_ID AS TravelerID,
+    t.First_Name || ' ' || t.Last_Name AS TravelerName,
+    t.Email AS TravelerEmail,
+    b.Booking_ID,
+    e.Title AS ExperienceTitle,
+    sp.Name AS ServiceProvider,
+    r.Rating_Value AS Rating,
+    TO_CHAR(r.Review_Date_Time, 'YYYY-MM-DD HH24:MI:SS') AS ReviewDate
+FROM 
+    Dg_Travelers t
+JOIN 
+    Dg_Bookings b ON t.T_ID = b.Traveler_ID
+JOIN 
+    Dg_Experience e ON b.Experience_ID = e.Experience_ID
+JOIN 
+    Dg_Service_Provider sp ON e.Service_Provider_ID = sp.Service_Provider_ID
+LEFT JOIN 
+    Dg_Ratings r ON b.Traveler_ID = r.Traveler_ID AND b.Experience_ID = r.Experience_ID
+ORDER BY 
+    t.T_ID, b.Booking_ID;
 
 --- BOOKINGS QUERY ENDS ---
 
@@ -438,28 +683,6 @@ GROUP BY
 ORDER BY 
     t.T_ID;
 
--- All the traveler who has booked 
-SELECT 
-    t.T_ID AS TravelerID,
-    t.First_Name || ' ' || t.Last_Name AS TravelerName,
-    t.Email AS TravelerEmail,
-    b.Booking_ID,
-    e.Title AS ExperienceTitle,
-    sp.Name AS ServiceProvider,
-    r.Rating_Value AS Rating,
-    TO_CHAR(r.Review_Date_Time, 'YYYY-MM-DD HH24:MI:SS') AS ReviewDate
-FROM 
-    Dg_Travelers t
-JOIN 
-    Dg_Bookings b ON t.T_ID = b.Traveler_ID
-JOIN 
-    Dg_Experience e ON b.Experience_ID = e.Experience_ID
-JOIN 
-    Dg_Service_Provider sp ON e.Service_Provider_ID = sp.Service_Provider_ID
-LEFT JOIN 
-    Dg_Ratings r ON b.Traveler_ID = r.Traveler_ID AND b.Experience_ID = r.Experience_ID
-ORDER BY 
-    t.T_ID, b.Booking_ID;
 
 
 --Traveler reviewd all details
@@ -521,6 +744,23 @@ GROUP BY
     e.Experience_ID, e.Title, e.Description, sp.Name
 ORDER BY 
     AverageRating DESC;
+
+---Top-Rated Experiences Lists 
+SELECT 
+    e.Experience_ID,
+    e.Title,
+    AVG(r.Rating_Value) AS Average_Rating,
+    COUNT(r.Rating_ID) AS Number_Of_Ratings
+FROM 
+    Dg_Experience e
+JOIN 
+    Dg_Ratings r ON e.Experience_ID = r.Experience_ID
+GROUP BY 
+    e.Experience_ID, e.Title
+HAVING 
+    AVG(r.Rating_Value) >= 8
+ORDER BY 
+    Average_Rating DESC;
 
 --- RATINGS QUERY ENDS ---
 
@@ -834,5 +1074,31 @@ GROUP BY
     ps.Payment_Status_Name
 ORDER BY 
     AverageAmountPaid DESC;
+
+--- Service preovider Revenue
+SELECT 
+    sp.Service_Provider_ID,
+    sp.Name AS Service_Provider_Name,
+    COUNT(b.Booking_ID) AS Total_Bookings,
+    SUM(b.Amount_Paid) AS Total_Revenue
+FROM 
+    Dg_Service_Provider sp
+JOIN 
+    Dg_Experience e ON sp.Service_Provider_ID = e.Service_Provider_ID
+JOIN 
+    Dg_Bookings b ON e.Experience_ID = b.Experience_ID
+GROUP BY 
+    sp.Service_Provider_ID, sp.Name;
+
+---Daily bookings
+SELECT 
+    TRUNC(b.Date_Of_Booking) AS Booking_Date,
+    COUNT(b.Booking_ID) AS Number_Of_Bookings
+FROM 
+    Dg_Bookings b
+GROUP BY 
+    TRUNC(b.Date_Of_Booking)
+ORDER BY 
+    Booking_Date;
 
 --- ANALYSIS QUERY ENDS ---

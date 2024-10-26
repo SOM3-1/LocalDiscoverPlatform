@@ -16,18 +16,11 @@ drop_trigger_statements = [
     "DROP TRIGGER trg_Check_Review_Eligibility",
     "DROP TRIGGER trg_Update_Group_Size",
     "DROP TRIGGER trg_Prevent_Leader_As_Member",
-    "DROP TRIGGER trg_Prevent_Past_Bookings",
-    "DROP TRIGGER trg_Default_Payment_Status",
+    "DROP TRIGGER trg_Prevent_Invalid_Booking_Dates",
     "DROP TRIGGER trg_Prevent_Duplicate_Ratings",
     "DROP TRIGGER trg_Prevent_Invalid_Cancellations",
-    "DROP TRIGGER trg_Set_Review_Date_Time",
-    "DROP TRIGGER trg_Check_Guide_Availability",
-    "DROP TRIGGER trg_Prevent_Modifications_To_Past_Bookings",
-    "DROP TRIGGER trg_Auto_Complete_Booking",
     "DROP TRIGGER trg_Prevent_Rating_For_Canceled",
-    "DROP TRIGGER trg_Restrict_Booking_Modifications",
     "DROP TRIGGER trg_Validate_Review_Status",
-    "DROP TRIGGER trg_Auto_Confirm_Booking"
 ]
 
 try:

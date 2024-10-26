@@ -31,7 +31,7 @@ try:
     cursor = connection.cursor()
     logger.info("Database connection established.")
 
-    # Step 1: Retrieve bookings with 'Completed' status
+    # Step 1: Retrieve bookings with 'Confirmed' status
     cursor.execute("""
         SELECT b.Traveler_ID, b.Experience_ID, b.Experience_Date
         FROM Dg_Bookings b
@@ -45,6 +45,17 @@ try:
     ratings_data = []
     for _ in range(num_ratings):
         traveler_id, experience_id, experience_date = random.choice(completed_bookings)
+        
+        # Check if a rating already exists for this traveler and experience
+        cursor.execute("""
+            SELECT COUNT(*) FROM Dg_Ratings
+            WHERE Traveler_ID = :1 AND Experience_ID = :2
+        """, (traveler_id, experience_id))
+        
+        if cursor.fetchone()[0] > 0:
+            logger.info(f"Duplicate rating found for Traveler_ID: {traveler_id} and Experience_ID: {experience_id}. Skipping.")
+            continue  # Skip this iteration if a duplicate is found
+
         rating_value = round(random.uniform(1.0, 10.0), 1)  # Generate a random rating between 1.0 and 10.0
         review_title = fake.sentence(nb_words=5)
         feedback = fake.paragraph(nb_sentences=3)

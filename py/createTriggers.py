@@ -75,25 +75,15 @@ create_trigger_statements = [
             NULL;
     END;
     """,
-    # Trigger to prevent bookings for past dates
+    # Trigger to prevent bookings for experience dates
     """
-    CREATE OR REPLACE TRIGGER trg_Prevent_Past_Bookings
+    CREATE OR REPLACE TRIGGER trg_Prevent_Invalid_Booking_Dates
     BEFORE INSERT OR UPDATE ON Dg_Bookings
     FOR EACH ROW
     BEGIN
-        IF :NEW.Experience_Date < SYSDATE THEN
-            RAISE_APPLICATION_ERROR(-20004, 'Bookings cannot be made for past dates.');
-        END IF;
-    END;
-    """,
-    # Trigger to auto-set payment status to 'Pending'
-    """
-    CREATE OR REPLACE TRIGGER trg_Default_Payment_Status
-    BEFORE INSERT ON Dg_Bookings
-    FOR EACH ROW
-    BEGIN
-        IF :NEW.Payment_Status IS NULL THEN
-            :NEW.Payment_Status := 'Pending';
+        -- Check if the booking date is after the experience date
+        IF :NEW.Date_Of_Booking > :NEW.Experience_Date THEN
+            RAISE_APPLICATION_ERROR(-20004, 'Booking date cannot be after the experience date.');
         END IF;
     END;
     """,
@@ -128,60 +118,8 @@ create_trigger_statements = [
         END IF;
     END;
     """,
-    # Trigger to auto-set the review date to the current date
+    # Trigger to prevent ratings for canceled bookings
     """
-    CREATE OR REPLACE TRIGGER trg_Set_Review_Date_Time
-    BEFORE INSERT ON Dg_Ratings
-    FOR EACH ROW
-    BEGIN
-        :NEW.Review_Date_Time := SYSDATE;
-    END;
-    """,
-    # Trigger to prevent modifications to past bookings
-    """
-    CREATE OR REPLACE TRIGGER trg_Prevent_Modifications_To_Past_Bookings
-    BEFORE UPDATE OR DELETE ON Dg_Bookings
-    FOR EACH ROW
-    BEGIN
-        IF :OLD.Experience_Date < SYSDATE THEN
-            RAISE_APPLICATION_ERROR(-20018, 'Modifications to past bookings are not allowed.');
-        END IF;
-    END;
-    """,
-    # Trigger to check group availability
-    """
-    CREATE OR REPLACE TRIGGER trg_Check_Guide_Availability
-    BEFORE INSERT ON Dg_Bookings
-    FOR EACH ROW
-    DECLARE
-        v_available_count NUMBER;
-    BEGIN
-        -- Check if the guide is available on the selected date for the experience
-        SELECT COUNT(*) INTO v_available_count
-        FROM Dg_Experience e
-        JOIN Dg_Availability_Schedule s ON e.Schedule_ID = s.Schedule_ID
-        WHERE e.Experience_ID = :NEW.Experience_ID
-        AND s.Available_Date = :NEW.Experience_Date;
-
-        -- If no guide is available, raise an error
-        IF v_available_count = 0 THEN
-            RAISE_APPLICATION_ERROR(-20009, 'The guide is not available on the selected date.');
-        END IF;
-    END;
-    """,
-    # Trigger to restrict booking modifications within 48 hours of the experience date
-    """
-    CREATE OR REPLACE TRIGGER trg_Restrict_Booking_Modifications
-    BEFORE UPDATE OR DELETE ON Dg_Bookings
-    FOR EACH ROW
-    BEGIN
-        IF :OLD.Experience_Date - SYSDATE <= 2 THEN
-            RAISE_APPLICATION_ERROR(-20016, 'Bookings cannot be modified within 48 hours of the scheduled date.');
-        END IF;
-    END;
-    """,
-        # Trigger to prevent ratings for canceled bookings
-        """
     CREATE OR REPLACE TRIGGER trg_Prevent_Rating_For_Canceled
     BEFORE INSERT ON Dg_Ratings
     FOR EACH ROW
@@ -198,21 +136,8 @@ create_trigger_statements = [
         END IF;
     END;
     """,
-    # Trigger to automatically mark booking as 'Completed' after the experience date
+    # Trigger to validate that reviews can only be submitted for confirmed bookings
     """
-    CREATE OR REPLACE TRIGGER trg_Auto_Complete_Booking
-    AFTER UPDATE OF Experience_Date ON Dg_Bookings
-    FOR EACH ROW
-    BEGIN
-        IF :NEW.Experience_Date < SYSDATE AND :OLD.Status != 'Completed' THEN
-            UPDATE Dg_Bookings
-            SET Status = 'Completed'
-            WHERE Booking_ID = :NEW.Booking_ID;
-        END IF;
-    END;
-    """,
-    """
-    -- Trigger to validate that reviews can only be submitted for confirmed bookings
     CREATE OR REPLACE TRIGGER trg_Validate_Review_Status
     BEFORE INSERT ON Dg_Ratings
     FOR EACH ROW
@@ -230,19 +155,6 @@ create_trigger_statements = [
             RAISE_APPLICATION_ERROR(-20008, 'Reviews can only be submitted for confirmed bookings.');
         END IF;
     END;
-    """,
-    """
-    CREATE OR REPLACE TRIGGER trg_Auto_Confirm_Booking
-    AFTER UPDATE ON Dg_Bookings
-    FOR EACH ROW
-    BEGIN
-        IF :NEW.Payment_Status = 'Completed' AND :OLD.Payment_Status != 'Completed' THEN
-            UPDATE Dg_Bookings
-            SET Status = 'Confirmed'
-            WHERE Booking_ID = :NEW.Booking_ID;
-        END IF;
-    END
-    /
     """
 ]
 
