@@ -1,5 +1,5 @@
 --- TRAVELERS ---
--- All the travelers with location and preferences
+-- Query: All Travelers with Location and Preferences - VW_DG_TRAVELERS_LOCATION_PREFERENCES
 SELECT 
     t.T_ID,
     t.First_Name,
@@ -22,7 +22,7 @@ JOIN
 ORDER BY 
     t.T_ID, p.Category_Name;
 
---travelers in group
+-- Query: All Travelers in Groups - VW_DG_TRAVELERS_IN_GROUPS
 SELECT 
     t.T_ID,
     t.First_Name,
@@ -36,7 +36,7 @@ JOIN
 ORDER BY 
     gm.Group_ID, t.T_ID;
 
----Travelers preference
+--- Query: All Traveler Preferences - VW_DG_TRAVELER_PREFERENCES
 SELECT 
     t.T_ID,
     t.First_Name || ' ' || t.Last_Name AS Traveler_Name,
@@ -50,7 +50,7 @@ JOIN
 JOIN 
     Dg_Interest_Categories ic ON tp.Preference_ID = ic.Category_ID;
 
----travelers with most bookings
+--- Query: Travelers with the Most Bookings - VW_DG_TRAVELERS_MOST_BOOKINGS
 SELECT 
     t.T_ID,
     t.First_Name || ' ' || t.Last_Name AS Traveler_Name,
@@ -68,7 +68,7 @@ ORDER BY
 
 
 --- GROUP QUERIES ---
---group details
+-- Query: Group Details with Leader and Member Information - VW_DG_GROUP_DETAILS_LEADER_MEMBER
 SELECT 
     g.Group_ID,
     g.Group_Name,
@@ -90,7 +90,7 @@ LEFT JOIN
 ORDER BY 
     g.Group_ID;
 
--- Travelers booked as a group
+-- Query: Travelers Booked as Part of a Group Experience - VW_DG_TRAVELERS_GROUP_BOOKINGS
 SELECT 
     t.T_ID AS TravelerID,
     t.First_Name || ' ' || t.Last_Name AS TravelerName,
@@ -112,7 +112,7 @@ JOIN
 ORDER BY 
     t.T_ID, g.Group_ID;
 
---Leader and their group members
+-- Query: Group Leaders and Their Members - VW_DG_GROUP_LEADERS_MEMBERS
 SELECT 
     g.Group_ID,
     g.Group_Name,
@@ -137,7 +137,7 @@ ORDER BY
 
 --- SERVICE PROVIDER ---
 
---  service provider details 
+-- Query: Service Provider Full Details with Schedule and Activities - VW_DG_SERVICE_PROVIDER_FULL_DETAILS
 SELECT 
     sp.Service_Provider_ID,
     sp.Name,
@@ -170,7 +170,7 @@ LEFT JOIN
 ORDER BY 
     sp.Name, ic.Category_Name, asch.Available_Date, st.Start_Time;
 
---- Service Provider Availability ---
+--- Query: Service Provider Availability by Location and Date - VW_DG_SERVICE_PROVIDER_AVAILABILITY_BY_LOCATION_DATE
 SELECT 
     SP.Service_Provider_ID,
     SP.Name AS Service_Provider_Name,
@@ -189,7 +189,7 @@ JOIN
 JOIN 
     Dg_Schedule_Times ST ON S.Schedule_ID = ST.Schedule_ID;
 
---- Service Provider Experience List
+--- Query: List of Experiences Offered by Each Service Provider - VW_DG_SERVICE_PROVIDER_EXPERIENCES_LIST
 SELECT 
     SP.Service_Provider_ID,
     SP.Name AS Service_Provider_Name,
@@ -204,7 +204,7 @@ FROM
 JOIN 
     Dg_Experience E ON SP.Service_Provider_ID = E.Service_Provider_ID;
 
---Most booked service provider
+-- Query: Most Booked Service Providers - VW_DG_MOST_BOOKED_SERVICE_PROVIDERS
 SELECT 
     SP.Service_Provider_ID,
     SP.Name AS Service_Provider_Name,
@@ -220,7 +220,7 @@ GROUP BY
 ORDER BY 
     Bookings_Count DESC;
 
----SP by location
+--- Query: Service Providers by Location - VW_DG_SERVICE_PROVIDER_BY_LOCATION
 SELECT 
     L.Location_Name,
     COUNT(DISTINCT SP.Service_Provider_ID) AS Number_Of_Providers
@@ -235,7 +235,7 @@ JOIN
 GROUP BY 
     L.Location_Name;
 
---- Top-Rated Experiences per Service Provider
+--- Query: Top-Rated Experiences per Service Provider - VW_DG_SERVICE_PROVIDER_TOP_RATED_EXPERIENCES
 SELECT 
     SP.Service_Provider_ID,
     SP.Name AS Service_Provider_Name,
@@ -253,7 +253,7 @@ GROUP BY
 HAVING 
     AVG(R.Rating_Value) >= 8;  -- Filter to show only highly rated experiences
 
---- Service Provider Bookings Overview
+--- Query: Service Provider Bookings Overview - VW_DG_SERVICE_PROVIDER_BOOKINGS_OVERVIEW
 SELECT 
     SP.Service_Provider_ID,
     SP.Name AS Service_Provider_Name,
@@ -267,7 +267,7 @@ JOIN
 GROUP BY 
     SP.Service_Provider_ID, SP.Name;
 
---- Service Provider Ratings and Feedback
+--- Query: Service Provider Ratings and Feedback Overview - VW_DG_SERVICE_PROVIDER_RATINGS_FEEDBACK_OVERVIEW
 SELECT 
     SP.Service_Provider_ID,
     SP.Name AS Service_Provider_Name,
@@ -282,7 +282,7 @@ JOIN
 GROUP BY 
     SP.Service_Provider_ID, SP.Name;
 
----Service Provider Availability Summary
+--- Query: Service Provider Availability Summary by Date and Location - VW_DG_SERVICE_PROVIDER_AVAILABILITY_SUMMARY
 SELECT 
     SP.Service_Provider_ID,
     SP.Name AS Service_Provider_Name,
@@ -301,7 +301,7 @@ JOIN
 JOIN 
     Dg_Schedule_Times ST ON S.Schedule_ID = ST.Schedule_ID;
 
---- Service Provider Details with Offered Activities
+--- Query: Service Provider Details with Offered Activities - VW_DG_SERVICE_PROVIDER_DETAILS_WITH_ACTIVITIES
 SELECT 
     SP.Service_Provider_ID,
     SP.Name AS Service_Provider_Name,
@@ -315,17 +315,13 @@ JOIN
 JOIN 
     Dg_Interest_Categories IC ON SPA.Activity_ID = IC.Category_ID;
 
-
-
-
 --- SERVICE PROVIDER ENDS ---
 
 
 
 --- EXPEREINCE ---
 
-
---all expe details
+-- Query: Detailed Experience Information with Provider, Tags, and Schedule - VW_DG_EXPERIENCE_DETAILS_PROVIDER_TAGS_SCHEDULE
 SELECT 
     E.Title AS Experience_Name,
     SP.Name AS Service_Provider_Name,
@@ -348,7 +344,7 @@ JOIN
 ORDER BY 
     E.Title, T.Tag_Name;
 
---experience
+-- Query: Complete Experience Details with Tags and Schedule - VW_DG_EXPERIENCE_COMPLETE_DETAILS_TAGS_SCHEDULE
 SELECT 
     E.Experience_ID,
     E.Title AS Experience_Title,
@@ -375,7 +371,7 @@ LEFT JOIN
 ORDER BY 
     E.Experience_ID, T.Tag_Name;
 
----Expereince summary 
+--- Query: Experience Summary with Provider and Location - VW_DG_EXPERIENCE_SUMMARY_PROVIDER_LOCATION
 SELECT 
     E.Experience_ID,
     E.Title,
@@ -393,7 +389,7 @@ JOIN
     Dg_Locations L ON SL.Location_ID = L.Location_ID;
 
 
---expereince tags concat
+-- Query: Experience Details with Concatenated Tags - VW_DG_EXPERIENCE_DETAILS_CONCATENATED_TAGS
 SELECT 
     E.Title AS Experience_Name,
     SP.Name AS Service_Provider_Name,
@@ -418,7 +414,7 @@ GROUP BY
 ORDER BY 
     E.Title;
 
----Experiences by Pricing Range
+--- Query: Experiences Count by Pricing Range - VW_DG_EXPERIENCE_COUNT_BY_PRICING_RANGE
 SELECT 
     CASE 
         WHEN Pricing < 50 THEN 'Low'
@@ -441,7 +437,7 @@ GROUP BY
 
 --- BOOKINGS ---
 
--- Bookings details
+-- Query: Detailed Booking Information with Traveler, Experience, and Status - VW_DG_BOOKING_DETAILS_TRAVELER_EXPERIENCE_STATUS
 SELECT 
     b.Booking_ID,
     b.Traveler_ID,
@@ -470,7 +466,7 @@ ORDER BY
     b.Date_Of_Booking DESC;
 
 
---- Booking and payment status
+--- Query: Booking and Payment Status for Travelers - VW_DG_BOOKING_PAYMENT_STATUS_TRAVELERS
 SELECT 
     B.Booking_ID,
     T.First_Name || ' ' || T.Last_Name AS Traveler_Name,
@@ -487,7 +483,7 @@ JOIN
 JOIN 
     Dg_Payment_Status PS ON B.Payment_Status_ID = PS.Payment_Status_ID;
 
---Atleast one booking for a traveler
+-- Query: Travelers with At Least One Booking - VW_DG_TRAVELERS_WITH_AT_LEAST_ONE_BOOKING
 SELECT 
     t.T_ID, 
     t.First_Name, 
@@ -505,7 +501,7 @@ HAVING
 ORDER BY 
     NumberOfBookings DESC;
 
---More than one booking
+-- Query: Travelers with Multiple Bookings - VW_DG_TRAVELERS_WITH_MULTIPLE_BOOKINGS
 SELECT 
     t.T_ID, 
     t.First_Name, 
@@ -523,7 +519,7 @@ HAVING
 ORDER BY 
     NumberOfBookings DESC;
 
---no bookings
+-- Query: Travelers with No Bookings - VW_DG_TRAVELERS_WITH_NO_BOOKINGS
 SELECT 
     t.T_ID, 
     t.First_Name, 
@@ -538,7 +534,7 @@ WHERE
 ORDER BY 
     t.T_ID;
 
--- Expereince booked by traveler 
+-- Query: Experiences Booked by Each Traveler - VW_DG_EXPERIENCES_BOOKED_BY_TRAVELER
 SELECT 
     e.Experience_ID,
     e.Title AS ExperienceTitle,
@@ -556,7 +552,7 @@ GROUP BY
 ORDER BY 
     NumberOfBookings DESC;
 
---Number of expereinces booked for a service provider
+-- Query: Number of Experiences Booked for Each Service Provider - VW_DG_SERVICE_PROVIDER_BOOKED_EXPERIENCES_COUNT
 SELECT 
     sp.Service_Provider_ID,
     sp.Name AS ServiceProviderName,
@@ -575,7 +571,7 @@ GROUP BY
 ORDER BY 
     NumberOfBookings DESC;
 
---Cancelled bookings
+-- Query: Service Providers with Canceled Bookings - VW_DG_SERVICE_PROVIDERS_WITH_CANCELED_BOOKINGS
 SELECT 
     sp.Service_Provider_ID,
     sp.Name AS ServiceProviderName,
@@ -598,7 +594,7 @@ GROUP BY
 ORDER BY 
     NumberOfCanceledBookings DESC;
 
---Traveler cancelled booking
+-- Query: Travelers with Canceled Bookings - VW_DG_TRAVELERS_WITH_CANCELED_BOOKINGS
 SELECT 
     t.T_ID AS TravelerID,
     t.First_Name || ' ' || t.Last_Name AS TravelerName,
@@ -617,7 +613,7 @@ GROUP BY
 ORDER BY 
     NumberOfCancelledBookings DESC;
 
--- All the traveler who has booked 
+-- Query: All Travelers Who Have Booked an Experience - VW_DG_TRAVELERS_BOOKED_EXPERIENCE
 SELECT 
     t.T_ID AS TravelerID,
     t.First_Name || ' ' || t.Last_Name AS TravelerName,
@@ -646,7 +642,7 @@ ORDER BY
 
 --- RATINGS ---
 
---Traveler who has reviewed
+-- Query: Travelers Who Have Submitted Reviews - VW_DG_TRAVELERS_WITH_REVIEWS
 SELECT 
     t.T_ID, 
     t.First_Name, 
@@ -664,7 +660,7 @@ HAVING
 ORDER BY 
     NumberOfReviews DESC;
 
---Traveler not reviewd
+-- Query: Travelers with No Reviews Submitted - VW_DG_TRAVELERS_WITH_NO_REVIEWS
 SELECT 
     t.T_ID, 
     t.First_Name, 
@@ -685,7 +681,7 @@ ORDER BY
 
 
 
---Traveler reviewd all details
+-- Query: Detailed Review Information for Each Traveler - VW_DG_TRAVELER_REVIEW_DETAILS
 SELECT 
     t.T_ID AS TravelerID,
     t.First_Name || ' ' || t.Last_Name AS TravelerName,
@@ -708,7 +704,7 @@ JOIN
 ORDER BY 
     t.T_ID, b.Booking_ID;
 
---Average rating of service provider 
+-- Query: Average Rating for Each Service Provider - VW_DG_SERVICE_PROVIDER_AVERAGE_RATING
 SELECT 
     sp.Service_Provider_ID,
     sp.Name AS ServiceProviderName,
@@ -727,7 +723,7 @@ GROUP BY
 ORDER BY 
     AverageRating DESC;
 
---Average rating for expereinces
+-- Query: Average Rating for Each Experience - VW_DG_EXPERIENCE_AVERAGE_RATING
 SELECT 
     e.Experience_ID,
     e.Title AS ExperienceTitle,
@@ -745,7 +741,7 @@ GROUP BY
 ORDER BY 
     AverageRating DESC;
 
----Top-Rated Experiences Lists 
+--- Query: Top-Rated Experiences List - VW_DG_TOP_RATED_EXPERIENCES_LIST
 SELECT 
     e.Experience_ID,
     e.Title,
@@ -765,11 +761,9 @@ ORDER BY
 --- RATINGS QUERY ENDS ---
 
 
-
-
 --- ANALYSIS OF BOOKINGS ---
 
---Total earnings for confimed
+-- Query: Total Earnings for Confirmed Bookings by Service Provider - VW_DG_TOTAL_EARNINGS_CONFIRMED
 SELECT 
     sp.Service_Provider_ID,
     sp.Name AS ServiceProviderName,
@@ -793,7 +787,8 @@ ORDER BY
     TotalEarnings DESC;
 
 
--- Total refunded 
+-- Query: Total Refunded Amount by Service Provider - VW_DG_TOTAL_REFUNDED_AMOUNT
+
 SELECT 
     sp.Service_Provider_ID,
     sp.Name AS ServiceProviderName,
@@ -816,7 +811,8 @@ GROUP BY
 ORDER BY 
     TotalRefundedEarnings DESC;
 
---Service Provider with most booking
+-- Query: Service Provider with the Most Bookings - VW_DG_SERVICE_PROVIDER_MOST_BOOKINGS
+
 SELECT 
     sp.Service_Provider_ID,
     sp.Name AS ServiceProviderName,
@@ -833,7 +829,8 @@ ORDER BY
     TotalBookings DESC;
 
 
---Booking over time
+-- Query: Monthly Booking Volume - VW_DG_MONTHLY_BOOKING_VOLUME
+
 SELECT 
     TO_CHAR(Date_Of_Booking, 'YYYY-MM') AS BookingMonth,
     COUNT(Booking_ID) AS NumberOfBookings
@@ -845,7 +842,8 @@ ORDER BY
     BookingMonth;
 
 
---Top locations
+-- Query: Top Locations by Available Experiences - VW_DG_TOP_LOCATIONS_AVAILABLE_EXPERIENCES
+
 SELECT 
     l.Location_ID,
     l.Location_Name,
@@ -863,7 +861,8 @@ GROUP BY
 ORDER BY 
     NumberOfAvailableExperiences DESC;
 
---Average Rating by locations
+-- Query: Average Rating by Location - VW_DG_AVERAGE_RATING_BY_LOCATION
+
 SELECT 
     l.Location_Name,
     AVG(r.Rating_Value) AS AverageRating
@@ -882,7 +881,8 @@ GROUP BY
 ORDER BY 
     AverageRating DESC;
 
---Group booking analysis
+-- Query: Group Booking Analysis by Type - VW_DG_GROUP_BOOKING_ANALYSIS
+
 SELECT 
     gt.Group_Type_Name,
     COUNT(gm.Group_ID) AS NumberOfGroupBookings
@@ -897,7 +897,8 @@ GROUP BY
 ORDER BY 
     NumberOfGroupBookings DESC;
 
---Traveler demographic analysis
+-- Query: Traveler Demographic Booking Analysis - VW_DG_TRAVELER_DEMOGRAPHIC_ANALYSIS
+
 SELECT 
     t.Demographic_Type,
     COUNT(b.Booking_ID) AS NumberOfBookings
@@ -910,7 +911,8 @@ GROUP BY
 ORDER BY 
     NumberOfBookings DESC;
 
---Refund Rate Analysis
+-- Query: Overall Refund Rate Analysis - VW_DG_REFUND_RATE_ANALYSIS
+
 SELECT 
     (COUNT(CASE WHEN b.Payment_Status_ID = 
         (SELECT Payment_Status_ID FROM Dg_Payment_Status WHERE Payment_Status_Name = 'Refunded') 
@@ -918,7 +920,8 @@ SELECT
 FROM 
     Dg_Bookings b;
 
---Locations with most booking
+-- Query: Locations with the Most Bookings - VW_DG_LOCATIONS_MOST_BOOKINGS
+
 SELECT 
     l.Location_ID,
     l.Location_Name,
@@ -939,7 +942,8 @@ ORDER BY
     NumberOfBookings DESC;
 
 
---Highest and lowest Ratings
+-- Query: Service Provider with Highest and Lowest Ratings - VW_DG_HIGHEST_LOWEST_RATED_SERVICE_PROVIDERS
+
 SELECT * FROM (
     SELECT 
         sp.Service_Provider_ID,
@@ -985,7 +989,8 @@ SELECT * FROM (
 ) WHERE ROWNUM = 1;
 
 
---Top 10 highest and top 10 lowest rated service provider
+-- Query: Top 10 Highest and Lowest Rated Service Providers - VW_DG_TOP_10_RATED_SERVICE_PROVIDERS
+
 SELECT * FROM (
     SELECT 
         sp.Service_Provider_ID,
@@ -1031,7 +1036,8 @@ SELECT * FROM (
 ) WHERE ROWNUM <= 10;
 
 
---Most booked Expereince
+-- Query: Most Booked Experiences - VW_DG_MOST_BOOKED_EXPERIENCES
+
 SELECT 
     e.Experience_ID,
     e.Title AS ExperienceTitle,
@@ -1046,7 +1052,8 @@ ORDER BY
     NumberOfBookings DESC
 FETCH FIRST 5 ROWS ONLY;
 
---Top Travelers
+-- Query: Top 10 Travelers by Booking Volume - VW_DG_TOP_10_TRAVELERS_BOOKINGS
+
 SELECT 
     t.T_ID AS TravelerID,
     t.First_Name || ' ' || t.Last_Name AS TravelerName,
@@ -1061,8 +1068,8 @@ ORDER BY
     NumberOfBookings DESC
 FETCH FIRST 10 ROWS ONLY;
 
+-- Query: Average Amount Paid by Payment Status - VW_DG_AVERAGE_AMOUNT_PAID_BY_PAYMENT_STATUS
 
---Average payment status
 SELECT 
     ps.Payment_Status_Name,
     AVG(b.Amount_Paid) AS AverageAmountPaid
@@ -1075,7 +1082,8 @@ GROUP BY
 ORDER BY 
     AverageAmountPaid DESC;
 
---- Service preovider Revenue
+-- Query: Total Revenue by Service Provider - VW_DG_TOTAL_REVENUE_BY_SERVICE_PROVIDER
+
 SELECT 
     sp.Service_Provider_ID,
     sp.Name AS Service_Provider_Name,
@@ -1090,7 +1098,8 @@ JOIN
 GROUP BY 
     sp.Service_Provider_ID, sp.Name;
 
----Daily bookings
+-- Query: Daily Booking Volume - VW_DG_DAILY_BOOKING_VOLUME
+
 SELECT 
     TRUNC(b.Date_Of_Booking) AS Booking_Date,
     COUNT(b.Booking_ID) AS Number_Of_Bookings
@@ -1102,3 +1111,155 @@ ORDER BY
     Booking_Date;
 
 --- ANALYSIS QUERY ENDS ---
+
+--Goals 
+
+-- Query: Guide Engagement and Support Needs - VW_DG_GUIDE_SUPPORT_NEEDS
+
+SELECT 
+    sp.Service_Provider_ID,
+    sp.Name AS Service_Provider_Name,
+    COUNT(b.Booking_ID) AS Booking_Count,
+    AVG(r.Rating_Value) AS Average_Rating
+FROM 
+    Dg_Service_Provider sp
+LEFT JOIN 
+    Dg_Experience e ON sp.Service_Provider_ID = e.Service_Provider_ID
+LEFT JOIN 
+    Dg_Bookings b ON e.Experience_ID = b.Experience_ID
+LEFT JOIN 
+    Dg_Ratings r ON e.Experience_ID = r.Experience_ID
+GROUP BY 
+    sp.Service_Provider_ID, sp.Name
+HAVING 
+    COUNT(b.Booking_ID) < 10 OR AVG(r.Rating_Value) < 3.0;
+
+
+--- Query: Quarterly Revenue Breakdown by Experience Category, Destination, and Service Provider - VW_DG_QUARTERLY_REVENUE_BREAKDOWN
+SELECT 
+    EXTRACT(YEAR FROM b.Date_Of_Booking) AS Year,
+    TO_CHAR(b.Date_Of_Booking, 'Q') AS Quarter,
+    ic.Category_Name AS Experience_Category,
+    loc.Location_Name AS Destination,
+    sp.Name AS Service_Provider,
+    SUM(b.Amount_Paid) AS Total_Revenue
+FROM 
+    Dg_Bookings b
+JOIN 
+    Dg_Experience e ON b.Experience_ID = e.Experience_ID
+JOIN 
+    Dg_Service_Provider sp ON e.Service_Provider_ID = sp.Service_Provider_ID
+JOIN 
+    Dg_Service_Provider_Activities spa ON sp.Service_Provider_ID = spa.Service_Provider_ID
+JOIN 
+    Dg_Interest_Categories ic ON spa.Activity_ID = ic.Category_ID
+JOIN 
+    Dg_Availability_Schedule s ON e.Schedule_ID = s.Schedule_ID
+JOIN 
+    Dg_Schedule_Locations sl ON s.Schedule_ID = sl.Schedule_ID
+JOIN 
+    Dg_Locations loc ON sl.Location_ID = loc.Location_ID
+GROUP BY 
+    EXTRACT(YEAR FROM b.Date_Of_Booking),
+    TO_CHAR(b.Date_Of_Booking, 'Q'),
+    ic.Category_Name,
+    loc.Location_Name,
+    sp.Name;
+
+-- Query: Monthly Booking Trends by Experience Category and Traveler Demographics - VW_DG_MONTHLY_BOOKING_TRENDS
+
+SELECT 
+    EXTRACT(MONTH FROM b.Date_Of_Booking) AS Month,
+    ic.Category_Name AS Experience_Category,
+    COUNT(b.Booking_ID) AS Booking_Count,
+    t.Demographic_Type AS Traveler_Demographic
+FROM 
+    Dg_Bookings b
+JOIN 
+    Dg_Experience e ON b.Experience_ID = e.Experience_ID
+JOIN 
+    Dg_Travelers t ON b.Traveler_ID = t.T_ID
+JOIN 
+    Dg_Service_Provider sp ON e.Service_Provider_ID = sp.Service_Provider_ID
+JOIN 
+    Dg_Service_Provider_Activities spa ON sp.Service_Provider_ID = spa.Service_Provider_ID
+JOIN 
+    Dg_Interest_Categories ic ON spa.Activity_ID = ic.Category_ID
+GROUP BY 
+    EXTRACT(MONTH FROM b.Date_Of_Booking),
+    ic.Category_Name,
+    t.Demographic_Type;
+
+-- Query: Repeat Travelers with Preferences - VW_DG_REPEAT_TRAVELERS_PREFERENCES
+
+SELECT 
+    t.T_ID AS Traveler_ID,
+    t.First_Name || ' ' || t.Last_Name AS Traveler_Name,
+    COUNT(b.Booking_ID) AS Total_Bookings,
+    LISTAGG(ic.Category_Name, ', ') WITHIN GROUP (ORDER BY ic.Category_Name) AS Preferences
+FROM 
+    Dg_Travelers t
+JOIN 
+    Dg_Bookings b ON t.T_ID = b.Traveler_ID
+JOIN 
+    Dg_Traveler_Preferences tp ON t.T_ID = tp.T_ID
+JOIN 
+    Dg_Interest_Categories ic ON tp.Preference_ID = ic.Category_ID
+GROUP BY 
+    t.T_ID,
+    t.First_Name,
+    t.Last_Name
+HAVING 
+    COUNT(b.Booking_ID) > 1;
+
+-- Query: Experience Diversity by Category and Location - VW_DG_EXPERIENCE_DIVERSITY
+
+SELECT 
+    ic.Category_Name AS Experience_Category,
+    loc.Location_Name AS Location,
+    COUNT(e.Experience_ID) AS Experience_Count
+FROM 
+    Dg_Experience e
+JOIN 
+    Dg_Service_Provider sp ON e.Service_Provider_ID = sp.Service_Provider_ID
+JOIN 
+    Dg_Service_Provider_Activities spa ON sp.Service_Provider_ID = spa.Service_Provider_ID
+JOIN 
+    Dg_Interest_Categories ic ON spa.Activity_ID = ic.Category_ID
+JOIN 
+    Dg_Availability_Schedule s ON e.Schedule_ID = s.Schedule_ID
+JOIN 
+    Dg_Schedule_Locations sl ON s.Schedule_ID = sl.Schedule_ID
+JOIN 
+    Dg_Locations loc ON sl.Location_ID = loc.Location_ID
+GROUP BY 
+    ic.Category_Name,
+    loc.Location_Name;
+
+-- Query: Monthly Booking Count by Experience - VW_DG_MONTHLY_BOOKING_COUNT_BY_EXPERIENCE
+
+SELECT 
+    EXTRACT(MONTH FROM b.Experience_Date) AS Month,
+    COUNT(b.Booking_ID) AS Booking_Count,
+    e.Title AS Experience_Title
+FROM 
+    Dg_Bookings b
+JOIN 
+    Dg_Experience e ON b.Experience_ID = e.Experience_ID
+GROUP BY 
+    EXTRACT(MONTH FROM b.Experience_Date),
+    e.Title
+ORDER BY 
+    Booking_Count DESC;
+
+-- Query: Average Days Between Booking and Experience Date by Title - VW_DG_AVG_DAYS_BETWEEN_BOOKING_EXPERIENCE
+
+SELECT 
+    AVG(TRUNC(b.Experience_Date) - TRUNC(b.Date_Of_Booking)) AS Avg_Days_Between_Booking,
+    e.Title AS Experience_Title
+FROM 
+    Dg_Bookings b
+JOIN 
+    Dg_Experience e ON b.Experience_ID = e.Experience_ID
+GROUP BY 
+    e.Title;
