@@ -116,43 +116,37 @@ Make sure that:
 #### 1. `credentials.py`
    - Stores database connection credentials such as the username, password, and connection string. **Remember to edit this file to enter your database credentials before running any scripts.**
 
-#### 2. `createTables.py`
-   - Creates the necessary database tables for the project. It contains the SQL commands to define the schema for each table.
+#### 2. `createAll.py`
+   - Creates the necessary database tables and triggers for the project. It contains the SQL commands to define the schema for each table.
 
-#### 3. `createTriggers.py`
-   - Creates triggers in the database. Triggers automatically execute specific actions in response to certain events on a table (e.g., insert, update, or delete operations).
-
-#### 4. `createViews.py`
+#### 3. `createViews.py`
    - Creates views in the database, which are virtual tables representing the result of a query. Views can simplify data retrieval and improve query readability.
 
-#### 5. `dropTables.py`
-   - Drops (deletes) the tables from the database. Useful for cleaning up or resetting the schema.
+#### 4. `dropAll.py`
+   - Drops (deletes) the triggers and tables from the database. Useful for cleaning up or resetting the schema.
 
-#### 6. `dropTriggers.py`
-   - Drops the triggers from the database, removing any automated actions set up in the database.
-
-#### 7. `dropViews.py`
+#### 5. `dropViews.py`
    - Drops the views from the database, removing any virtual tables created with `createViews.py`.
 
-#### 8. `insert_experiences.py`
+#### 6. `insert_experiences.py`
    - Inserts data into the `Dg_Experience` table. This script adds records for different experiences using data generated from the `mocks.py` file or other sources.
 
-#### 9. `insert_groups.py`
+#### 7. `insert_groups.py`
    - Adds data to the table that manages group-related information, such as group bookings or categories.
 
-#### 10. `insert_lookup_tables.py`
+#### 8. `insert_lookup_tables.py`
    - Populates the lookup tables with reference data used across different tables. The data for these tables is typically provided in `mocks.py`.
 
-#### 11. `insert_service_providers.py`
+#### 9. `insert_service_providers.py`
    - Inserts records into the `Dg_Service_Providers` table, which stores information about service providers who offer various experiences.
 
-#### 12. `insert_travellers.py`
+#### 10. `insert_travellers.py`
    - Adds records to the `Dg_Travelers` table, representing travelers or users who participate in the experiences.
 
-#### 13. `mocks.py`
+#### 11. `mocks.py`
    - Contains mock data used for populating the database. Includes lists of sample data such as city names, experience tags, categories, and other reference data.
 
-#### 14. `run_scripts_insert.py`
+#### 12. `run_scripts_insert.py`
    - Automates the process of running multiple insert scripts in a sequence to populate the database tables with initial data. **If you want to insert all the data in a single run, use this script.**
 
 ### Summary
@@ -179,8 +173,8 @@ Make sure that:
 
 To ensure the database is set up correctly, follow these steps in the specified order:
 
-1. **Create Tables**
-   - Start by creating the necessary database tables. This defines the schema for each table that will be populated.
+1. **Create Tables and Triggers**
+   - Start by creating the necessary database tables and triggers. This defines the schema for each table that will be populated.
 
 2. **Lookup Tables**
    - Populate lookup tables with reference data, such as booking statuses, payment methods, and categories.
@@ -203,5 +197,5 @@ To ensure the database is set up correctly, follow these steps in the specified 
 8. **Ratings**
    - Insert traveler ratings and feedback for the experiences they've participated in.
 
-9. **Drop Tables**
-   - If needed, you can drop the tables to clean up the database. This step removes all the data and table definitions. 
+9. **Drop Triggers and Tables**
+   - If needed, you can drop the triggers and tables to clean up the database. This step removes all the data, trigger and table definitions. 

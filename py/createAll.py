@@ -177,6 +177,149 @@ create_table_statements = [
     """,
 ]
 
+create_trigger_statements = [
+    # Validate Review Eligibility - trg_Review_Eligibility
+    """
+    CREATE OR REPLACE TRIGGER trg_Review_Eligibility
+    BEFORE INSERT ON Dg_Ratings
+    FOR EACH ROW
+    DECLARE
+        v_booking_status VARCHAR2(20);
+        v_confirmed_status_id VARCHAR2(20);
+        v_canceled_status_id VARCHAR2(20);
+    BEGIN
+        -- Get the status IDs for 'Confirmed' and 'Canceled'
+        SELECT Status_ID INTO v_confirmed_status_id FROM Dg_Booking_Status WHERE Status_Name = 'Confirmed';
+        SELECT Status_ID INTO v_canceled_status_id FROM Dg_Booking_Status WHERE Status_Name = 'Cancelled';
+
+        -- Retrieve the booking status for the traveler and experience
+        SELECT Booking_Status_ID INTO v_booking_status
+        FROM Dg_Bookings
+        WHERE Traveler_ID = :NEW.Traveler_ID
+        AND Experience_ID = :NEW.Experience_ID;
+
+        -- Ensure the booking is confirmed and not canceled
+        IF v_booking_status != v_confirmed_status_id THEN
+            RAISE_APPLICATION_ERROR(-20008, 'Reviews can only be submitted for confirmed bookings.');
+        ELSIF v_booking_status = v_canceled_status_id THEN
+            RAISE_APPLICATION_ERROR(-20017, 'Ratings cannot be submitted for canceled bookings.');
+        END IF;
+
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            RAISE_APPLICATION_ERROR(-20018, 'No booking found for this traveler and experience.');
+    END;
+    """,
+    # Compound Trigger to update Group_Size after adding or removing a member
+    """
+    CREATE OR REPLACE TRIGGER trg_Update_Group_Size
+    FOR INSERT OR DELETE ON Dg_Group_Members
+    COMPOUND TRIGGER
+        v_group_id VARCHAR2(20);
+
+    BEFORE EACH ROW IS
+    BEGIN
+        IF INSERTING THEN
+            v_group_id := :NEW.Group_ID;
+        ELSIF DELETING THEN
+            v_group_id := :OLD.Group_ID;
+        END IF;
+    END BEFORE EACH ROW;
+
+    AFTER STATEMENT IS
+    BEGIN
+        UPDATE Dg_Groups
+        SET Group_Size = (SELECT COUNT(*) FROM Dg_Group_Members WHERE Group_ID = v_group_id)
+        WHERE Group_ID = v_group_id;
+    END AFTER STATEMENT;
+    END trg_Update_Group_Size;
+    """,
+    # Trigger to prevent the group leader from being added as a member
+    """
+    CREATE OR REPLACE TRIGGER trg_Prevent_Leader_As_Member
+    BEFORE INSERT ON Dg_Group_Members
+    FOR EACH ROW
+    DECLARE
+        v_group_leader_id VARCHAR2(20);
+    BEGIN
+        SELECT Group_Leader_T_ID INTO v_group_leader_id
+        FROM Dg_Groups
+        WHERE Group_ID = :NEW.Group_ID
+          AND Group_Leader_T_ID IS NOT NULL;
+
+        IF :NEW.T_ID = v_group_leader_id THEN
+            RAISE_APPLICATION_ERROR(-20002, 'Group leader cannot be added as a regular member.');
+        END IF;
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            NULL;
+    END;
+    """,
+    # Trigger to prevent bookings for experience dates
+    """
+    CREATE OR REPLACE TRIGGER trg_Prevent_Invalid_Booking_Dates
+    BEFORE INSERT OR UPDATE ON Dg_Bookings
+    FOR EACH ROW
+    BEGIN
+        -- Check if the booking date is after the experience date
+        IF :NEW.Date_Of_Booking > :NEW.Experience_Date THEN
+            RAISE_APPLICATION_ERROR(-20004, 'Booking date cannot be after the experience date.');
+        END IF;
+    END;
+    """,
+    # Trigger to prevent cancellations for past or completed bookings
+    """
+    CREATE OR REPLACE TRIGGER trg_Prevent_Invalid_Cancellations
+    BEFORE UPDATE ON Dg_Bookings
+    FOR EACH ROW
+    BEGIN
+        IF :NEW.Status = 'Canceled' THEN
+            IF :OLD.Experience_Date < SYSDATE OR :OLD.Status = 'Completed' THEN
+                RAISE_APPLICATION_ERROR(-20007, 'Booking cannot be canceled after the experience date or once it is completed.');
+            END IF;
+        END IF;
+    END;
+    """,
+    # Trigger to prevent ratings for canceled bookings
+    """
+    CREATE OR REPLACE TRIGGER trg_Prevent_Rating_For_Canceled
+    BEFORE INSERT ON Dg_Ratings
+    FOR EACH ROW
+    DECLARE
+        v_booking_status VARCHAR2(20);
+    BEGIN
+        SELECT Status INTO v_booking_status
+        FROM Dg_Bookings
+        WHERE Traveler_ID = :NEW.Traveler_ID
+        AND Experience_ID = :NEW.Experience_ID;
+        
+        IF v_booking_status = 'Canceled' THEN
+            RAISE_APPLICATION_ERROR(-20017, 'Ratings cannot be submitted for canceled bookings.');
+        END IF;
+    END;
+    """,
+    # Trigger to validate that reviews can only be submitted for confirmed bookings
+    """
+    CREATE OR REPLACE TRIGGER trg_Validate_Review_Status
+    BEFORE INSERT ON Dg_Ratings
+    FOR EACH ROW
+    DECLARE
+        v_booking_status VARCHAR2(20);
+    BEGIN
+        -- Get the booking status for the corresponding traveler and experience
+        SELECT Status INTO v_booking_status
+        FROM Dg_Bookings
+        WHERE Traveler_ID = :NEW.Traveler_ID
+        AND Experience_ID = :NEW.Experience_ID;
+
+        -- Ensure the booking status is 'Confirmed'
+        IF v_booking_status != 'Confirmed' THEN
+            RAISE_APPLICATION_ERROR(-20008, 'Reviews can only be submitted for confirmed bookings.');
+        END IF;
+    END;
+    """
+]
+
 try:
     # Establish a connection to the database
     logger.info("Connecting to the database...")
@@ -193,9 +336,17 @@ try:
         except cx_Oracle.DatabaseError as e:
             logger.error(f"An error occurred while creating the table: {e}")
 
+    for create_trigger_sql in create_trigger_statements:
+        try:
+            logger.info(f"Executing: {create_trigger_sql.splitlines()[1].strip()}")
+            cursor.execute(create_trigger_sql)
+            logger.info("Trigger created successfully.")
+        except cx_Oracle.DatabaseError as e:
+            logger.error(f"An error occurred while creating the trigger: {e}")
+
     # Commit the changes
     connection.commit()
-    logger.info("All tables and view created successfully.")
+    logger.info("All tables and triggers created successfully.")
 
 except cx_Oracle.DatabaseError as e:
     logger.error(f"An error occurred: {e}")
