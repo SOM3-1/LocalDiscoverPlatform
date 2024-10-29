@@ -4,6 +4,7 @@ import random
 from faker import Faker
 from mocks import preference_options
 from credentials import netid, pwd, connection
+from setupConfig import num_tags
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -108,8 +109,7 @@ try:
             service_provider_id, schedule_id
         ))
 
-        # Step 6: Assign 1-3 random tags to each experience
-        num_tags = random.randint(1, 3)
+        # Step 6: Assign 1-n random tags to each experience
         selected_tags = random.sample(tags, num_tags)
         for tag_id, _ in selected_tags:
             experience_tags_data.append((experience_id, tag_id))

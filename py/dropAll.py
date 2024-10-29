@@ -41,7 +41,8 @@ drop_table_statements = [
     "DROP TABLE Dg_Tags CASCADE CONSTRAINTS",
     "DROP TABLE Dg_Booking_Methods CASCADE CONSTRAINTS",
     "DROP TABLE Dg_Booking_Status CASCADE CONSTRAINTS",
-    "DROP TABLE Dg_Payment_Status CASCADE CONSTRAINTS"
+    "DROP TABLE Dg_Payment_Status CASCADE CONSTRAINTS",
+    "PURGE RECYCLEBIN"
 ]
 
 

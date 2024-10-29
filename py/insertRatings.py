@@ -16,13 +16,12 @@ dsn = connection
 
 fake = Faker()
 
-def generate_unique_rating_id(cursor):
-    """Generate a unique Rating ID."""
-    while True:
-        rating_id = f"R{random.randint(1, 99999):05d}"
-        cursor.execute("SELECT COUNT(*) FROM Dg_Ratings WHERE Rating_ID = :1", (rating_id,))
-        if cursor.fetchone()[0] == 0:  # No existing Rating_ID found
-            return rating_id
+def generate_unique_rating_ids(count):
+    """Generate exactly `count` unique Rating IDs."""
+    unique_ids = set()
+    while len(unique_ids) < count:
+        unique_ids.add(f"R{random.randint(1, 99999):05d}")
+    return list(unique_ids)
 
 def generate_rating_data(rating_value):
     """Generate review title and feedback based on rating value."""
@@ -32,10 +31,9 @@ def generate_rating_data(rating_value):
     elif 5 <= rating_value <= 7:
         title = random.choice(["Decent experience", "It was okay", "Average outing"])
         feedback = f"{fake.sentence()} The experience was alright but could use some enhancements. The {fake.word()} section was satisfactory but nothing extraordinary."
-    else:  # rating_value between 8 and 10
+    else:
         title = random.choice(["Amazing experience!", "Highly recommended", "Would do it again"])
         feedback = f"{fake.sentence()} The experience exceeded my expectations! I particularly enjoyed the {fake.word()} aspect and would recommend it to others."
-
     return title, feedback
 
 try:
@@ -55,11 +53,13 @@ try:
     completed_bookings = cursor.fetchall()
     num_ratings = int(len(completed_bookings) * 0.8)  # Targeting 80% of eligible bookings
 
-    # Dictionary to track unique traveler-experience pairs
-    eligible_reviews = {(traveler_id, experience_id): experience_date for traveler_id, experience_id, experience_date in completed_bookings}
+    # Pre-generate unique Rating IDs
+    rating_ids = list(generate_unique_rating_ids(num_ratings))
 
     ratings_data = []
-    for _ in range(num_ratings):
+    eligible_reviews = {(traveler_id, experience_id): experience_date for traveler_id, experience_id, experience_date in completed_bookings}
+
+    for i in range(num_ratings):
         # Select a random (Traveler_ID, Experience_ID) pair
         traveler_experience_pair = random.choice(list(eligible_reviews.keys()))
         traveler_id, experience_id = traveler_experience_pair
@@ -71,13 +71,12 @@ try:
         # Ensure the review date is after the experience date
         days_after = random.randint(1, 30)  # Randomly add 1-30 days after experience
         review_date_time = experience_date + timedelta(days=days_after)
-        # Add random time to the review date
         review_date_time = datetime.combine(review_date_time, datetime.min.time()) + timedelta(
             hours=random.randint(0, 23), minutes=random.randint(0, 59), seconds=random.randint(0, 59)
         )
 
-        # Generate a unique Rating ID
-        rating_id = generate_unique_rating_id(cursor)
+        # Use a pre-generated unique Rating ID
+        rating_id = rating_ids[i]
 
         ratings_data.append((
             rating_id, traveler_id, experience_id, rating_value, review_date_time.strftime('%Y-%m-%d %H:%M:%S'),

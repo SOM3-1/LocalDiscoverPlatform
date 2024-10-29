@@ -73,4 +73,5 @@ DROP TABLE Dg_Booking_Status CASCADE CONSTRAINTS;
 -- Drop the Dg_Payment_Status table
 DROP TABLE Dg_Payment_Status CASCADE CONSTRAINTS;
 
-
+-- Clear recycle bin
+PURGE RECYCLEBIN;

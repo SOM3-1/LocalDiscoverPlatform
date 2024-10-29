@@ -5,6 +5,7 @@ from mocks import preference_options, city_names
 from faker import Faker
 from datetime import date
 from credentials import netid, pwd, connection
+from setupConfig import total_travelers, num_preferences
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -51,8 +52,6 @@ try:
     cursor.execute("SELECT Category_ID FROM Dg_Interest_Categories")
     preference_ids = [row[0] for row in cursor.fetchall()]
 
-    # Total number of travelers
-    total_travelers = 5000
     commit_interval = int(total_travelers * 0.2)  # Commit every 20% of total records
 
     # Step 3: Insert travelers with a reference to Dg_Locations
@@ -90,7 +89,6 @@ try:
     traveler_preferences_data = []
     for traveler_id in range(1, total_travelers + 1):
         t_id = f"T{traveler_id:05d}"
-        num_preferences = random.randint(1, 3)  # Each traveler can have 1-3 preferences
         selected_preferences = random.sample(preference_ids, num_preferences)
         for pref_id in selected_preferences:
             traveler_preferences_data.append((t_id, pref_id))
