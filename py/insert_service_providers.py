@@ -42,14 +42,14 @@ def generate_non_conflicting_schedule(existing_schedules, location_id, activity_
             if random.choice([True, False]):
                 # Past activity: schedule within the past 4 weeks
                 start_time = fake.date_time_between_dates(
-                    datetime_start=datetime.now() - timedelta(weeks=4),
+                    datetime_start=datetime.now() - timedelta(weeks=52),
                     datetime_end=datetime.now() - timedelta(days=1)
                 )
             else:
                 # Future activity: schedule within the next 4 weeks
                 start_time = fake.date_time_between_dates(
                     datetime_start=datetime.now() + timedelta(days=1),
-                    datetime_end=datetime.now() + timedelta(weeks=4)
+                    datetime_end=datetime.now() + timedelta(weeks=10)
                 )
 
             # Ensure the start and end times have four-digit years

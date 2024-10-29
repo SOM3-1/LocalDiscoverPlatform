@@ -51,10 +51,14 @@ try:
     cursor.execute("SELECT Category_ID FROM Dg_Interest_Categories")
     preference_ids = [row[0] for row in cursor.fetchall()]
 
+    # Total number of travelers
+    total_travelers = 5000
+    commit_interval = int(total_travelers * 0.2)  # Commit every 20% of total records
+
     # Step 3: Insert travelers with a reference to Dg_Locations
     logger.info("Inserting travelers into the Dg_Travelers table...")
     travelers_data = []
-    for i in range(1, 1001):  # Generate 1000 travelers
+    for i in range(1, total_travelers + 1):
         location_id = random.choice(location_ids)
         dob = fake.date_of_birth(minimum_age=18, maximum_age=80)
         demographic_type = get_demographic_type(dob)
@@ -71,36 +75,43 @@ try:
         )
         travelers_data.append(traveler)
 
-    cursor.executemany("""
-    INSERT INTO Dg_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone)
-    VALUES (:1, :2, :3, TO_DATE(:4, 'YYYY-MM-DD'), :5, :6, :7, :8, :9)
-    """, travelers_data)
-    logger.info(f"Inserted {len(travelers_data)} travelers.")
+        # Insert in batches of 20% and commit
+        if i % commit_interval == 0 or i == total_travelers:
+            cursor.executemany("""
+            INSERT INTO Dg_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone)
+            VALUES (:1, :2, :3, TO_DATE(:4, 'YYYY-MM-DD'), :5, :6, :7, :8, :9)
+            """, travelers_data)
+            connection.commit()
+            logger.info(f"Committed {i} travelers.")
+            travelers_data = []  # Clear the list for the next batch
 
-    # Step 4: Insert traveler preferences into the Dg_Traveler_Preferences table
+    # Step 4: Insert traveler preferences
     logger.info("Inserting traveler preferences into the Dg_Traveler_Preferences table...")
     traveler_preferences_data = []
-    for traveler in travelers_data:
-        t_id = traveler[0]
+    for traveler_id in range(1, total_travelers + 1):
+        t_id = f"T{traveler_id:05d}"
         num_preferences = random.randint(1, 3)  # Each traveler can have 1-3 preferences
         selected_preferences = random.sample(preference_ids, num_preferences)
         for pref_id in selected_preferences:
             traveler_preferences_data.append((t_id, pref_id))
 
-    cursor.executemany("""
-    INSERT INTO Dg_Traveler_Preferences (T_ID, Preference_ID) 
-    VALUES (:1, :2)
-    """, traveler_preferences_data)
-    logger.info(f"Inserted {len(traveler_preferences_data)} traveler preferences.")
+        # Insert preferences in batches and commit every 20%
+        if traveler_id % commit_interval == 0 or traveler_id == total_travelers:
+            cursor.executemany("""
+            INSERT INTO Dg_Traveler_Preferences (T_ID, Preference_ID) 
+            VALUES (:1, :2)
+            """, traveler_preferences_data)
+            connection.commit()
+            logger.info(f"Committed preferences for {traveler_id} travelers.")
+            traveler_preferences_data = []  # Clear for the next batch
 
-    # Step 5: Commit the changes
-    connection.commit()
     logger.info("All traveler data inserted successfully.")
 
 except cx_Oracle.DatabaseError as e:
     logger.error(f"An error occurred: {e}")
+    if connection:
+        connection.rollback()
 finally:
-    # Clean up by closing the cursor and connection
     if cursor:
         cursor.close()
         logger.info("Cursor closed.")

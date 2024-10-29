@@ -172,7 +172,8 @@ create_table_statements = [
         Rating_Value NUMBER CHECK (Rating_Value BETWEEN 1 AND 10),
         Review_Date_Time TIMESTAMP DEFAULT SYSDATE, -- Set default review date to the current date
         Feedback VARCHAR2(500),
-        Review_Title VARCHAR2(100)
+        Review_Title VARCHAR2(100),
+        CONSTRAINT unique_traveler_experience UNIQUE (Traveler_ID, Experience_ID)
     )
     """,
 ]
