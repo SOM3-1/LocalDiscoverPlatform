@@ -279,44 +279,6 @@ create_trigger_statements = [
             END IF;
         END IF;
     END;
-    """,
-    # Trigger to prevent ratings for canceled bookings
-    """
-    CREATE OR REPLACE TRIGGER trg_Prevent_Rating_For_Canceled
-    BEFORE INSERT ON Dg_Ratings
-    FOR EACH ROW
-    DECLARE
-        v_booking_status VARCHAR2(20);
-    BEGIN
-        SELECT Status INTO v_booking_status
-        FROM Dg_Bookings
-        WHERE Traveler_ID = :NEW.Traveler_ID
-        AND Experience_ID = :NEW.Experience_ID;
-        
-        IF v_booking_status = 'Canceled' THEN
-            RAISE_APPLICATION_ERROR(-20017, 'Ratings cannot be submitted for canceled bookings.');
-        END IF;
-    END;
-    """,
-    # Trigger to validate that reviews can only be submitted for confirmed bookings
-    """
-    CREATE OR REPLACE TRIGGER trg_Validate_Review_Status
-    BEFORE INSERT ON Dg_Ratings
-    FOR EACH ROW
-    DECLARE
-        v_booking_status VARCHAR2(20);
-    BEGIN
-        -- Get the booking status for the corresponding traveler and experience
-        SELECT Status INTO v_booking_status
-        FROM Dg_Bookings
-        WHERE Traveler_ID = :NEW.Traveler_ID
-        AND Experience_ID = :NEW.Experience_ID;
-
-        -- Ensure the booking status is 'Confirmed'
-        IF v_booking_status != 'Confirmed' THEN
-            RAISE_APPLICATION_ERROR(-20008, 'Reviews can only be submitted for confirmed bookings.');
-        END IF;
-    END;
     """
 ]
 

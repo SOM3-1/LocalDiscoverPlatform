@@ -24,6 +24,20 @@ def generate_unique_rating_id(cursor):
         if cursor.fetchone()[0] == 0:  # No existing Rating_ID found
             return rating_id
 
+def generate_rating_data(rating_value):
+    """Generate review title and feedback based on rating value."""
+    if rating_value <= 4:
+        title = random.choice(["Disappointing experience", "Not worth it", "Could be better"])
+        feedback = f"{fake.sentence()} Unfortunately, the experience did not meet my expectations. The {fake.word()} part was underwhelming and needs improvement."
+    elif 5 <= rating_value <= 7:
+        title = random.choice(["Decent experience", "It was okay", "Average outing"])
+        feedback = f"{fake.sentence()} The experience was alright but could use some enhancements. The {fake.word()} section was satisfactory but nothing extraordinary."
+    else:  # rating_value between 8 and 10
+        title = random.choice(["Amazing experience!", "Highly recommended", "Would do it again"])
+        feedback = f"{fake.sentence()} The experience exceeded my expectations! I particularly enjoyed the {fake.word()} aspect and would recommend it to others."
+
+    return title, feedback
+
 try:
     # Establish a connection to the database
     logger.info("Connecting to the database...")
@@ -31,7 +45,7 @@ try:
     cursor = connection.cursor()
     logger.info("Database connection established.")
 
-    # Step 1: Retrieve bookings with 'Confirmed' status
+    # Retrieve eligible bookings with 'Confirmed' status
     cursor.execute("""
         SELECT b.Traveler_ID, b.Experience_ID, b.Experience_Date
         FROM Dg_Bookings b
@@ -39,29 +53,23 @@ try:
         WHERE bs.Status_Name = 'Confirmed'
     """)
     completed_bookings = cursor.fetchall()
-    num_ratings = int(len(completed_bookings) * 0.8)  # 80% of eligible bookings
+    num_ratings = int(len(completed_bookings) * 0.8)  # Targeting 80% of eligible bookings
 
-    # Step 2: Generate ratings
+    # Dictionary to track unique traveler-experience pairs
+    eligible_reviews = {(traveler_id, experience_id): experience_date for traveler_id, experience_id, experience_date in completed_bookings}
+
     ratings_data = []
     for _ in range(num_ratings):
-        traveler_id, experience_id, experience_date = random.choice(completed_bookings)
-        
-        # Check if a rating already exists for this traveler and experience
-        cursor.execute("""
-            SELECT COUNT(*) FROM Dg_Ratings
-            WHERE Traveler_ID = :1 AND Experience_ID = :2
-        """, (traveler_id, experience_id))
-        
-        if cursor.fetchone()[0] > 0:
-            logger.info(f"Duplicate rating found for Traveler_ID: {traveler_id} and Experience_ID: {experience_id}. Skipping.")
-            continue  # Skip this iteration if a duplicate is found
+        # Select a random (Traveler_ID, Experience_ID) pair
+        traveler_experience_pair = random.choice(list(eligible_reviews.keys()))
+        traveler_id, experience_id = traveler_experience_pair
+        experience_date = eligible_reviews[traveler_experience_pair]
 
-        rating_value = round(random.uniform(1.0, 10.0), 1)  # Generate a random rating between 1.0 and 10.0
-        review_title = fake.sentence(nb_words=5)
-        feedback = fake.paragraph(nb_sentences=3)
+        rating_value = round(random.uniform(2, 10), 1)  # Generate a rating between 2 and 10
+        review_title, feedback = generate_rating_data(rating_value)  # Generate title and feedback based on rating
 
         # Ensure the review date is after the experience date
-        days_after = random.randint(1, 30)  # Randomly add between 1 and 30 days
+        days_after = random.randint(1, 30)  # Randomly add 1-30 days after experience
         review_date_time = experience_date + timedelta(days=days_after)
         # Add random time to the review date
         review_date_time = datetime.combine(review_date_time, datetime.min.time()) + timedelta(
@@ -76,7 +84,10 @@ try:
             feedback, review_title
         ))
 
-    # Step 3: Insert ratings into Dg_Ratings
+        # Remove the used traveler-experience pair to avoid duplicate ratings
+        del eligible_reviews[traveler_experience_pair]
+
+    # Insert ratings into Dg_Ratings
     logger.info("Inserting ratings into the Dg_Ratings table...")
     insert_query = """
     INSERT INTO Dg_Ratings (

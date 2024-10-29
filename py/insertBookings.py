@@ -16,118 +16,107 @@ dsn = connection
 
 fake = Faker()
 
-def generate_unique_booking_id(cursor):
-    """Generate a unique Booking ID."""
-    while True:
-        booking_id = f"B{random.randint(1, 99999):05d}"
-        cursor.execute("SELECT COUNT(*) FROM Dg_Bookings WHERE Booking_ID = :1", (booking_id,))
-        if cursor.fetchone()[0] == 0:  # No existing Booking_ID found
-            return booking_id
-
-def is_duplicate_booking(cursor, traveler_id, experience_id, experience_date):
-    """Check if a booking already exists for the given traveler, experience, and date."""
-    cursor.execute("""
-        SELECT COUNT(*) FROM Dg_Bookings 
-        WHERE Traveler_ID = :1 AND Experience_ID = :2 AND Experience_Date = TO_DATE(:3, 'YYYY-MM-DD')
-    """, (traveler_id, experience_id, experience_date.strftime('%Y-%m-%d')))
-    return cursor.fetchone()[0] > 0  # Return True if a duplicate is found
-
 def ensure_four_digit_year(date_obj):
     """Ensure the date has a four-digit year."""
     if date_obj.year < 100:
         date_obj = date_obj.replace(year=date_obj.year + 2000)
     return date_obj
 
+# Initialize a set to track used Booking IDs
+used_booking_ids = set()
+
+def generate_unique_booking_id():
+    """Generate a unique Booking ID."""
+    while True:
+        booking_id = f"B{random.randint(1, 99999):05d}"
+        if booking_id not in used_booking_ids:  # Check against in-memory set
+            used_booking_ids.add(booking_id)  # Mark as used
+            return booking_id
+
 try:
-    # Establish a connection to the database
+    # Connect to the database once
     logger.info("Connecting to the database...")
     connection = cx_Oracle.connect(username, password, dsn)
     cursor = connection.cursor()
     logger.info("Database connection established.")
 
-    # Step 1: Retrieve travelers
+    # Step 1: Fetch all necessary data with minimal database calls
     cursor.execute("SELECT T_ID FROM Dg_Travelers")
     travelers = [row[0] for row in cursor.fetchall()]
-    num_travelers = len(travelers)
-    num_bookings = int(num_travelers * 0.4)  # 40% of travelers
 
-    # Step 2: Retrieve experiences with pricing and their schedules
     cursor.execute("SELECT Experience_ID, Schedule_ID, Pricing FROM Dg_Experience")
     experiences = cursor.fetchall()
 
-    # Step 3: Retrieve booking methods
     cursor.execute("SELECT Method_ID FROM Dg_Booking_Methods")
     booking_methods = [row[0] for row in cursor.fetchall()]
 
-    # Step 4: Retrieve booking statuses
     cursor.execute("SELECT Status_ID, Status_Name FROM Dg_Booking_Status")
     booking_statuses = {row[1]: row[0] for row in cursor.fetchall()}
 
-    # Step 5: Retrieve payment statuses
     cursor.execute("SELECT Payment_Status_ID, Payment_Status_Name FROM Dg_Payment_Status")
     payment_statuses = {row[1]: row[0] for row in cursor.fetchall()}
 
-    # Step 6: Generate bookings
+    # Fetch existing bookings and store in a nested dictionary to avoid duplicates
+    cursor.execute("SELECT Traveler_ID, Experience_ID, Experience_Date FROM Dg_Bookings")
+    bookings_dict = {traveler_id: {} for traveler_id in travelers}
+    for traveler_id, experience_id, experience_date in cursor.fetchall():
+        if experience_id not in bookings_dict[traveler_id]:
+            bookings_dict[traveler_id][experience_id] = set()
+        bookings_dict[traveler_id][experience_id].add(experience_date)
+
+    # Step 2: Fetch all available dates by schedule in one go
+    cursor.execute("SELECT Schedule_ID, Available_Date FROM Dg_Availability_Schedule")
+    available_dates_dict = {}
+    for schedule_id, available_date in cursor.fetchall():
+        if schedule_id not in available_dates_dict:
+            available_dates_dict[schedule_id] = []
+        available_dates_dict[schedule_id].append(ensure_four_digit_year(available_date))
+
+    # Step 3: Generate bookings
     booking_data = []
-    booked_dates = {}  # To track booking dates for each traveler to avoid duplicate bookings on the same date
+    num_bookings = int(len(travelers) * 0.4)  # Targeting 40% of travelers
 
     for _ in range(num_bookings):
         traveler_id = random.choice(travelers)
         experience_id, schedule_id, pricing = random.choice(experiences)
-
-        # Get available dates for the selected schedule
-        cursor.execute("""
-            SELECT Available_Date FROM Dg_Availability_Schedule WHERE Schedule_ID = :1
-        """, (schedule_id,))
-        available_dates = [ensure_four_digit_year(row[0]) for row in cursor.fetchall()]
+        available_dates = available_dates_dict.get(schedule_id, [])
 
         if not available_dates:
-            continue  # Skip if no available dates for the schedule
+            continue
 
-        # Choose a booking date and ensure it is before the experience date
-        experience_date = random.choice(available_dates)
-        date_of_booking = experience_date - timedelta(days=random.randint(1, 30))
-        # Add random time to the booking date
-        date_of_booking = datetime.combine(date_of_booking, datetime.min.time()) + timedelta(
-            hours=random.randint(0, 23), minutes=random.randint(0, 59), seconds=random.randint(0, 59)
-        )
+        for _ in range(10):  # Attempt up to 10 times to avoid duplicate bookings
+            experience_date = random.choice(available_dates)
+            if experience_date not in bookings_dict[traveler_id].get(experience_id, set()):
+                date_of_booking = experience_date - timedelta(days=random.randint(1, 30))
+                date_of_booking = ensure_four_digit_year(date_of_booking)
+                date_of_booking = datetime.combine(date_of_booking, datetime.min.time()) + timedelta(
+                    hours=random.randint(0, 23), minutes=random.randint(0, 59), seconds=random.randint(0, 59)
+                )
 
-        # Ensure the booking date has a four-digit year
-        date_of_booking = ensure_four_digit_year(date_of_booking)
+                # Assign booking and payment statuses
+                if random.random() < 0.7:
+                    payment_status = 'Completed'
+                    booking_status = 'Confirmed'
+                else:
+                    payment_status = random.choice(['Pending', 'Failed', 'Refunded'])
+                    booking_status = 'Cancelled' if payment_status in ['Failed', 'Refunded'] else 'Pending'
 
-        # Check for duplicate booking for the same traveler, experience, and date
-        if is_duplicate_booking(cursor, traveler_id, experience_id, experience_date):
-            continue  # Skip if a duplicate booking exists
+                # Add this booking to the booking data
+                booking_id = generate_unique_booking_id()
+                booking_data.append((
+                    booking_id, traveler_id, experience_id,
+                    date_of_booking.strftime('%Y-%m-%d %H:%M:%S'), experience_date.strftime('%Y-%m-%d'),
+                    pricing, booking_statuses[booking_status], random.choice(booking_methods), payment_statuses[payment_status]
+                ))
 
-        # Set booking status with a 70% probability of being 'Completed'
-        if random.random() < 0.7:
-            payment_status = 'Completed'
-            booking_status = 'Confirmed'
-        else:
-            # Randomly select from other statuses (30% of cases)
-            payment_status = random.choice(['Pending', 'Failed', 'Refunded'])
-            if payment_status == 'Pending':
-                booking_status = 'Pending'
-            else:
-                # Both 'Failed' and 'Refunded' map to 'Cancelled' booking status
-                booking_status = 'Cancelled'
+                # Update the bookings_dict to avoid duplicates
+                if experience_id not in bookings_dict[traveler_id]:
+                    bookings_dict[traveler_id][experience_id] = set()
+                bookings_dict[traveler_id][experience_id].add(experience_date)
 
-        # Get the corresponding status IDs
-        payment_status_id = payment_statuses[payment_status]
-        booking_status_id = booking_statuses[booking_status]
-        booking_method_id = random.choice(booking_methods)
-        amount_paid = pricing  # Use the pricing from the experience table
+                break  # Exit retry loop after a valid booking is found
 
-        # Generate a unique Booking ID
-        booking_id = generate_unique_booking_id(cursor)
-
-        booking_data.append((
-            booking_id, traveler_id, experience_id,
-            date_of_booking.strftime('%Y-%m-%d %H:%M:%S'), experience_date.strftime('%Y-%m-%d'),
-            amount_paid, booking_status_id, booking_method_id, payment_status_id
-        ))
-
-    # Step 7: Insert bookings into Dg_Bookings
+    # Step 4: Insert bookings into Dg_Bookings
     logger.info("Inserting bookings into the Dg_Bookings table...")
     insert_query = """
     INSERT INTO Dg_Bookings (
@@ -149,7 +138,6 @@ except cx_Oracle.DatabaseError as e:
     if connection:
         connection.rollback()
 finally:
-    # Clean up by closing the cursor and connection
     if cursor:
         cursor.close()
         logger.info("Cursor closed.")

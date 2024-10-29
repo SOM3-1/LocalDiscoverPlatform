@@ -92,8 +92,14 @@ try:
 
     # Step 3: Insert service providers
     logger.info("Inserting service providers into the Dg_Service_Provider table...")
+    cursor.execute("SELECT COUNT(*) FROM Dg_Travelers")
+    total_travelers = cursor.fetchone()[0]
+    num_service_providers = max(1, int(total_travelers * 0.05))  # Calculate 5%, ensuring at least 1 provider
+
+    logger.info(f"Inserting {num_service_providers} service providers into the Dg_Service_Provider table...")
+
     service_providers_data = []
-    for i in range(1, 51):  # Generate 200 service providers
+    for i in range(1, num_service_providers + 1): 
         sp_id = f"SP{i:05d}"
         email = fake.unique.email()
         phone = generate_phone_number()
