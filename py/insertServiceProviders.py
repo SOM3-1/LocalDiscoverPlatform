@@ -5,9 +5,14 @@ from faker import Faker
 from datetime import datetime, timedelta
 from credentials import netid, pwd, connection
 from setupConfig import service_provider_percent, num_activities
+import sys
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    handlers=[logging.StreamHandler(sys.stdout)] 
+)
 logger = logging.getLogger(__name__)
 
 # Database connection configuration

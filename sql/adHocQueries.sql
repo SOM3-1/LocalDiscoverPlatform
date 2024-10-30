@@ -72,13 +72,10 @@ ORDER BY
 SELECT 
     g.Group_ID,
     g.Group_Name,
-    g.Group_Type,
+    gt.Group_Type_Name AS Group_Type,
     g.Group_Leader_T_ID AS Leader_ID,
-    leader.First_Name AS Leader_First_Name,
-    leader.Last_Name AS Leader_Last_Name,
-    gm.T_ID AS Member_ID,
-    member.First_Name AS Member_First_Name,
-    member.Last_Name AS Member_Last_Name
+    leader.First_Name || ' ' || leader.Last_Name AS Leader_Full_Name,
+    LISTAGG(member.First_Name || ' ' || member.Last_Name, ', ') WITHIN GROUP (ORDER BY member.Last_Name) AS Member_Full_Names
 FROM 
     Dg_Groups g
 JOIN 
@@ -87,6 +84,14 @@ LEFT JOIN
     Dg_Group_Members gm ON g.Group_ID = gm.Group_ID
 LEFT JOIN 
     Dg_Travelers member ON gm.T_ID = member.T_ID
+JOIN
+    Dg_Group_Types gt ON g.Group_Type_ID = gt.Group_Type_ID
+GROUP BY 
+    g.Group_ID,
+    g.Group_Name,
+    gt.Group_Type_Name,
+    g.Group_Leader_T_ID,
+    leader.First_Name || ' ' || leader.Last_Name
 ORDER BY 
     g.Group_ID;
 

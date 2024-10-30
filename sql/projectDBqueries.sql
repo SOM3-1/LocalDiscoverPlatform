@@ -35,7 +35,34 @@ GROUP BY
 ORDER BY 
     Total_Revenue DESC;
 
--- Query 3: Top 5 Most Booked Experiences with Location Details
+-- Query 3: Group Details with Leader and Member Information -
+ SELECT 
+    g.Group_ID,
+    g.Group_Name,
+    gt.Group_Type_Name AS Group_Type,
+    g.Group_Leader_T_ID AS Leader_ID,
+    leader.First_Name || ' ' || leader.Last_Name AS Leader_Full_Name,
+    LISTAGG(member.First_Name || ' ' || member.Last_Name, ', ') WITHIN GROUP (ORDER BY member.Last_Name) AS Member_Full_Names
+FROM 
+    Dg_Groups g
+JOIN 
+    Dg_Travelers leader ON g.Group_Leader_T_ID = leader.T_ID
+LEFT JOIN 
+    Dg_Group_Members gm ON g.Group_ID = gm.Group_ID
+LEFT JOIN 
+    Dg_Travelers member ON gm.T_ID = member.T_ID
+JOIN
+    Dg_Group_Types gt ON g.Group_Type_ID = gt.Group_Type_ID
+GROUP BY 
+    g.Group_ID,
+    g.Group_Name,
+    gt.Group_Type_Name,
+    g.Group_Leader_T_ID,
+    leader.First_Name || ' ' || leader.Last_Name
+ORDER BY 
+    g.Group_ID;
+
+-- Query 4: Top 5 Most Booked Experiences with Location Details
 SELECT 
     e.Experience_ID,
     e.Title AS ExperienceTitle,
@@ -55,7 +82,7 @@ ORDER BY
     NumberOfBookings DESC
 FETCH FIRST 5 ROWS ONLY;
 
--- Query 4: Average Rating per Service Provider with Minimum 5 Ratings
+-- Query 5: Average Rating per Service Provider with Minimum 5 Ratings
 SELECT 
     sp.Service_Provider_ID,
     sp.Name AS Service_Provider_Name,
@@ -73,7 +100,7 @@ HAVING
 ORDER BY 
     Average_Rating DESC;
 
--- Query 5: Total Earnings by Service Provider and Experience Category with ROLLUP
+-- Query 6: Total Earnings by Service Provider and Experience Category with ROLLUP
 SELECT 
     sp.Service_Provider_ID,
     ic.Category_Name AS Experience_Category,
@@ -91,7 +118,7 @@ JOIN
 GROUP BY 
     ROLLUP (sp.Service_Provider_ID, ic.Category_Name);
 
--- Query 6: Total Bookings and Revenue by Month and Location with CUBE
+-- Query 7: Total Bookings and Revenue by Month and Location with CUBE
 SELECT 
     EXTRACT(MONTH FROM b.Date_Of_Booking) AS Month,
     l.Location_Name,
@@ -109,7 +136,7 @@ GROUP BY CUBE (EXTRACT(MONTH FROM b.Date_Of_Booking), l.Location_Name)
 ORDER BY 
     Total_Bookings DESC;
 
--- Query 7: Service Providers Offering All Categories
+-- Query 8: Service Providers Offering All Categories
 SELECT 
     sp.Service_Provider_ID,
     sp.Name,
@@ -125,7 +152,7 @@ HAVING
 ORDER BY 
     Categories_Covered DESC;
 
--- Query 8: Average Rating per Experience and Overall Average Rating per Traveler
+-- Query 9: Average Rating per Experience and Overall Average Rating per Traveler
 SELECT 
     t.T_ID AS Traveler_ID,
     e.Experience_ID,
@@ -144,7 +171,7 @@ GROUP BY
     t.T_ID, e.Experience_ID, e.Title
     ORDER BY Overall_Average_Rating DESC;
 
--- Query 9: Top 10 Highest and Lowest Rated Service Providers
+-- Query 10: Top 10 Highest and Lowest Rated Service Providers
 SELECT * FROM (
     SELECT 
         sp.Service_Provider_ID,

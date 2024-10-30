@@ -1,12 +1,17 @@
 import cx_Oracle
 import logging
+import sys
 import random
 from faker import Faker
 from datetime import datetime, timedelta
 from credentials import netid, pwd, connection
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    handlers=[logging.StreamHandler(sys.stdout)] 
+)
 logger = logging.getLogger(__name__)
 
 # Database connection configuration

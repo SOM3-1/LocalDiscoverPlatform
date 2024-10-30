@@ -1,10 +1,15 @@
 import cx_Oracle
 import logging
+import sys
 from mocks import preference_options, city_names, group_types, experience_tags, payment_statuses, booking_statuses, booking_methods
 from credentials import netid, pwd, connection
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    handlers=[logging.StreamHandler(sys.stdout)] 
+)
 logger = logging.getLogger(__name__)
 
 # Database connection configuration

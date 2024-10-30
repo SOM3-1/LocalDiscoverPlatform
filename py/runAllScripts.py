@@ -1,12 +1,13 @@
 import subprocess
 import logging
+import sys
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s", handlers=[logging.StreamHandler()])
 logger = logging.getLogger(__name__)
 
 # List of scripts to execute
-scripts = ['insert_lookup_tables.py', 'insert_travellers.py', 'insert_groups.py', 'insert_service_providers.py', 'insert_expereinces.py'] 
+scripts = ['dropAll.py','createAll.py','insertLookupTables.py', 'insertTravellers.py', 'insertGroups.py', 'insertServiceProviders.py', 'insertExpereinces.py', 'insertBookings.py', 'insertRatings.py'] 
 
 # Execute each script one by one
 for script in scripts:
@@ -18,12 +19,12 @@ for script in scripts:
         logger.info(f"Output of {script}:\n{result.stdout}")
         
         # Check for errors
-        if result.returncode != 0:
+        if result.returncode != 0 or result.stderr:
             logger.error(f"Error executing {script}:\n{result.stderr}")
-            break  # Stop executing further scripts if there's an error
+            sys.exit(1)  # Stop the script entirely if there's an error
         else:
             logger.info(f"{script} executed successfully.")
 
     except Exception as e:
         logger.error(f"An error occurred while executing {script}: {e}")
-        break  # Stop executing further scripts if there's an error
+        sys.exit(1)  # Stop the script entirely if there's an error

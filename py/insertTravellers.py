@@ -1,6 +1,7 @@
 import cx_Oracle
 import logging
 import random
+import sys
 from mocks import preference_options, city_names
 from faker import Faker
 from datetime import date
@@ -8,7 +9,11 @@ from credentials import netid, pwd, connection
 from setupConfig import total_travelers, num_preferences
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    handlers=[logging.StreamHandler(sys.stdout)] 
+)
 logger = logging.getLogger(__name__)
 
 # Database connection configuration

@@ -34,8 +34,15 @@
      - **Port:** `1523`
      - **Service name:** `pcse1p.data.uta.edu`
 
-4. **Run the SQL Scripts:**
-   - Open the provided `.sql` files (e.g., `createTables.sql`) in your SQL tool and execute the scripts to perform the required operations.
+### 4. **Run the SQL Scripts:**
+
+- Use the provided `.sql` files to set up and manage the database:
+  - `dropAll.sql`: Drops existing tables, views, and triggers to reset the database.
+  - `createAll.sql`: Creates the necessary tables, views, and triggers for the project.
+  - `adhocQueries.sql`: Contains ad-hoc queries for various data operations and testing.
+  - `projectDBqueries.sql`: Contains queries required for project submission.
+
+- Open each `.sql` file in your SQL tool and execute them as needed to perform the required operations. 
 
 ### Running Python Scripts in the Terminal
 
@@ -82,29 +89,35 @@
    - **Run the Scripts:**
      - To create tables, execute:
        ```
-       python createTables.py
+       python createAll.py
        ```
      - To drop tables, execute:
        ```
-       python dropTables.py
-       ```
-     - To create triggers, execute:
-       ```
-       python createTriggers.py
-       ```
-     - To drop triggers, execute:
-       ```
-       python dropTriggers.py
+       python dropAll.py
        ```
 
-### Inserting Data in a Single Run
+### Creaetin Tables and Inserting Data in a Single Run
 
-If you want to insert all the necessary data into the database tables in a single run, you should use the `run_scripts_insert.py` script. This script automates the process of executing multiple insert scripts sequentially, populating all the required tables.
+If you want to insert all the necessary table, views, triggers and data into the database tables in a single run, you should use the `runAllScripts.py` script. This script automates the process of executing multiple create, insert scripts sequentially, populating all the required tables.
 
 To insert data in a single run, execute:
    ```
-   python run_scripts_insert.py
+   python runAllScripts.py
    ```
+### Script Execution Order
+
+1. `dropll.py`: Drops existing tables, views, and triggers.
+2. `createAll.py`: Creates all tables, views, and triggers in the database.
+
+#### Data Insertion Scripts:
+
+3. `insertLookupTables.py`: Inserts reference or lookup data.
+4. `insertTravellers.py`: Inserts traveler data.
+5. `insertGroups.py`: Inserts group data.
+6. `insertServiceProviders.py`: Inserts service provider data.
+7. `insertExpereinces.py`: Inserts experience data.
+8. `insertBookings.py`: Inserts booking data.
+9. `insertRatings.py`: Inserts rating data.
 
 Make sure that:
    - The SSH tunnel is open.
@@ -128,25 +141,37 @@ Make sure that:
 #### 5. `dropViews.py`
    - Drops the views from the database, removing any virtual tables created with `createViews.py`.
 
-#### 6. `insert_experiences.py`
+#### 6. `insertExperiences.py`
    - Inserts data into the `Dg_Experience` table. This script adds records for different experiences using data generated from the `mocks.py` file or other sources.
 
-#### 7. `insert_groups.py`
+#### 7. `insertGroups.py`
    - Adds data to the table that manages group-related information, such as group bookings or categories.
 
-#### 8. `insert_lookup_tables.py`
+#### 8. `insertLookuptables.py`
    - Populates the lookup tables with reference data used across different tables. The data for these tables is typically provided in `mocks.py`.
 
-#### 9. `insert_service_providers.py`
+#### 9. `insertServiceProviders.py`
    - Inserts records into the `Dg_Service_Providers` table, which stores information about service providers who offer various experiences.
 
-#### 10. `insert_travellers.py`
+#### 10. `insertTravellers.py`
    - Adds records to the `Dg_Travelers` table, representing travelers or users who participate in the experiences.
 
-#### 11. `mocks.py`
+#### 11. `insertBookings.py`
+   - Adds records to the `Dg_Bookings` table, representing bookings done by travelers.
+
+#### 12. `insertRatings.py`
+   - Adds records to the `Dg_Ratings` table, representing reviews recorded by travelers.
+
+#### 13. `mocks.py`
    - Contains mock data used for populating the database. Includes lists of sample data such as city names, experience tags, categories, and other reference data.
 
-#### 12. `run_scripts_insert.py`
+#### 14. `setupConfig.py`
+   - Contains config file where we can set number of travelers, service providers and so on.
+
+#### 15. `tables.py`
+   - Contains table, views, triggers names to create or drop.
+
+#### 16. `runAllScripts.py`
    - Automates the process of running multiple insert scripts in a sequence to populate the database tables with initial data. **If you want to insert all the data in a single run, use this script.**
 
 ### Summary

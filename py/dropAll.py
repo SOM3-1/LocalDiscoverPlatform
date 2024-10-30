@@ -1,9 +1,15 @@
 import cx_Oracle
 import logging
+import sys
 from credentials import netid, pwd, connection
+from tables import drop_trigger_statements, drop_table_statements, drop_view_statements
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    handlers=[logging.StreamHandler(sys.stdout)] 
+)
 logger = logging.getLogger(__name__)
 
 # Database connection configuration
@@ -11,47 +17,22 @@ username = netid
 password = pwd
 dsn = connection
 
-# List of DROP TRIGGER statements
-drop_trigger_statements = [
-    "DROP TRIGGER trg_Review_Eligibility",
-    "DROP TRIGGER trg_Update_Group_Size",
-    "DROP TRIGGER trg_Prevent_Leader_As_Member",
-    "DROP TRIGGER trg_Prevent_Invalid_Booking_Dates",
-    "DROP TRIGGER trg_Prevent_Invalid_Cancellations",
-]
-
-# List of DROP TABLES statements
-drop_table_statements = [
-    "DROP TABLE Dg_Ratings CASCADE CONSTRAINTS",
-    "DROP TABLE Dg_Bookings CASCADE CONSTRAINTS",
-    "DROP TABLE Dg_Service_Provider_Activities CASCADE CONSTRAINTS",
-    "DROP TABLE Dg_Availability_Schedule CASCADE CONSTRAINTS",
-    "DROP TABLE Dg_Schedule_Locations CASCADE CONSTRAINTS",
-    "DROP TABLE Dg_Schedule_Times CASCADE CONSTRAINTS",
-    "DROP TABLE Dg_Service_Provider CASCADE CONSTRAINTS",
-    "DROP TABLE Dg_Experience_Tags CASCADE CONSTRAINTS",
-    "DROP TABLE Dg_Experience CASCADE CONSTRAINTS",
-    "DROP TABLE Dg_Group_Members CASCADE CONSTRAINTS",
-    "DROP TABLE Dg_Groups CASCADE CONSTRAINTS",
-    "DROP TABLE Dg_Traveler_Preferences CASCADE CONSTRAINTS",
-    "DROP TABLE Dg_Interest_Categories CASCADE CONSTRAINTS",
-    "DROP TABLE Dg_Travelers CASCADE CONSTRAINTS",
-    "DROP TABLE Dg_Locations CASCADE CONSTRAINTS",
-    "DROP TABLE Dg_Group_Types CASCADE CONSTRAINTS",
-    "DROP TABLE Dg_Tags CASCADE CONSTRAINTS",
-    "DROP TABLE Dg_Booking_Methods CASCADE CONSTRAINTS",
-    "DROP TABLE Dg_Booking_Status CASCADE CONSTRAINTS",
-    "DROP TABLE Dg_Payment_Status CASCADE CONSTRAINTS",
-    "PURGE RECYCLEBIN"
-]
-
-
 try:
     # Establish a connection to the database
     logger.info("Connecting to the database...")
     connection = cx_Oracle.connect(username, password, dsn)
     cursor = connection.cursor()
     logger.info("Database connection established.")
+
+# Execute each DROP VIEWS statement
+    for drop_view_sql in drop_view_statements:
+        try:
+            logger.info(f"Executing: {drop_view_sql}")
+            cursor.execute(drop_view_sql)
+            logger.info("View dropped successfully.")
+        except cx_Oracle.DatabaseError as e:
+            logger.error(f"An error occurred while dropping the views: {e}")
+            # Continue to the next view even if one fails\
 
     # Execute each DROP TRIGGER statement
     for drop_trigger_sql in drop_trigger_statements:
@@ -71,6 +52,7 @@ try:
             logger.info("Table dropped successfully.")
         except cx_Oracle.DatabaseError as e:
             logger.warning(f"Table does not exist or could not be dropped: {e}")
+            # Continue to the next table even if one fails
 
     # Commit the changes
     connection.commit()
