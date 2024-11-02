@@ -71,16 +71,16 @@ try:
     cursor = connection.cursor()
     logger.info("Database connection established.")
 
-    cursor.execute("SELECT Service_Provider_ID, Activity_ID FROM Dg_Service_Provider_Activities")
+    cursor.execute("SELECT Service_Provider_ID, Activity_ID FROM Fall24_S003_T8_Service_Provider_Activities")
     existing_activity_pairs = {(row[0], row[1]) for row in cursor.fetchall()}
 
-    cursor.execute("SELECT Location_ID FROM Dg_Locations")
+    cursor.execute("SELECT Location_ID FROM Fall24_S003_T8_Locations")
     location_data = cursor.fetchall()
 
-    cursor.execute("SELECT Category_ID, Category_Name FROM Dg_Interest_Categories")
+    cursor.execute("SELECT Category_ID, Category_Name FROM Fall24_S003_T8_Interest_Categories")
     activity_data = cursor.fetchall()
 
-    cursor.execute("SELECT COUNT(*) FROM Dg_Travelers")
+    cursor.execute("SELECT COUNT(*) FROM Fall24_S003_T8_Travelers")
     total_travelers = cursor.fetchone()[0]
     num_service_providers = max(1, int(total_travelers * service_provider_percent))
 
@@ -107,7 +107,7 @@ try:
     for i in range(0, len(service_providers_data), batch_size):
         batch = service_providers_data[i:i + batch_size]
         cursor.executemany("""
-        INSERT INTO Dg_Service_Provider (Service_Provider_ID, Name, Email, Phone, Bio, Street, City, Zip, Country) 
+        INSERT INTO Fall24_S003_T8_Service_Provider (Service_Provider_ID, Name, Email, Phone, Bio, Street, City, Zip, Country) 
         VALUES (:1, :2, :3, :4, :5, :6, :7, :8, :9)
         """, batch)
         connection.commit()
@@ -144,22 +144,22 @@ try:
     # Insert activities, schedules, times, and locations in 25% batches
     for data_list, insert_query, data_name in [
         (service_provider_activities_data, """
-        INSERT INTO Dg_Service_Provider_Activities (Service_Provider_ID, Activity_ID) 
+        INSERT INTO Fall24_S003_T8_Service_Provider_Activities (Service_Provider_ID, Activity_ID) 
         VALUES (:1, :2)
         """, "service provider activities"),
         
         (activity_schedules_data, """
-        INSERT INTO Dg_Availability_Schedule (Schedule_ID, Service_Provider_ID, Available_Date)
+        INSERT INTO Fall24_S003_T8_Availability_Schedule (Schedule_ID, Service_Provider_ID, Available_Date)
         VALUES (:1, :2, TO_DATE(:3, 'YYYY-MM-DD'))
         """, "availability schedules"),
         
         (schedule_times_data, """
-        INSERT INTO Dg_Schedule_Times (Schedule_ID, Start_Time, End_Time)
+        INSERT INTO Fall24_S003_T8_Schedule_Times (Schedule_ID, Start_Time, End_Time)
         VALUES (:1, :2, :3)
         """, "schedule times"),
         
         (schedule_locations_data, """
-        INSERT INTO Dg_Schedule_Locations (Schedule_ID, Location_ID)
+        INSERT INTO Fall24_S003_T8_Schedule_Locations (Schedule_ID, Location_ID)
         VALUES (:1, :2)
         """, "schedule locations")
     ]:

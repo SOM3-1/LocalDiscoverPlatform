@@ -51,8 +51,8 @@ try:
     # Retrieve eligible bookings with 'Confirmed' status
     cursor.execute("""
         SELECT b.Traveler_ID, b.Experience_ID, b.Experience_Date
-        FROM Dg_Bookings b
-        JOIN Dg_Booking_Status bs ON b.Booking_Status_ID = bs.Status_ID
+        FROM Fall24_S003_T8_Bookings b
+        JOIN Fall24_S003_T8_Booking_Status bs ON b.Booking_Status_ID = bs.Status_ID
         WHERE bs.Status_Name = 'Confirmed'
     """)
     completed_bookings = cursor.fetchall()
@@ -91,10 +91,10 @@ try:
         # Remove the used traveler-experience pair to avoid duplicate ratings
         del eligible_reviews[traveler_experience_pair]
 
-    # Insert ratings into Dg_Ratings
-    logger.info("Inserting ratings into the Dg_Ratings table...")
+    # Insert ratings into Fall24_S003_T8_Ratings
+    logger.info("Inserting ratings into the Fall24_S003_T8_Ratings table...")
     insert_query = """
-    INSERT INTO Dg_Ratings (
+    INSERT INTO Fall24_S003_T8_Ratings (
         Rating_ID, Traveler_ID, Experience_ID, Rating_Value, Review_Date_Time, Feedback, Review_Title
     ) VALUES (
         :1, :2, :3, :4, TO_TIMESTAMP(:5, 'YYYY-MM-DD HH24:MI:SS'), :6, :7

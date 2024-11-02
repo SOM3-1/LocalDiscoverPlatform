@@ -1,5 +1,5 @@
 --- TRAVELERS ---
--- Query: All Travelers with Location and Preferences - VW_DG_TRAVELERS_LOCATION_PREFERENCES
+-- Query: All Travelers with Location and Preferences - VW_Fall24_S003_T8_TRAVELERS_LOCATION_PREFERENCES
 SELECT 
     t.T_ID,
     t.First_Name,
@@ -12,17 +12,17 @@ SELECT
     t.Phone,
     p.Category_Name AS Preference_Name
 FROM 
-    Dg_Travelers t
+    Fall24_S003_T8_Travelers t
 JOIN 
-    Dg_Locations l ON t.Location_ID = l.Location_ID
+    Fall24_S003_T8_Locations l ON t.Location_ID = l.Location_ID
 JOIN 
-    Dg_Traveler_Preferences tp ON t.T_ID = tp.T_ID
+    Fall24_S003_T8_Traveler_Preferences tp ON t.T_ID = tp.T_ID
 JOIN 
-    Dg_Interest_Categories p ON tp.Preference_ID = p.Category_ID
+    Fall24_S003_T8_Interest_Categories p ON tp.Preference_ID = p.Category_ID
 ORDER BY 
     t.T_ID, p.Category_Name;
 
--- Query: All Travelers in Groups - VW_DG_TRAVELERS_IN_GROUPS
+-- Query: All Travelers in Groups - VW_Fall24_S003_T8_TRAVELERS_IN_GROUPS
 SELECT 
     t.T_ID,
     t.First_Name,
@@ -30,13 +30,13 @@ SELECT
     t.Email,
     gm.Group_ID
 FROM 
-    Dg_Group_Members gm
+    Fall24_S003_T8_Group_Members gm
 JOIN 
-    Dg_Travelers t ON gm.T_ID = t.T_ID
+    Fall24_S003_T8_Travelers t ON gm.T_ID = t.T_ID
 ORDER BY 
     gm.Group_ID, t.T_ID;
 
---- Query: All Traveler Preferences - VW_DG_TRAVELER_PREFERENCES
+--- Query: All Traveler Preferences - VW_Fall24_S003_T8_TRAVELER_PREFERENCES
 SELECT 
     t.T_ID,
     t.First_Name || ' ' || t.Last_Name AS Traveler_Name,
@@ -44,21 +44,21 @@ SELECT
     t.Phone,
     ic.Category_Name AS Preference
 FROM 
-    Dg_Travelers t
+    Fall24_S003_T8_Travelers t
 JOIN 
-    Dg_Traveler_Preferences tp ON t.T_ID = tp.T_ID
+    Fall24_S003_T8_Traveler_Preferences tp ON t.T_ID = tp.T_ID
 JOIN 
-    Dg_Interest_Categories ic ON tp.Preference_ID = ic.Category_ID;
+    Fall24_S003_T8_Interest_Categories ic ON tp.Preference_ID = ic.Category_ID;
 
---- Query: Travelers with the Most Bookings - VW_DG_TRAVELERS_MOST_BOOKINGS
+--- Query: Travelers with the Most Bookings - VW_Fall24_S003_T8_TRAVELERS_MOST_BOOKINGS
 SELECT 
     t.T_ID,
     t.First_Name || ' ' || t.Last_Name AS Traveler_Name,
     COUNT(b.Booking_ID) AS Total_Bookings
 FROM 
-    Dg_Travelers t
+    Fall24_S003_T8_Travelers t
 JOIN 
-    Dg_Bookings b ON t.T_ID = b.Traveler_ID
+    Fall24_S003_T8_Bookings b ON t.T_ID = b.Traveler_ID
 GROUP BY 
     t.T_ID, t.First_Name, t.Last_Name
 ORDER BY 
@@ -68,7 +68,7 @@ ORDER BY
 
 
 --- GROUP QUERIES ---
--- Query: Group Details with Leader and Member Information - VW_DG_GROUP_DETAILS_LEADER_MEMBER
+-- Query: Group Details with Leader and Member Information - VW_Fall24_S003_T8_GROUP_DETAILS_LEADER_MEMBER
 SELECT 
     g.Group_ID,
     g.Group_Name,
@@ -77,15 +77,15 @@ SELECT
     leader.First_Name || ' ' || leader.Last_Name AS Leader_Full_Name,
     LISTAGG(member.First_Name || ' ' || member.Last_Name, ', ') WITHIN GROUP (ORDER BY member.Last_Name) AS Member_Full_Names
 FROM 
-    Dg_Groups g
+    Fall24_S003_T8_Groups g
 JOIN 
-    Dg_Travelers leader ON g.Group_Leader_T_ID = leader.T_ID
+    Fall24_S003_T8_Travelers leader ON g.Group_Leader_T_ID = leader.T_ID
 LEFT JOIN 
-    Dg_Group_Members gm ON g.Group_ID = gm.Group_ID
+    Fall24_S003_T8_Group_Members gm ON g.Group_ID = gm.Group_ID
 LEFT JOIN 
-    Dg_Travelers member ON gm.T_ID = member.T_ID
+    Fall24_S003_T8_Travelers member ON gm.T_ID = member.T_ID
 JOIN
-    Dg_Group_Types gt ON g.Group_Type_ID = gt.Group_Type_ID
+    Fall24_S003_T8_Group_Types gt ON g.Group_Type_ID = gt.Group_Type_ID
 GROUP BY 
     g.Group_ID,
     g.Group_Name,
@@ -95,7 +95,7 @@ GROUP BY
 ORDER BY 
     g.Group_ID;
 
--- Query: Travelers Booked as Part of a Group Experience - VW_DG_TRAVELERS_GROUP_BOOKINGS
+-- Query: Travelers Booked as Part of a Group Experience - VW_Fall24_S003_T8_TRAVELERS_GROUP_BOOKINGS
 SELECT 
     t.T_ID AS TravelerID,
     t.First_Name || ' ' || t.Last_Name AS TravelerName,
@@ -105,19 +105,19 @@ SELECT
     b.Booking_ID,
     e.Title AS ExperienceTitle
 FROM 
-    Dg_Travelers t
+    Fall24_S003_T8_Travelers t
 JOIN 
-    Dg_Group_Members gm ON t.T_ID = gm.T_ID
+    Fall24_S003_T8_Group_Members gm ON t.T_ID = gm.T_ID
 JOIN 
-    Dg_Groups g ON gm.Group_ID = g.Group_ID
+    Fall24_S003_T8_Groups g ON gm.Group_ID = g.Group_ID
 JOIN 
-    Dg_Bookings b ON t.T_ID = b.Traveler_ID
+    Fall24_S003_T8_Bookings b ON t.T_ID = b.Traveler_ID
 JOIN 
-    Dg_Experience e ON b.Experience_ID = e.Experience_ID
+    Fall24_S003_T8_Experience e ON b.Experience_ID = e.Experience_ID
 ORDER BY 
     t.T_ID, g.Group_ID;
 
--- Query: Group Leaders and Their Members - VW_DG_GROUP_LEADERS_MEMBERS
+-- Query: Group Leaders and Their Members - VW_Fall24_S003_T8_GROUP_LEADERS_MEMBERS
 SELECT 
     g.Group_ID,
     g.Group_Name,
@@ -128,13 +128,13 @@ SELECT
     member.First_Name AS Member_First_Name,
     member.Last_Name AS Member_Last_Name
 FROM 
-    Dg_Groups g
+    Fall24_S003_T8_Groups g
 JOIN 
-    Dg_Travelers leader ON g.Group_Leader_T_ID = leader.T_ID
+    Fall24_S003_T8_Travelers leader ON g.Group_Leader_T_ID = leader.T_ID
 JOIN 
-    Dg_Group_Members gm ON g.Group_ID = gm.Group_ID
+    Fall24_S003_T8_Group_Members gm ON g.Group_ID = gm.Group_ID
 JOIN 
-    Dg_Travelers member ON gm.T_ID = member.T_ID
+    Fall24_S003_T8_Travelers member ON gm.T_ID = member.T_ID
 ORDER BY 
     g.Group_ID, member.T_ID;
 
@@ -142,7 +142,7 @@ ORDER BY
 
 --- SERVICE PROVIDER ---
 
--- Query: Service Provider Full Details with Schedule and Activities - VW_DG_SERVICE_PROVIDER_FULL_DETAILS
+-- Query: Service Provider Full Details with Schedule and Activities - VW_Fall24_S003_T8_SERVICE_PROVIDER_FULL_DETAILS
 SELECT 
     sp.Service_Provider_ID,
     sp.Name,
@@ -159,23 +159,23 @@ SELECT
     st.Start_Time,
     st.End_Time
 FROM 
-    Dg_Service_Provider sp
+    Fall24_S003_T8_Service_Provider sp
 LEFT JOIN 
-    Dg_Service_Provider_Activities spa ON sp.Service_Provider_ID = spa.Service_Provider_ID
+    Fall24_S003_T8_Service_Provider_Activities spa ON sp.Service_Provider_ID = spa.Service_Provider_ID
 LEFT JOIN 
-    Dg_Interest_Categories ic ON spa.Activity_ID = ic.Category_ID
+    Fall24_S003_T8_Interest_Categories ic ON spa.Activity_ID = ic.Category_ID
 LEFT JOIN 
-    Dg_Availability_Schedule asch ON sp.Service_Provider_ID = asch.Service_Provider_ID
+    Fall24_S003_T8_Availability_Schedule asch ON sp.Service_Provider_ID = asch.Service_Provider_ID
 LEFT JOIN 
-    Dg_Schedule_Locations sl ON asch.Schedule_ID = sl.Schedule_ID
+    Fall24_S003_T8_Schedule_Locations sl ON asch.Schedule_ID = sl.Schedule_ID
 LEFT JOIN 
-    Dg_Locations loc ON sl.Location_ID = loc.Location_ID
+    Fall24_S003_T8_Locations loc ON sl.Location_ID = loc.Location_ID
 LEFT JOIN 
-    Dg_Schedule_Times st ON asch.Schedule_ID = st.Schedule_ID
+    Fall24_S003_T8_Schedule_Times st ON asch.Schedule_ID = st.Schedule_ID
 ORDER BY 
     sp.Name, ic.Category_Name, asch.Available_Date, st.Start_Time;
 
---- Query: Service Provider Availability by Location and Date - VW_DG_SERVICE_PROVIDER_AVAILABILITY_BY_LOCATION_DATE
+--- Query: Service Provider Availability by Location and Date - VW_Fall24_S003_T8_SERVICE_PROVIDER_AVAILABILITY_BY_LOCATION_DATE
 SELECT 
     SP.Service_Provider_ID,
     SP.Name AS Service_Provider_Name,
@@ -184,17 +184,17 @@ SELECT
     ST.Start_Time,
     ST.End_Time
 FROM 
-    Dg_Service_Provider SP
+    Fall24_S003_T8_Service_Provider SP
 JOIN 
-    Dg_Availability_Schedule S ON SP.Service_Provider_ID = S.Service_Provider_ID
+    Fall24_S003_T8_Availability_Schedule S ON SP.Service_Provider_ID = S.Service_Provider_ID
 JOIN 
-    Dg_Schedule_Locations SL ON S.Schedule_ID = SL.Schedule_ID
+    Fall24_S003_T8_Schedule_Locations SL ON S.Schedule_ID = SL.Schedule_ID
 JOIN 
-    Dg_Locations L ON SL.Location_ID = L.Location_ID
+    Fall24_S003_T8_Locations L ON SL.Location_ID = L.Location_ID
 JOIN 
-    Dg_Schedule_Times ST ON S.Schedule_ID = ST.Schedule_ID;
+    Fall24_S003_T8_Schedule_Times ST ON S.Schedule_ID = ST.Schedule_ID;
 
---- Query: List of Experiences Offered by Each Service Provider - VW_DG_SERVICE_PROVIDER_EXPERIENCES_LIST
+--- Query: List of Experiences Offered by Each Service Provider - VW_Fall24_S003_T8_SERVICE_PROVIDER_EXPERIENCES_LIST
 SELECT 
     SP.Service_Provider_ID,
     SP.Name AS Service_Provider_Name,
@@ -205,42 +205,42 @@ SELECT
     E.Min_Group_Size,
     E.Max_Group_Size
 FROM 
-    Dg_Service_Provider SP
+    Fall24_S003_T8_Service_Provider SP
 JOIN 
-    Dg_Experience E ON SP.Service_Provider_ID = E.Service_Provider_ID;
+    Fall24_S003_T8_Experience E ON SP.Service_Provider_ID = E.Service_Provider_ID;
 
--- Query: Most Booked Service Providers - VW_DG_MOST_BOOKED_SERVICE_PROVIDERS
+-- Query: Most Booked Service Providers - VW_Fall24_S003_T8_MOST_BOOKED_SERVICE_PROVIDERS
 SELECT 
     SP.Service_Provider_ID,
     SP.Name AS Service_Provider_Name,
     COUNT(B.Booking_ID) AS Bookings_Count
 FROM 
-    Dg_Service_Provider SP
+    Fall24_S003_T8_Service_Provider SP
 JOIN 
-    Dg_Experience E ON SP.Service_Provider_ID = E.Service_Provider_ID
+    Fall24_S003_T8_Experience E ON SP.Service_Provider_ID = E.Service_Provider_ID
 JOIN 
-    Dg_Bookings B ON E.Experience_ID = B.Experience_ID
+    Fall24_S003_T8_Bookings B ON E.Experience_ID = B.Experience_ID
 GROUP BY 
     SP.Service_Provider_ID, SP.Name
 ORDER BY 
     Bookings_Count DESC;
 
---- Query: Service Providers by Location - VW_DG_SERVICE_PROVIDER_BY_LOCATION
+--- Query: Service Providers by Location - VW_Fall24_S003_T8_SERVICE_PROVIDER_BY_LOCATION
 SELECT 
     L.Location_Name,
     COUNT(DISTINCT SP.Service_Provider_ID) AS Number_Of_Providers
 FROM 
-    Dg_Locations L
+    Fall24_S003_T8_Locations L
 JOIN 
-    Dg_Schedule_Locations SL ON L.Location_ID = SL.Location_ID
+    Fall24_S003_T8_Schedule_Locations SL ON L.Location_ID = SL.Location_ID
 JOIN 
-    Dg_Availability_Schedule S ON SL.Schedule_ID = S.Schedule_ID
+    Fall24_S003_T8_Availability_Schedule S ON SL.Schedule_ID = S.Schedule_ID
 JOIN 
-    Dg_Service_Provider SP ON S.Service_Provider_ID = SP.Service_Provider_ID
+    Fall24_S003_T8_Service_Provider SP ON S.Service_Provider_ID = SP.Service_Provider_ID
 GROUP BY 
     L.Location_Name;
 
---- Query: Top-Rated Experiences per Service Provider - VW_DG_SERVICE_PROVIDER_TOP_RATED_EXPERIENCES
+--- Query: Top-Rated Experiences per Service Provider - VW_Fall24_S003_T8_SERVICE_PROVIDER_TOP_RATED_EXPERIENCES
 SELECT 
     SP.Service_Provider_ID,
     SP.Name AS Service_Provider_Name,
@@ -248,46 +248,46 @@ SELECT
     E.Title AS Experience_Title,
     AVG(R.Rating_Value) AS Average_Rating
 FROM 
-    Dg_Service_Provider SP
+    Fall24_S003_T8_Service_Provider SP
 JOIN 
-    Dg_Experience E ON SP.Service_Provider_ID = E.Service_Provider_ID
+    Fall24_S003_T8_Experience E ON SP.Service_Provider_ID = E.Service_Provider_ID
 JOIN 
-    Dg_Ratings R ON E.Experience_ID = R.Experience_ID
+    Fall24_S003_T8_Ratings R ON E.Experience_ID = R.Experience_ID
 GROUP BY 
     SP.Service_Provider_ID, SP.Name, E.Experience_ID, E.Title
 HAVING 
     AVG(R.Rating_Value) >= 8;  -- Filter to show only highly rated experiences
 
---- Query: Service Provider Bookings Overview - VW_DG_SERVICE_PROVIDER_BOOKINGS_OVERVIEW
+--- Query: Service Provider Bookings Overview - VW_Fall24_S003_T8_SERVICE_PROVIDER_BOOKINGS_OVERVIEW
 SELECT 
     SP.Service_Provider_ID,
     SP.Name AS Service_Provider_Name,
     COUNT(B.Booking_ID) AS Total_Bookings
 FROM 
-    Dg_Service_Provider SP
+    Fall24_S003_T8_Service_Provider SP
 JOIN 
-    Dg_Experience E ON SP.Service_Provider_ID = E.Service_Provider_ID
+    Fall24_S003_T8_Experience E ON SP.Service_Provider_ID = E.Service_Provider_ID
 JOIN 
-    Dg_Bookings B ON E.Experience_ID = B.Experience_ID
+    Fall24_S003_T8_Bookings B ON E.Experience_ID = B.Experience_ID
 GROUP BY 
     SP.Service_Provider_ID, SP.Name;
 
---- Query: Service Provider Ratings and Feedback Overview - VW_DG_SERVICE_PROVIDER_RATINGS_FEEDBACK_OVERVIEW
+--- Query: Service Provider Ratings and Feedback Overview - VW_Fall24_S003_T8_SERVICE_PROVIDER_RATINGS_FEEDBACK_OVERVIEW
 SELECT 
     SP.Service_Provider_ID,
     SP.Name AS Service_Provider_Name,
     AVG(R.Rating_Value) AS Average_Rating,
     COUNT(R.Rating_ID) AS Number_Of_Ratings
 FROM 
-    Dg_Service_Provider SP
+    Fall24_S003_T8_Service_Provider SP
 JOIN 
-    Dg_Experience E ON SP.Service_Provider_ID = E.Service_Provider_ID
+    Fall24_S003_T8_Experience E ON SP.Service_Provider_ID = E.Service_Provider_ID
 JOIN 
-    Dg_Ratings R ON E.Experience_ID = R.Experience_ID
+    Fall24_S003_T8_Ratings R ON E.Experience_ID = R.Experience_ID
 GROUP BY 
     SP.Service_Provider_ID, SP.Name;
 
---- Query: Service Provider Availability Summary by Date and Location - VW_DG_SERVICE_PROVIDER_AVAILABILITY_SUMMARY
+--- Query: Service Provider Availability Summary by Date and Location - VW_Fall24_S003_T8_SERVICE_PROVIDER_AVAILABILITY_SUMMARY
 SELECT 
     SP.Service_Provider_ID,
     SP.Name AS Service_Provider_Name,
@@ -296,17 +296,17 @@ SELECT
     ST.Start_Time,
     ST.End_Time
 FROM 
-    Dg_Service_Provider SP
+    Fall24_S003_T8_Service_Provider SP
 JOIN 
-    Dg_Availability_Schedule S ON SP.Service_Provider_ID = S.Service_Provider_ID
+    Fall24_S003_T8_Availability_Schedule S ON SP.Service_Provider_ID = S.Service_Provider_ID
 JOIN 
-    Dg_Schedule_Locations SL ON S.Schedule_ID = SL.Schedule_ID
+    Fall24_S003_T8_Schedule_Locations SL ON S.Schedule_ID = SL.Schedule_ID
 JOIN 
-    Dg_Locations L ON SL.Location_ID = L.Location_ID
+    Fall24_S003_T8_Locations L ON SL.Location_ID = L.Location_ID
 JOIN 
-    Dg_Schedule_Times ST ON S.Schedule_ID = ST.Schedule_ID;
+    Fall24_S003_T8_Schedule_Times ST ON S.Schedule_ID = ST.Schedule_ID;
 
---- Query: Service Provider Details with Offered Activities - VW_DG_SERVICE_PROVIDER_DETAILS_WITH_ACTIVITIES
+--- Query: Service Provider Details with Offered Activities - VW_Fall24_S003_T8_SERVICE_PROVIDER_DETAILS_WITH_ACTIVITIES
 SELECT 
     SP.Service_Provider_ID,
     SP.Name AS Service_Provider_Name,
@@ -314,11 +314,11 @@ SELECT
     SP.Phone,
     IC.Category_Name AS Activity
 FROM 
-    Dg_Service_Provider SP
+    Fall24_S003_T8_Service_Provider SP
 JOIN 
-    Dg_Service_Provider_Activities SPA ON SP.Service_Provider_ID = SPA.Service_Provider_ID
+    Fall24_S003_T8_Service_Provider_Activities SPA ON SP.Service_Provider_ID = SPA.Service_Provider_ID
 JOIN 
-    Dg_Interest_Categories IC ON SPA.Activity_ID = IC.Category_ID;
+    Fall24_S003_T8_Interest_Categories IC ON SPA.Activity_ID = IC.Category_ID;
 
 --- SERVICE PROVIDER ENDS ---
 
@@ -326,7 +326,7 @@ JOIN
 
 --- EXPEREINCE ---
 
--- Query: Detailed Experience Information with Provider, Tags, and Schedule - VW_DG_EXPERIENCE_DETAILS_PROVIDER_TAGS_SCHEDULE
+-- Query: Detailed Experience Information with Provider, Tags, and Schedule - VW_Fall24_S003_T8_EXPERIENCE_DETAILS_PROVIDER_TAGS_SCHEDULE
 SELECT 
     E.Title AS Experience_Name,
     SP.Name AS Service_Provider_Name,
@@ -335,21 +335,21 @@ SELECT
     ST.Start_Time AS Schedule_Start_Time,
     ST.End_Time AS Schedule_End_Time
 FROM 
-    Dg_Experience E
+    Fall24_S003_T8_Experience E
 JOIN 
-    Dg_Service_Provider SP ON E.Service_Provider_ID = SP.Service_Provider_ID
+    Fall24_S003_T8_Service_Provider SP ON E.Service_Provider_ID = SP.Service_Provider_ID
 JOIN 
-    Dg_Experience_Tags ET ON E.Experience_ID = ET.Experience_ID
+    Fall24_S003_T8_Experience_Tags ET ON E.Experience_ID = ET.Experience_ID
 JOIN 
-    Dg_Tags T ON ET.Tag_ID = T.Tag_ID
+    Fall24_S003_T8_Tags T ON ET.Tag_ID = T.Tag_ID
 JOIN 
-    Dg_Availability_Schedule S ON E.Schedule_ID = S.Schedule_ID
+    Fall24_S003_T8_Availability_Schedule S ON E.Schedule_ID = S.Schedule_ID
 JOIN 
-    Dg_Schedule_Times ST ON S.Schedule_ID = ST.Schedule_ID
+    Fall24_S003_T8_Schedule_Times ST ON S.Schedule_ID = ST.Schedule_ID
 ORDER BY 
     E.Title, T.Tag_Name;
 
--- Query: Complete Experience Details with Tags and Schedule - VW_DG_EXPERIENCE_COMPLETE_DETAILS_TAGS_SCHEDULE
+-- Query: Complete Experience Details with Tags and Schedule - VW_Fall24_S003_T8_EXPERIENCE_COMPLETE_DETAILS_TAGS_SCHEDULE
 SELECT 
     E.Experience_ID,
     E.Title AS Experience_Title,
@@ -364,19 +364,19 @@ SELECT
     ST.Start_Time,
     ST.End_Time
 FROM 
-    Dg_Experience E
+    Fall24_S003_T8_Experience E
 LEFT JOIN 
-    Dg_Experience_Tags ET ON E.Experience_ID = ET.Experience_ID
+    Fall24_S003_T8_Experience_Tags ET ON E.Experience_ID = ET.Experience_ID
 LEFT JOIN 
-    Dg_Tags T ON ET.Tag_ID = T.Tag_ID
+    Fall24_S003_T8_Tags T ON ET.Tag_ID = T.Tag_ID
 LEFT JOIN 
-    Dg_Availability_Schedule S ON E.Schedule_ID = S.Schedule_ID
+    Fall24_S003_T8_Availability_Schedule S ON E.Schedule_ID = S.Schedule_ID
 LEFT JOIN 
-    Dg_Schedule_Times ST ON S.Schedule_ID = ST.Schedule_ID
+    Fall24_S003_T8_Schedule_Times ST ON S.Schedule_ID = ST.Schedule_ID
 ORDER BY 
     E.Experience_ID, T.Tag_Name;
 
---- Query: Experience Summary with Provider and Location - VW_DG_EXPERIENCE_SUMMARY_PROVIDER_LOCATION
+--- Query: Experience Summary with Provider and Location - VW_Fall24_S003_T8_EXPERIENCE_SUMMARY_PROVIDER_LOCATION
 SELECT 
     E.Experience_ID,
     E.Title,
@@ -385,16 +385,16 @@ SELECT
     SP.Name AS Service_Provider,
     L.Location_Name AS Location
 FROM 
-    Dg_Experience E
+    Fall24_S003_T8_Experience E
 JOIN 
-    Dg_Service_Provider SP ON E.Service_Provider_ID = SP.Service_Provider_ID
+    Fall24_S003_T8_Service_Provider SP ON E.Service_Provider_ID = SP.Service_Provider_ID
 JOIN 
-    Dg_Schedule_Locations SL ON E.Schedule_ID = SL.Schedule_ID
+    Fall24_S003_T8_Schedule_Locations SL ON E.Schedule_ID = SL.Schedule_ID
 JOIN 
-    Dg_Locations L ON SL.Location_ID = L.Location_ID;
+    Fall24_S003_T8_Locations L ON SL.Location_ID = L.Location_ID;
 
 
--- Query: Experience Details with Concatenated Tags - VW_DG_EXPERIENCE_DETAILS_CONCATENATED_TAGS
+-- Query: Experience Details with Concatenated Tags - VW_Fall24_S003_T8_EXPERIENCE_DETAILS_CONCATENATED_TAGS
 SELECT 
     E.Title AS Experience_Name,
     SP.Name AS Service_Provider_Name,
@@ -403,23 +403,23 @@ SELECT
     ST.Start_Time AS Schedule_Start_Time,
     ST.End_Time AS Schedule_End_Time
 FROM 
-    Dg_Experience E
+    Fall24_S003_T8_Experience E
 JOIN 
-    Dg_Service_Provider SP ON E.Service_Provider_ID = SP.Service_Provider_ID
+    Fall24_S003_T8_Service_Provider SP ON E.Service_Provider_ID = SP.Service_Provider_ID
 JOIN 
-    Dg_Experience_Tags ET ON E.Experience_ID = ET.Experience_ID
+    Fall24_S003_T8_Experience_Tags ET ON E.Experience_ID = ET.Experience_ID
 JOIN 
-    Dg_Tags T ON ET.Tag_ID = T.Tag_ID
+    Fall24_S003_T8_Tags T ON ET.Tag_ID = T.Tag_ID
 JOIN 
-    Dg_Availability_Schedule S ON E.Schedule_ID = S.Schedule_ID
+    Fall24_S003_T8_Availability_Schedule S ON E.Schedule_ID = S.Schedule_ID
 JOIN 
-    Dg_Schedule_Times ST ON S.Schedule_ID = ST.Schedule_ID
+    Fall24_S003_T8_Schedule_Times ST ON S.Schedule_ID = ST.Schedule_ID
 GROUP BY 
     E.Title, SP.Name, S.Available_Date, ST.Start_Time, ST.End_Time
 ORDER BY 
     E.Title;
 
---- Query: Experiences Count by Pricing Range - VW_DG_EXPERIENCE_COUNT_BY_PRICING_RANGE
+--- Query: Experiences Count by Pricing Range - VW_Fall24_S003_T8_EXPERIENCE_COUNT_BY_PRICING_RANGE
 SELECT 
     CASE 
         WHEN Pricing < 50 THEN 'Low'
@@ -428,7 +428,7 @@ SELECT
     END AS Price_Range,
     COUNT(e.Experience_ID) AS Number_Of_Experiences
 FROM 
-    Dg_Experience e
+    Fall24_S003_T8_Experience e
 GROUP BY 
     CASE 
         WHEN Pricing < 50 THEN 'Low'
@@ -442,7 +442,7 @@ GROUP BY
 
 --- BOOKINGS ---
 
--- Query: Detailed Booking Information with Traveler, Experience, and Status - VW_DG_BOOKING_DETAILS_TRAVELER_EXPERIENCE_STATUS
+-- Query: Detailed Booking Information with Traveler, Experience, and Status - VW_Fall24_S003_T8_BOOKING_DETAILS_TRAVELER_EXPERIENCE_STATUS
 SELECT 
     b.Booking_ID,
     b.Traveler_ID,
@@ -456,22 +456,22 @@ SELECT
     ps.Payment_Status_Name AS Payment_Status,
     bm.Method_Name AS Booking_Method
 FROM 
-    Dg_Bookings b
+    Fall24_S003_T8_Bookings b
 JOIN 
-    Dg_Travelers t ON b.Traveler_ID = t.T_ID
+    Fall24_S003_T8_Travelers t ON b.Traveler_ID = t.T_ID
 JOIN 
-    Dg_Experience e ON b.Experience_ID = e.Experience_ID
+    Fall24_S003_T8_Experience e ON b.Experience_ID = e.Experience_ID
 JOIN 
-    Dg_Booking_Status bs ON b.Booking_Status_ID = bs.Status_ID
+    Fall24_S003_T8_Booking_Status bs ON b.Booking_Status_ID = bs.Status_ID
 JOIN 
-    Dg_Payment_Status ps ON b.Payment_Status_ID = ps.Payment_Status_ID
+    Fall24_S003_T8_Payment_Status ps ON b.Payment_Status_ID = ps.Payment_Status_ID
 JOIN 
-    Dg_Booking_Methods bm ON b.Booking_Method_ID = bm.Method_ID
+    Fall24_S003_T8_Booking_Methods bm ON b.Booking_Method_ID = bm.Method_ID
 ORDER BY 
     b.Date_Of_Booking DESC;
 
 
---- Query: Booking and Payment Status for Travelers - VW_DG_BOOKING_PAYMENT_STATUS_TRAVELERS
+--- Query: Booking and Payment Status for Travelers - VW_Fall24_S003_T8_BOOKING_PAYMENT_STATUS_TRAVELERS
 SELECT 
     B.Booking_ID,
     T.First_Name || ' ' || T.Last_Name AS Traveler_Name,
@@ -480,15 +480,15 @@ SELECT
     B.Amount_Paid,
     PS.Payment_Status_Name AS Payment_Status
 FROM 
-    Dg_Bookings B
+    Fall24_S003_T8_Bookings B
 JOIN 
-    Dg_Travelers T ON B.Traveler_ID = T.T_ID
+    Fall24_S003_T8_Travelers T ON B.Traveler_ID = T.T_ID
 JOIN 
-    Dg_Experience E ON B.Experience_ID = E.Experience_ID
+    Fall24_S003_T8_Experience E ON B.Experience_ID = E.Experience_ID
 JOIN 
-    Dg_Payment_Status PS ON B.Payment_Status_ID = PS.Payment_Status_ID;
+    Fall24_S003_T8_Payment_Status PS ON B.Payment_Status_ID = PS.Payment_Status_ID;
 
--- Query: Travelers with At Least One Booking - VW_DG_TRAVELERS_WITH_AT_LEAST_ONE_BOOKING
+-- Query: Travelers with At Least One Booking - VW_Fall24_S003_T8_TRAVELERS_WITH_AT_LEAST_ONE_BOOKING
 SELECT 
     t.T_ID, 
     t.First_Name, 
@@ -496,9 +496,9 @@ SELECT
     t.Email, 
     COUNT(b.Booking_ID) AS NumberOfBookings
 FROM 
-    Dg_Travelers t
+    Fall24_S003_T8_Travelers t
 JOIN 
-    Dg_Bookings b ON t.T_ID = b.Traveler_ID
+    Fall24_S003_T8_Bookings b ON t.T_ID = b.Traveler_ID
 GROUP BY 
     t.T_ID, t.First_Name, t.Last_Name, t.Email
 HAVING 
@@ -506,7 +506,7 @@ HAVING
 ORDER BY 
     NumberOfBookings DESC;
 
--- Query: Travelers with Multiple Bookings - VW_DG_TRAVELERS_WITH_MULTIPLE_BOOKINGS
+-- Query: Travelers with Multiple Bookings - VW_Fall24_S003_T8_TRAVELERS_WITH_MULTIPLE_BOOKINGS
 SELECT 
     t.T_ID, 
     t.First_Name, 
@@ -514,9 +514,9 @@ SELECT
     t.Email, 
     COUNT(b.Booking_ID) AS NumberOfBookings
 FROM 
-    Dg_Travelers t
+    Fall24_S003_T8_Travelers t
 JOIN 
-    Dg_Bookings b ON t.T_ID = b.Traveler_ID
+    Fall24_S003_T8_Bookings b ON t.T_ID = b.Traveler_ID
 GROUP BY 
     t.T_ID, t.First_Name, t.Last_Name, t.Email
 HAVING 
@@ -524,22 +524,22 @@ HAVING
 ORDER BY 
     NumberOfBookings DESC;
 
--- Query: Travelers with No Bookings - VW_DG_TRAVELERS_WITH_NO_BOOKINGS
+-- Query: Travelers with No Bookings - VW_Fall24_S003_T8_TRAVELERS_WITH_NO_BOOKINGS
 SELECT 
     t.T_ID, 
     t.First_Name, 
     t.Last_Name, 
     t.Email
 FROM 
-    Dg_Travelers t
+    Fall24_S003_T8_Travelers t
 LEFT JOIN 
-    Dg_Bookings b ON t.T_ID = b.Traveler_ID
+    Fall24_S003_T8_Bookings b ON t.T_ID = b.Traveler_ID
 WHERE 
     b.Booking_ID IS NULL
 ORDER BY 
     t.T_ID;
 
--- Query: Experiences Booked by Each Traveler - VW_DG_EXPERIENCES_BOOKED_BY_TRAVELER
+-- Query: Experiences Booked by Each Traveler - VW_Fall24_S003_T8_EXPERIENCES_BOOKED_BY_TRAVELER
 SELECT 
     e.Experience_ID,
     e.Title AS ExperienceTitle,
@@ -547,17 +547,17 @@ SELECT
     sp.Name AS ServiceProvider,
     COUNT(b.Booking_ID) AS NumberOfBookings
 FROM 
-    Dg_Experience e
+    Fall24_S003_T8_Experience e
 JOIN 
-    Dg_Bookings b ON e.Experience_ID = b.Experience_ID
+    Fall24_S003_T8_Bookings b ON e.Experience_ID = b.Experience_ID
 JOIN 
-    Dg_Service_Provider sp ON e.Service_Provider_ID = sp.Service_Provider_ID
+    Fall24_S003_T8_Service_Provider sp ON e.Service_Provider_ID = sp.Service_Provider_ID
 GROUP BY 
     e.Experience_ID, e.Title, e.Description, sp.Name
 ORDER BY 
     NumberOfBookings DESC;
 
--- Query: Number of Experiences Booked for Each Service Provider - VW_DG_SERVICE_PROVIDER_BOOKED_EXPERIENCES_COUNT
+-- Query: Number of Experiences Booked for Each Service Provider - VW_Fall24_S003_T8_SERVICE_PROVIDER_BOOKED_EXPERIENCES_COUNT
 SELECT 
     sp.Service_Provider_ID,
     sp.Name AS ServiceProviderName,
@@ -566,17 +566,17 @@ SELECT
     sp.City AS ServiceProviderCity,
     COUNT(b.Booking_ID) AS NumberOfBookings
 FROM 
-    Dg_Service_Provider sp
+    Fall24_S003_T8_Service_Provider sp
 JOIN 
-    Dg_Experience e ON sp.Service_Provider_ID = e.Service_Provider_ID
+    Fall24_S003_T8_Experience e ON sp.Service_Provider_ID = e.Service_Provider_ID
 JOIN 
-    Dg_Bookings b ON e.Experience_ID = b.Experience_ID
+    Fall24_S003_T8_Bookings b ON e.Experience_ID = b.Experience_ID
 GROUP BY 
     sp.Service_Provider_ID, sp.Name, sp.Email, sp.Phone, sp.City
 ORDER BY 
     NumberOfBookings DESC;
 
--- Query: Service Providers with Canceled Bookings - VW_DG_SERVICE_PROVIDERS_WITH_CANCELED_BOOKINGS
+-- Query: Service Providers with Canceled Bookings - VW_Fall24_S003_T8_SERVICE_PROVIDERS_WITH_CANCELED_BOOKINGS
 SELECT 
     sp.Service_Provider_ID,
     sp.Name AS ServiceProviderName,
@@ -585,13 +585,13 @@ SELECT
     sp.City AS ServiceProviderCity,
     COUNT(b.Booking_ID) AS NumberOfCanceledBookings
 FROM 
-    Dg_Service_Provider sp
+    Fall24_S003_T8_Service_Provider sp
 JOIN 
-    Dg_Experience e ON sp.Service_Provider_ID = e.Service_Provider_ID
+    Fall24_S003_T8_Experience e ON sp.Service_Provider_ID = e.Service_Provider_ID
 JOIN 
-    Dg_Bookings b ON e.Experience_ID = b.Experience_ID
+    Fall24_S003_T8_Bookings b ON e.Experience_ID = b.Experience_ID
 JOIN 
-    Dg_Booking_Status bs ON b.Booking_Status_ID = bs.Status_ID
+    Fall24_S003_T8_Booking_Status bs ON b.Booking_Status_ID = bs.Status_ID
 WHERE 
     bs.Status_Name = 'Cancelled'
 GROUP BY 
@@ -599,18 +599,18 @@ GROUP BY
 ORDER BY 
     NumberOfCanceledBookings DESC;
 
--- Query: Travelers with Canceled Bookings - VW_DG_TRAVELERS_WITH_CANCELED_BOOKINGS
+-- Query: Travelers with Canceled Bookings - VW_Fall24_S003_T8_TRAVELERS_WITH_CANCELED_BOOKINGS
 SELECT 
     t.T_ID AS TravelerID,
     t.First_Name || ' ' || t.Last_Name AS TravelerName,
     t.Email AS TravelerEmail,
     COUNT(b.Booking_ID) AS NumberOfCancelledBookings
 FROM 
-    Dg_Travelers t
+    Fall24_S003_T8_Travelers t
 JOIN 
-    Dg_Bookings b ON t.T_ID = b.Traveler_ID
+    Fall24_S003_T8_Bookings b ON t.T_ID = b.Traveler_ID
 JOIN 
-    Dg_Booking_Status bs ON b.Booking_Status_ID = bs.Status_ID
+    Fall24_S003_T8_Booking_Status bs ON b.Booking_Status_ID = bs.Status_ID
 WHERE 
     bs.Status_Name = 'Cancelled'
 GROUP BY 
@@ -618,7 +618,7 @@ GROUP BY
 ORDER BY 
     NumberOfCancelledBookings DESC;
 
--- Query: All Travelers Who Have Booked an Experience - VW_DG_TRAVELERS_BOOKED_EXPERIENCE
+-- Query: All Travelers Who Have Booked an Experience - VW_Fall24_S003_T8_TRAVELERS_BOOKED_EXPERIENCE
 SELECT 
     t.T_ID AS TravelerID,
     t.First_Name || ' ' || t.Last_Name AS TravelerName,
@@ -629,15 +629,15 @@ SELECT
     r.Rating_Value AS Rating,
     TO_CHAR(r.Review_Date_Time, 'YYYY-MM-DD HH24:MI:SS') AS ReviewDate
 FROM 
-    Dg_Travelers t
+    Fall24_S003_T8_Travelers t
 JOIN 
-    Dg_Bookings b ON t.T_ID = b.Traveler_ID
+    Fall24_S003_T8_Bookings b ON t.T_ID = b.Traveler_ID
 JOIN 
-    Dg_Experience e ON b.Experience_ID = e.Experience_ID
+    Fall24_S003_T8_Experience e ON b.Experience_ID = e.Experience_ID
 JOIN 
-    Dg_Service_Provider sp ON e.Service_Provider_ID = sp.Service_Provider_ID
+    Fall24_S003_T8_Service_Provider sp ON e.Service_Provider_ID = sp.Service_Provider_ID
 LEFT JOIN 
-    Dg_Ratings r ON b.Traveler_ID = r.Traveler_ID AND b.Experience_ID = r.Experience_ID
+    Fall24_S003_T8_Ratings r ON b.Traveler_ID = r.Traveler_ID AND b.Experience_ID = r.Experience_ID
 ORDER BY 
     t.T_ID, b.Booking_ID;
 
@@ -647,7 +647,7 @@ ORDER BY
 
 --- RATINGS ---
 
--- Query: Travelers Who Have Submitted Reviews - VW_DG_TRAVELERS_WITH_REVIEWS
+-- Query: Travelers Who Have Submitted Reviews - VW_Fall24_S003_T8_TRAVELERS_WITH_REVIEWS
 SELECT 
     t.T_ID, 
     t.First_Name, 
@@ -655,9 +655,9 @@ SELECT
     t.Email, 
     COUNT(r.Rating_ID) AS NumberOfReviews
 FROM 
-    Dg_Travelers t
+    Fall24_S003_T8_Travelers t
 JOIN 
-    Dg_Ratings r ON t.T_ID = r.Traveler_ID
+    Fall24_S003_T8_Ratings r ON t.T_ID = r.Traveler_ID
 GROUP BY 
     t.T_ID, t.First_Name, t.Last_Name, t.Email
 HAVING 
@@ -665,18 +665,18 @@ HAVING
 ORDER BY 
     NumberOfReviews DESC;
 
--- Query: Travelers with No Reviews Submitted - VW_DG_TRAVELERS_WITH_NO_REVIEWS
+-- Query: Travelers with No Reviews Submitted - VW_Fall24_S003_T8_TRAVELERS_WITH_NO_REVIEWS
 SELECT 
     t.T_ID, 
     t.First_Name, 
     t.Last_Name, 
     t.Email
 FROM 
-    Dg_Travelers t
+    Fall24_S003_T8_Travelers t
 JOIN 
-    Dg_Bookings b ON t.T_ID = b.Traveler_ID
+    Fall24_S003_T8_Bookings b ON t.T_ID = b.Traveler_ID
 LEFT JOIN 
-    Dg_Ratings r ON b.Traveler_ID = r.Traveler_ID AND b.Experience_ID = r.Experience_ID
+    Fall24_S003_T8_Ratings r ON b.Traveler_ID = r.Traveler_ID AND b.Experience_ID = r.Experience_ID
 WHERE 
     r.Rating_ID IS NULL
 GROUP BY 
@@ -686,7 +686,7 @@ ORDER BY
 
 
 
--- Query: Detailed Review Information for Each Traveler - VW_DG_TRAVELER_REVIEW_DETAILS
+-- Query: Detailed Review Information for Each Traveler - VW_Fall24_S003_T8_TRAVELER_REVIEW_DETAILS
 SELECT 
     t.T_ID AS TravelerID,
     t.First_Name || ' ' || t.Last_Name AS TravelerName,
@@ -697,19 +697,19 @@ SELECT
     r.Rating_Value AS Rating,
     TO_CHAR(r.Review_Date_Time, 'YYYY-MM-DD HH24:MI:SS') AS ReviewDate
 FROM 
-    Dg_Travelers t
+    Fall24_S003_T8_Travelers t
 JOIN 
-    Dg_Bookings b ON t.T_ID = b.Traveler_ID
+    Fall24_S003_T8_Bookings b ON t.T_ID = b.Traveler_ID
 JOIN 
-    Dg_Experience e ON b.Experience_ID = e.Experience_ID
+    Fall24_S003_T8_Experience e ON b.Experience_ID = e.Experience_ID
 JOIN 
-    Dg_Service_Provider sp ON e.Service_Provider_ID = sp.Service_Provider_ID
+    Fall24_S003_T8_Service_Provider sp ON e.Service_Provider_ID = sp.Service_Provider_ID
 JOIN 
-    Dg_Ratings r ON b.Traveler_ID = r.Traveler_ID AND b.Experience_ID = r.Experience_ID
+    Fall24_S003_T8_Ratings r ON b.Traveler_ID = r.Traveler_ID AND b.Experience_ID = r.Experience_ID
 ORDER BY 
     t.T_ID, b.Booking_ID;
 
--- Query: Average Rating for Each Service Provider - VW_DG_SERVICE_PROVIDER_AVERAGE_RATING
+-- Query: Average Rating for Each Service Provider - VW_Fall24_S003_T8_SERVICE_PROVIDER_AVERAGE_RATING
 SELECT 
     sp.Service_Provider_ID,
     sp.Name AS ServiceProviderName,
@@ -718,17 +718,17 @@ SELECT
     sp.City AS ServiceProviderCity,
     AVG(r.Rating_Value) AS AverageRating
 FROM 
-    Dg_Service_Provider sp
+    Fall24_S003_T8_Service_Provider sp
 JOIN 
-    Dg_Experience e ON sp.Service_Provider_ID = e.Service_Provider_ID
+    Fall24_S003_T8_Experience e ON sp.Service_Provider_ID = e.Service_Provider_ID
 JOIN 
-    Dg_Ratings r ON e.Experience_ID = r.Experience_ID
+    Fall24_S003_T8_Ratings r ON e.Experience_ID = r.Experience_ID
 GROUP BY 
     sp.Service_Provider_ID, sp.Name, sp.Email, sp.Phone, sp.City
 ORDER BY 
     AverageRating DESC;
 
--- Query: Average Rating for Each Experience - VW_DG_EXPERIENCE_AVERAGE_RATING
+-- Query: Average Rating for Each Experience - VW_Fall24_S003_T8_EXPERIENCE_AVERAGE_RATING
 SELECT 
     e.Experience_ID,
     e.Title AS ExperienceTitle,
@@ -736,26 +736,26 @@ SELECT
     sp.Name AS ServiceProvider,
     AVG(r.Rating_Value) AS AverageRating
 FROM 
-    Dg_Experience e
+    Fall24_S003_T8_Experience e
 JOIN 
-    Dg_Service_Provider sp ON e.Service_Provider_ID = sp.Service_Provider_ID
+    Fall24_S003_T8_Service_Provider sp ON e.Service_Provider_ID = sp.Service_Provider_ID
 JOIN 
-    Dg_Ratings r ON e.Experience_ID = r.Experience_ID
+    Fall24_S003_T8_Ratings r ON e.Experience_ID = r.Experience_ID
 GROUP BY 
     e.Experience_ID, e.Title, e.Description, sp.Name
 ORDER BY 
     AverageRating DESC;
 
---- Query: Top-Rated Experiences List - VW_DG_TOP_RATED_EXPERIENCES_LIST
+--- Query: Top-Rated Experiences List - VW_Fall24_S003_T8_TOP_RATED_EXPERIENCES_LIST
 SELECT 
     e.Experience_ID,
     e.Title,
     AVG(r.Rating_Value) AS Average_Rating,
     COUNT(r.Rating_ID) AS Number_Of_Ratings
 FROM 
-    Dg_Experience e
+    Fall24_S003_T8_Experience e
 JOIN 
-    Dg_Ratings r ON e.Experience_ID = r.Experience_ID
+    Fall24_S003_T8_Ratings r ON e.Experience_ID = r.Experience_ID
 GROUP BY 
     e.Experience_ID, e.Title
 HAVING 
@@ -768,7 +768,7 @@ ORDER BY
 
 --- ANALYSIS OF BOOKINGS ---
 
--- Query: Total Earnings for Confirmed Bookings by Service Provider - VW_DG_TOTAL_EARNINGS_CONFIRMED
+-- Query: Total Earnings for Confirmed Bookings by Service Provider - VW_Fall24_S003_T8_TOTAL_EARNINGS_CONFIRMED
 SELECT 
     sp.Service_Provider_ID,
     sp.Name AS ServiceProviderName,
@@ -777,13 +777,13 @@ SELECT
     sp.City AS ServiceProviderCity,
     SUM(b.Amount_Paid) AS TotalEarnings
 FROM 
-    Dg_Service_Provider sp
+    Fall24_S003_T8_Service_Provider sp
 JOIN 
-    Dg_Experience e ON sp.Service_Provider_ID = e.Service_Provider_ID
+    Fall24_S003_T8_Experience e ON sp.Service_Provider_ID = e.Service_Provider_ID
 JOIN 
-    Dg_Bookings b ON e.Experience_ID = b.Experience_ID
+    Fall24_S003_T8_Bookings b ON e.Experience_ID = b.Experience_ID
 JOIN 
-    Dg_Booking_Status bs ON b.Booking_Status_ID = bs.Status_ID
+    Fall24_S003_T8_Booking_Status bs ON b.Booking_Status_ID = bs.Status_ID
 WHERE 
     bs.Status_Name = 'Confirmed' 
 GROUP BY 
@@ -792,7 +792,7 @@ ORDER BY
     TotalEarnings DESC;
 
 
--- Query: Total Refunded Amount by Service Provider - VW_DG_TOTAL_REFUNDED_AMOUNT
+-- Query: Total Refunded Amount by Service Provider - VW_Fall24_S003_T8_TOTAL_REFUNDED_AMOUNT
 
 SELECT 
     sp.Service_Provider_ID,
@@ -802,13 +802,13 @@ SELECT
     sp.City AS ServiceProviderCity,
     SUM(b.Amount_Paid) AS TotalRefundedEarnings
 FROM 
-    Dg_Service_Provider sp
+    Fall24_S003_T8_Service_Provider sp
 JOIN 
-    Dg_Experience e ON sp.Service_Provider_ID = e.Service_Provider_ID
+    Fall24_S003_T8_Experience e ON sp.Service_Provider_ID = e.Service_Provider_ID
 JOIN 
-    Dg_Bookings b ON e.Experience_ID = b.Experience_ID
+    Fall24_S003_T8_Bookings b ON e.Experience_ID = b.Experience_ID
 JOIN 
-    Dg_Payment_Status ps ON b.Payment_Status_ID = ps.Payment_Status_ID
+    Fall24_S003_T8_Payment_Status ps ON b.Payment_Status_ID = ps.Payment_Status_ID
 WHERE 
     ps.Payment_Status_Name = 'Refunded'
 GROUP BY 
@@ -816,138 +816,138 @@ GROUP BY
 ORDER BY 
     TotalRefundedEarnings DESC;
 
--- Query: Service Provider with the Most Bookings - VW_DG_SERVICE_PROVIDER_MOST_BOOKINGS
+-- Query: Service Provider with the Most Bookings - VW_Fall24_S003_T8_SERVICE_PROVIDER_MOST_BOOKINGS
 
 SELECT 
     sp.Service_Provider_ID,
     sp.Name AS ServiceProviderName,
     COUNT(b.Booking_ID) AS TotalBookings
 FROM 
-    Dg_Service_Provider sp
+    Fall24_S003_T8_Service_Provider sp
 JOIN 
-    Dg_Experience e ON sp.Service_Provider_ID = e.Service_Provider_ID
+    Fall24_S003_T8_Experience e ON sp.Service_Provider_ID = e.Service_Provider_ID
 JOIN 
-    Dg_Bookings b ON e.Experience_ID = b.Experience_ID
+    Fall24_S003_T8_Bookings b ON e.Experience_ID = b.Experience_ID
 GROUP BY 
     sp.Service_Provider_ID, sp.Name
 ORDER BY 
     TotalBookings DESC;
 
 
--- Query: Monthly Booking Volume - VW_DG_MONTHLY_BOOKING_VOLUME
+-- Query: Monthly Booking Volume - VW_Fall24_S003_T8_MONTHLY_BOOKING_VOLUME
 
 SELECT 
     TO_CHAR(Date_Of_Booking, 'YYYY-MM') AS BookingMonth,
     COUNT(Booking_ID) AS NumberOfBookings
 FROM 
-    Dg_Bookings
+    Fall24_S003_T8_Bookings
 GROUP BY 
     TO_CHAR(Date_Of_Booking, 'YYYY-MM')
 ORDER BY 
     BookingMonth;
 
 
--- Query: Top Locations by Available Experiences - VW_DG_TOP_LOCATIONS_AVAILABLE_EXPERIENCES
+-- Query: Top Locations by Available Experiences - VW_Fall24_S003_T8_TOP_LOCATIONS_AVAILABLE_EXPERIENCES
 
 SELECT 
     l.Location_ID,
     l.Location_Name,
     COUNT(e.Experience_ID) AS NumberOfAvailableExperiences
 FROM 
-    Dg_Locations l
+    Fall24_S003_T8_Locations l
 JOIN 
-    Dg_Schedule_Locations sl ON l.Location_ID = sl.Location_ID
+    Fall24_S003_T8_Schedule_Locations sl ON l.Location_ID = sl.Location_ID
 JOIN 
-    Dg_Availability_Schedule s ON sl.Schedule_ID = s.Schedule_ID
+    Fall24_S003_T8_Availability_Schedule s ON sl.Schedule_ID = s.Schedule_ID
 JOIN 
-    Dg_Experience e ON s.Schedule_ID = e.Schedule_ID
+    Fall24_S003_T8_Experience e ON s.Schedule_ID = e.Schedule_ID
 GROUP BY 
     l.Location_ID, l.Location_Name
 ORDER BY 
     NumberOfAvailableExperiences DESC;
 
--- Query: Average Rating by Location - VW_DG_AVERAGE_RATING_BY_LOCATION
+-- Query: Average Rating by Location - VW_Fall24_S003_T8_AVERAGE_RATING_BY_LOCATION
 
 SELECT 
     l.Location_Name,
     AVG(r.Rating_Value) AS AverageRating
 FROM 
-    Dg_Ratings r
+    Fall24_S003_T8_Ratings r
 JOIN 
-    Dg_Experience e ON r.Experience_ID = e.Experience_ID
+    Fall24_S003_T8_Experience e ON r.Experience_ID = e.Experience_ID
 JOIN 
-    Dg_Availability_Schedule s ON e.Schedule_ID = s.Schedule_ID
+    Fall24_S003_T8_Availability_Schedule s ON e.Schedule_ID = s.Schedule_ID
 JOIN 
-    Dg_Schedule_Locations sl ON s.Schedule_ID = sl.Schedule_ID
+    Fall24_S003_T8_Schedule_Locations sl ON s.Schedule_ID = sl.Schedule_ID
 JOIN 
-    Dg_Locations l ON sl.Location_ID = l.Location_ID
+    Fall24_S003_T8_Locations l ON sl.Location_ID = l.Location_ID
 GROUP BY 
     l.Location_Name
 ORDER BY 
     AverageRating DESC;
 
--- Query: Group Booking Analysis by Type - VW_DG_GROUP_BOOKING_ANALYSIS
+-- Query: Group Booking Analysis by Type - VW_Fall24_S003_T8_GROUP_BOOKING_ANALYSIS
 
 SELECT 
     gt.Group_Type_Name,
     COUNT(gm.Group_ID) AS NumberOfGroupBookings
 FROM 
-    Dg_Group_Types gt
+    Fall24_S003_T8_Group_Types gt
 JOIN 
-    Dg_Groups g ON gt.Group_Type_ID = g.Group_Type_ID
+    Fall24_S003_T8_Groups g ON gt.Group_Type_ID = g.Group_Type_ID
 JOIN 
-    Dg_Group_Members gm ON g.Group_ID = gm.Group_ID
+    Fall24_S003_T8_Group_Members gm ON g.Group_ID = gm.Group_ID
 GROUP BY 
     gt.Group_Type_Name
 ORDER BY 
     NumberOfGroupBookings DESC;
 
--- Query: Traveler Demographic Booking Analysis - VW_DG_TRAVELER_DEMOGRAPHIC_ANALYSIS
+-- Query: Traveler Demographic Booking Analysis - VW_Fall24_S003_T8_TRAVELER_DEMOGRAPHIC_ANALYSIS
 
 SELECT 
     t.Demographic_Type,
     COUNT(b.Booking_ID) AS NumberOfBookings
 FROM 
-    Dg_Travelers t
+    Fall24_S003_T8_Travelers t
 JOIN 
-    Dg_Bookings b ON t.T_ID = b.Traveler_ID
+    Fall24_S003_T8_Bookings b ON t.T_ID = b.Traveler_ID
 GROUP BY 
     t.Demographic_Type
 ORDER BY 
     NumberOfBookings DESC;
 
--- Query: Overall Refund Rate Analysis - VW_DG_REFUND_RATE_ANALYSIS
+-- Query: Overall Refund Rate Analysis - VW_Fall24_S003_T8_REFUND_RATE_ANALYSIS
 
 SELECT 
     (COUNT(CASE WHEN b.Payment_Status_ID = 
-        (SELECT Payment_Status_ID FROM Dg_Payment_Status WHERE Payment_Status_Name = 'Refunded') 
+        (SELECT Payment_Status_ID FROM Fall24_S003_T8_Payment_Status WHERE Payment_Status_Name = 'Refunded') 
     THEN 1 END) / COUNT(*)) * 100 AS RefundRate
 FROM 
-    Dg_Bookings b;
+    Fall24_S003_T8_Bookings b;
 
--- Query: Locations with the Most Bookings - VW_DG_LOCATIONS_MOST_BOOKINGS
+-- Query: Locations with the Most Bookings - VW_Fall24_S003_T8_LOCATIONS_MOST_BOOKINGS
 
 SELECT 
     l.Location_ID,
     l.Location_Name,
     COUNT(b.Booking_ID) AS NumberOfBookings
 FROM 
-    Dg_Locations l
+    Fall24_S003_T8_Locations l
 JOIN 
-    Dg_Schedule_Locations sl ON l.Location_ID = sl.Location_ID
+    Fall24_S003_T8_Schedule_Locations sl ON l.Location_ID = sl.Location_ID
 JOIN 
-    Dg_Availability_Schedule s ON sl.Schedule_ID = s.Schedule_ID
+    Fall24_S003_T8_Availability_Schedule s ON sl.Schedule_ID = s.Schedule_ID
 JOIN 
-    Dg_Experience e ON s.Schedule_ID = e.Schedule_ID
+    Fall24_S003_T8_Experience e ON s.Schedule_ID = e.Schedule_ID
 JOIN 
-    Dg_Bookings b ON e.Experience_ID = b.Experience_ID
+    Fall24_S003_T8_Bookings b ON e.Experience_ID = b.Experience_ID
 GROUP BY 
     l.Location_ID, l.Location_Name
 ORDER BY 
     NumberOfBookings DESC;
 
 
--- Query: Service Provider with Highest and Lowest Ratings - VW_DG_HIGHEST_LOWEST_RATED_SERVICE_PROVIDERS
+-- Query: Service Provider with Highest and Lowest Ratings - VW_Fall24_S003_T8_HIGHEST_LOWEST_RATED_SERVICE_PROVIDERS
 
 SELECT * FROM (
     SELECT 
@@ -959,11 +959,11 @@ SELECT * FROM (
         AVG(r.Rating_Value) AS AverageRating,
         'Highest' AS RatingType
     FROM 
-        Dg_Service_Provider sp
+        Fall24_S003_T8_Service_Provider sp
     JOIN 
-        Dg_Experience e ON sp.Service_Provider_ID = e.Service_Provider_ID
+        Fall24_S003_T8_Experience e ON sp.Service_Provider_ID = e.Service_Provider_ID
     JOIN 
-        Dg_Ratings r ON e.Experience_ID = r.Experience_ID
+        Fall24_S003_T8_Ratings r ON e.Experience_ID = r.Experience_ID
     GROUP BY 
         sp.Service_Provider_ID, sp.Name, sp.Email, sp.Phone, sp.City
     ORDER BY 
@@ -982,11 +982,11 @@ SELECT * FROM (
         AVG(r.Rating_Value) AS AverageRating,
         'Lowest' AS RatingType
     FROM 
-        Dg_Service_Provider sp
+        Fall24_S003_T8_Service_Provider sp
     JOIN 
-        Dg_Experience e ON sp.Service_Provider_ID = e.Service_Provider_ID
+        Fall24_S003_T8_Experience e ON sp.Service_Provider_ID = e.Service_Provider_ID
     JOIN 
-        Dg_Ratings r ON e.Experience_ID = r.Experience_ID
+        Fall24_S003_T8_Ratings r ON e.Experience_ID = r.Experience_ID
     GROUP BY 
         sp.Service_Provider_ID, sp.Name, sp.Email, sp.Phone, sp.City
     ORDER BY 
@@ -994,7 +994,7 @@ SELECT * FROM (
 ) WHERE ROWNUM = 1;
 
 
--- Query: Top 10 Highest and Lowest Rated Service Providers - VW_DG_TOP_10_RATED_SERVICE_PROVIDERS
+-- Query: Top 10 Highest and Lowest Rated Service Providers - VW_Fall24_S003_T8_TOP_10_RATED_SERVICE_PROVIDERS
 
 SELECT * FROM (
     SELECT 
@@ -1006,11 +1006,11 @@ SELECT * FROM (
         AVG(r.Rating_Value) AS AverageRating,
         'Top 10 Highest' AS RatingCategory
     FROM 
-        Dg_Service_Provider sp
+        Fall24_S003_T8_Service_Provider sp
     JOIN 
-        Dg_Experience e ON sp.Service_Provider_ID = e.Service_Provider_ID
+        Fall24_S003_T8_Experience e ON sp.Service_Provider_ID = e.Service_Provider_ID
     JOIN 
-        Dg_Ratings r ON e.Experience_ID = r.Experience_ID
+        Fall24_S003_T8_Ratings r ON e.Experience_ID = r.Experience_ID
     GROUP BY 
         sp.Service_Provider_ID, sp.Name, sp.Email, sp.Phone, sp.City
     ORDER BY 
@@ -1029,11 +1029,11 @@ SELECT * FROM (
         AVG(r.Rating_Value) AS AverageRating,
         'Top 10 Lowest' AS RatingCategory
     FROM 
-        Dg_Service_Provider sp
+        Fall24_S003_T8_Service_Provider sp
     JOIN 
-        Dg_Experience e ON sp.Service_Provider_ID = e.Service_Provider_ID
+        Fall24_S003_T8_Experience e ON sp.Service_Provider_ID = e.Service_Provider_ID
     JOIN 
-        Dg_Ratings r ON e.Experience_ID = r.Experience_ID
+        Fall24_S003_T8_Ratings r ON e.Experience_ID = r.Experience_ID
     GROUP BY 
         sp.Service_Provider_ID, sp.Name, sp.Email, sp.Phone, sp.City
     ORDER BY 
@@ -1041,53 +1041,53 @@ SELECT * FROM (
 ) WHERE ROWNUM <= 10;
 
 
--- Query: Most Booked Experiences - VW_DG_MOST_BOOKED_EXPERIENCES
+-- Query: Most Booked Experiences - VW_Fall24_S003_T8_MOST_BOOKED_EXPERIENCES
 
 SELECT 
     e.Experience_ID,
     e.Title AS ExperienceTitle,
     COUNT(b.Booking_ID) AS NumberOfBookings
 FROM 
-    Dg_Experience e
+    Fall24_S003_T8_Experience e
 JOIN 
-    Dg_Bookings b ON e.Experience_ID = b.Experience_ID
+    Fall24_S003_T8_Bookings b ON e.Experience_ID = b.Experience_ID
 GROUP BY 
     e.Experience_ID, e.Title
 ORDER BY 
     NumberOfBookings DESC
 FETCH FIRST 5 ROWS ONLY;
 
--- Query: Top 10 Travelers by Booking Volume - VW_DG_TOP_10_TRAVELERS_BOOKINGS
+-- Query: Top 10 Travelers by Booking Volume - VW_Fall24_S003_T8_TOP_10_TRAVELERS_BOOKINGS
 
 SELECT 
     t.T_ID AS TravelerID,
     t.First_Name || ' ' || t.Last_Name AS TravelerName,
     COUNT(b.Booking_ID) AS NumberOfBookings
 FROM 
-    Dg_Travelers t
+    Fall24_S003_T8_Travelers t
 JOIN 
-    Dg_Bookings b ON t.T_ID = b.Traveler_ID
+    Fall24_S003_T8_Bookings b ON t.T_ID = b.Traveler_ID
 GROUP BY 
     t.T_ID, t.First_Name, t.Last_Name
 ORDER BY 
     NumberOfBookings DESC
 FETCH FIRST 10 ROWS ONLY;
 
--- Query: Average Amount Paid by Payment Status - VW_DG_AVERAGE_AMOUNT_PAID_BY_PAYMENT_STATUS
+-- Query: Average Amount Paid by Payment Status - VW_Fall24_S003_T8_AVERAGE_AMOUNT_PAID_BY_PAYMENT_STATUS
 
 SELECT 
     ps.Payment_Status_Name,
     AVG(b.Amount_Paid) AS AverageAmountPaid
 FROM 
-    Dg_Bookings b
+    Fall24_S003_T8_Bookings b
 JOIN 
-    Dg_Payment_Status ps ON b.Payment_Status_ID = ps.Payment_Status_ID
+    Fall24_S003_T8_Payment_Status ps ON b.Payment_Status_ID = ps.Payment_Status_ID
 GROUP BY 
     ps.Payment_Status_Name
 ORDER BY 
     AverageAmountPaid DESC;
 
--- Query: Total Revenue by Service Provider - VW_DG_TOTAL_REVENUE_BY_SERVICE_PROVIDER
+-- Query: Total Revenue by Service Provider - VW_Fall24_S003_T8_TOTAL_REVENUE_BY_SERVICE_PROVIDER
 
 SELECT 
     sp.Service_Provider_ID,
@@ -1095,21 +1095,21 @@ SELECT
     COUNT(b.Booking_ID) AS Total_Bookings,
     SUM(b.Amount_Paid) AS Total_Revenue
 FROM 
-    Dg_Service_Provider sp
+    Fall24_S003_T8_Service_Provider sp
 JOIN 
-    Dg_Experience e ON sp.Service_Provider_ID = e.Service_Provider_ID
+    Fall24_S003_T8_Experience e ON sp.Service_Provider_ID = e.Service_Provider_ID
 JOIN 
-    Dg_Bookings b ON e.Experience_ID = b.Experience_ID
+    Fall24_S003_T8_Bookings b ON e.Experience_ID = b.Experience_ID
 GROUP BY 
     sp.Service_Provider_ID, sp.Name;
 
--- Query: Daily Booking Volume - VW_DG_DAILY_BOOKING_VOLUME
+-- Query: Daily Booking Volume - VW_Fall24_S003_T8_DAILY_BOOKING_VOLUME
 
 SELECT 
     TRUNC(b.Date_Of_Booking) AS Booking_Date,
     COUNT(b.Booking_ID) AS Number_Of_Bookings
 FROM 
-    Dg_Bookings b
+    Fall24_S003_T8_Bookings b
 GROUP BY 
     TRUNC(b.Date_Of_Booking)
 ORDER BY 
@@ -1119,7 +1119,7 @@ ORDER BY
 
 --Goals 
 
--- Query: Guide Engagement and Support Needs - VW_DG_GUIDE_SUPPORT_NEEDS
+-- Query: Guide Engagement and Support Needs - VW_Fall24_S003_T8_GUIDE_SUPPORT_NEEDS
 
 SELECT 
     sp.Service_Provider_ID,
@@ -1127,20 +1127,20 @@ SELECT
     COUNT(b.Booking_ID) AS Booking_Count,
     AVG(r.Rating_Value) AS Average_Rating
 FROM 
-    Dg_Service_Provider sp
+    Fall24_S003_T8_Service_Provider sp
 LEFT JOIN 
-    Dg_Experience e ON sp.Service_Provider_ID = e.Service_Provider_ID
+    Fall24_S003_T8_Experience e ON sp.Service_Provider_ID = e.Service_Provider_ID
 LEFT JOIN 
-    Dg_Bookings b ON e.Experience_ID = b.Experience_ID
+    Fall24_S003_T8_Bookings b ON e.Experience_ID = b.Experience_ID
 LEFT JOIN 
-    Dg_Ratings r ON e.Experience_ID = r.Experience_ID
+    Fall24_S003_T8_Ratings r ON e.Experience_ID = r.Experience_ID
 GROUP BY 
     sp.Service_Provider_ID, sp.Name
 HAVING 
     COUNT(b.Booking_ID) < 10 OR AVG(r.Rating_Value) < 3.0;
 
 
---- Query: Quarterly Revenue Breakdown by Experience Category, Destination, and Service Provider - VW_DG_QUARTERLY_REVENUE_BREAKDOWN
+--- Query: Quarterly Revenue Breakdown by Experience Category, Destination, and Service Provider - VW_Fall24_S003_T8_QUARTERLY_REVENUE_BREAKDOWN
 SELECT 
     EXTRACT(YEAR FROM b.Date_Of_Booking) AS Year,
     TO_CHAR(b.Date_Of_Booking, 'Q') AS Quarter,
@@ -1149,21 +1149,21 @@ SELECT
     sp.Name AS Service_Provider,
     SUM(b.Amount_Paid) AS Total_Revenue
 FROM 
-    Dg_Bookings b
+    Fall24_S003_T8_Bookings b
 JOIN 
-    Dg_Experience e ON b.Experience_ID = e.Experience_ID
+    Fall24_S003_T8_Experience e ON b.Experience_ID = e.Experience_ID
 JOIN 
-    Dg_Service_Provider sp ON e.Service_Provider_ID = sp.Service_Provider_ID
+    Fall24_S003_T8_Service_Provider sp ON e.Service_Provider_ID = sp.Service_Provider_ID
 JOIN 
-    Dg_Service_Provider_Activities spa ON sp.Service_Provider_ID = spa.Service_Provider_ID
+    Fall24_S003_T8_Service_Provider_Activities spa ON sp.Service_Provider_ID = spa.Service_Provider_ID
 JOIN 
-    Dg_Interest_Categories ic ON spa.Activity_ID = ic.Category_ID
+    Fall24_S003_T8_Interest_Categories ic ON spa.Activity_ID = ic.Category_ID
 JOIN 
-    Dg_Availability_Schedule s ON e.Schedule_ID = s.Schedule_ID
+    Fall24_S003_T8_Availability_Schedule s ON e.Schedule_ID = s.Schedule_ID
 JOIN 
-    Dg_Schedule_Locations sl ON s.Schedule_ID = sl.Schedule_ID
+    Fall24_S003_T8_Schedule_Locations sl ON s.Schedule_ID = sl.Schedule_ID
 JOIN 
-    Dg_Locations loc ON sl.Location_ID = loc.Location_ID
+    Fall24_S003_T8_Locations loc ON sl.Location_ID = loc.Location_ID
 GROUP BY 
     EXTRACT(YEAR FROM b.Date_Of_Booking),
     TO_CHAR(b.Date_Of_Booking, 'Q'),
@@ -1171,7 +1171,7 @@ GROUP BY
     loc.Location_Name,
     sp.Name;
 
--- Query: Monthly Booking Trends by Experience Category and Traveler Demographics - VW_DG_MONTHLY_BOOKING_TRENDS
+-- Query: Monthly Booking Trends by Experience Category and Traveler Demographics - VW_Fall24_S003_T8_MONTHLY_BOOKING_TRENDS
 
 SELECT 
     EXTRACT(MONTH FROM b.Date_Of_Booking) AS Month,
@@ -1179,23 +1179,23 @@ SELECT
     COUNT(b.Booking_ID) AS Booking_Count,
     t.Demographic_Type AS Traveler_Demographic
 FROM 
-    Dg_Bookings b
+    Fall24_S003_T8_Bookings b
 JOIN 
-    Dg_Experience e ON b.Experience_ID = e.Experience_ID
+    Fall24_S003_T8_Experience e ON b.Experience_ID = e.Experience_ID
 JOIN 
-    Dg_Travelers t ON b.Traveler_ID = t.T_ID
+    Fall24_S003_T8_Travelers t ON b.Traveler_ID = t.T_ID
 JOIN 
-    Dg_Service_Provider sp ON e.Service_Provider_ID = sp.Service_Provider_ID
+    Fall24_S003_T8_Service_Provider sp ON e.Service_Provider_ID = sp.Service_Provider_ID
 JOIN 
-    Dg_Service_Provider_Activities spa ON sp.Service_Provider_ID = spa.Service_Provider_ID
+    Fall24_S003_T8_Service_Provider_Activities spa ON sp.Service_Provider_ID = spa.Service_Provider_ID
 JOIN 
-    Dg_Interest_Categories ic ON spa.Activity_ID = ic.Category_ID
+    Fall24_S003_T8_Interest_Categories ic ON spa.Activity_ID = ic.Category_ID
 GROUP BY 
     EXTRACT(MONTH FROM b.Date_Of_Booking),
     ic.Category_Name,
     t.Demographic_Type;
 
--- Query: Repeat Travelers with Preferences - VW_DG_REPEAT_TRAVELERS_PREFERENCES
+-- Query: Repeat Travelers with Preferences - VW_Fall24_S003_T8_REPEAT_TRAVELERS_PREFERENCES
 
 SELECT 
     t.T_ID AS Traveler_ID,
@@ -1203,13 +1203,13 @@ SELECT
     COUNT(b.Booking_ID) AS Total_Bookings,
     LISTAGG(ic.Category_Name, ', ') WITHIN GROUP (ORDER BY ic.Category_Name) AS Preferences
 FROM 
-    Dg_Travelers t
+    Fall24_S003_T8_Travelers t
 JOIN 
-    Dg_Bookings b ON t.T_ID = b.Traveler_ID
+    Fall24_S003_T8_Bookings b ON t.T_ID = b.Traveler_ID
 JOIN 
-    Dg_Traveler_Preferences tp ON t.T_ID = tp.T_ID
+    Fall24_S003_T8_Traveler_Preferences tp ON t.T_ID = tp.T_ID
 JOIN 
-    Dg_Interest_Categories ic ON tp.Preference_ID = ic.Category_ID
+    Fall24_S003_T8_Interest_Categories ic ON tp.Preference_ID = ic.Category_ID
 GROUP BY 
     t.T_ID,
     t.First_Name,
@@ -1217,54 +1217,54 @@ GROUP BY
 HAVING 
     COUNT(b.Booking_ID) > 1;
 
--- Query: Experience Diversity by Category and Location - VW_DG_EXPERIENCE_DIVERSITY
+-- Query: Experience Diversity by Category and Location - VW_Fall24_S003_T8_EXPERIENCE_DIVERSITY
 
 SELECT 
     ic.Category_Name AS Experience_Category,
     loc.Location_Name AS Location,
     COUNT(e.Experience_ID) AS Experience_Count
 FROM 
-    Dg_Experience e
+    Fall24_S003_T8_Experience e
 JOIN 
-    Dg_Service_Provider sp ON e.Service_Provider_ID = sp.Service_Provider_ID
+    Fall24_S003_T8_Service_Provider sp ON e.Service_Provider_ID = sp.Service_Provider_ID
 JOIN 
-    Dg_Service_Provider_Activities spa ON sp.Service_Provider_ID = spa.Service_Provider_ID
+    Fall24_S003_T8_Service_Provider_Activities spa ON sp.Service_Provider_ID = spa.Service_Provider_ID
 JOIN 
-    Dg_Interest_Categories ic ON spa.Activity_ID = ic.Category_ID
+    Fall24_S003_T8_Interest_Categories ic ON spa.Activity_ID = ic.Category_ID
 JOIN 
-    Dg_Availability_Schedule s ON e.Schedule_ID = s.Schedule_ID
+    Fall24_S003_T8_Availability_Schedule s ON e.Schedule_ID = s.Schedule_ID
 JOIN 
-    Dg_Schedule_Locations sl ON s.Schedule_ID = sl.Schedule_ID
+    Fall24_S003_T8_Schedule_Locations sl ON s.Schedule_ID = sl.Schedule_ID
 JOIN 
-    Dg_Locations loc ON sl.Location_ID = loc.Location_ID
+    Fall24_S003_T8_Locations loc ON sl.Location_ID = loc.Location_ID
 GROUP BY 
     ic.Category_Name,
     loc.Location_Name;
 
--- Query: Monthly Booking Count by Experience - VW_DG_MONTHLY_BOOKING_COUNT_BY_EXPERIENCE
+-- Query: Monthly Booking Count by Experience - VW_Fall24_S003_T8_MONTHLY_BOOKING_COUNT_BY_EXPERIENCE
 
 SELECT 
     EXTRACT(MONTH FROM b.Experience_Date) AS Month,
     COUNT(b.Booking_ID) AS Booking_Count,
     e.Title AS Experience_Title
 FROM 
-    Dg_Bookings b
+    Fall24_S003_T8_Bookings b
 JOIN 
-    Dg_Experience e ON b.Experience_ID = e.Experience_ID
+    Fall24_S003_T8_Experience e ON b.Experience_ID = e.Experience_ID
 GROUP BY 
     EXTRACT(MONTH FROM b.Experience_Date),
     e.Title
 ORDER BY 
     Booking_Count DESC;
 
--- Query: Average Days Between Booking and Experience Date by Title - VW_DG_AVG_DAYS_BETWEEN_BOOKING_EXPERIENCE
+-- Query: Average Days Between Booking and Experience Date by Title - VW_Fall24_S003_T8_AVG_DAYS_BETWEEN_BOOKING_EXPERIENCE
 
 SELECT 
     AVG(TRUNC(b.Experience_Date) - TRUNC(b.Date_Of_Booking)) AS Avg_Days_Between_Booking,
     e.Title AS Experience_Title
 FROM 
-    Dg_Bookings b
+    Fall24_S003_T8_Bookings b
 JOIN 
-    Dg_Experience e ON b.Experience_ID = e.Experience_ID
+    Fall24_S003_T8_Experience e ON b.Experience_ID = e.Experience_ID
 GROUP BY 
     e.Title;

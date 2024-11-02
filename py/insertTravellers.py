@@ -50,17 +50,17 @@ try:
     logger.info("Database connection established.")
 
     # Step 1: Retrieve location data
-    cursor.execute("SELECT Location_ID FROM Dg_Locations")
+    cursor.execute("SELECT Location_ID FROM Fall24_S003_T8_Locations")
     location_ids = [row[0] for row in cursor.fetchall()]
 
     # Step 2: Retrieve preference data
-    cursor.execute("SELECT Category_ID FROM Dg_Interest_Categories")
+    cursor.execute("SELECT Category_ID FROM Fall24_S003_T8_Interest_Categories")
     preference_ids = [row[0] for row in cursor.fetchall()]
 
     commit_interval = int(total_travelers * 0.2)  # Commit every 20% of total records
 
-    # Step 3: Insert travelers with a reference to Dg_Locations
-    logger.info("Inserting travelers into the Dg_Travelers table...")
+    # Step 3: Insert travelers with a reference to Fall24_S003_T8_Locations
+    logger.info("Inserting travelers into the Fall24_S003_T8_Travelers table...")
     travelers_data = []
     for i in range(1, total_travelers + 1):
         location_id = random.choice(location_ids)
@@ -82,7 +82,7 @@ try:
         # Insert in batches of 20% and commit
         if i % commit_interval == 0 or i == total_travelers:
             cursor.executemany("""
-            INSERT INTO Dg_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone)
+            INSERT INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone)
             VALUES (:1, :2, :3, TO_DATE(:4, 'YYYY-MM-DD'), :5, :6, :7, :8, :9)
             """, travelers_data)
             connection.commit()
@@ -90,7 +90,7 @@ try:
             travelers_data = []  # Clear the list for the next batch
 
     # Step 4: Insert traveler preferences
-    logger.info("Inserting traveler preferences into the Dg_Traveler_Preferences table...")
+    logger.info("Inserting traveler preferences into the Fall24_S003_T8_Traveler_Preferences table...")
     traveler_preferences_data = []
     for traveler_id in range(1, total_travelers + 1):
         t_id = f"T{traveler_id:05d}"
@@ -101,7 +101,7 @@ try:
         # Insert preferences in batches and commit every 20%
         if traveler_id % commit_interval == 0 or traveler_id == total_travelers:
             cursor.executemany("""
-            INSERT INTO Dg_Traveler_Preferences (T_ID, Preference_ID) 
+            INSERT INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) 
             VALUES (:1, :2)
             """, traveler_preferences_data)
             connection.commit()

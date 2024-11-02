@@ -28,14 +28,14 @@ try:
     logger.info("Database connection established.")
 
     # Step 1: Retrieve travelers to assign as group leaders and members
-    cursor.execute("SELECT T_ID FROM Dg_Travelers")
+    cursor.execute("SELECT T_ID FROM Fall24_S003_T8_Travelers")
     traveler_ids = [row[0] for row in cursor.fetchall()]
     total_travelers = len(traveler_ids)
     logger.info(f"Retrieved {total_travelers} travelers.")
 
-    # Step 2: Retrieve available group types from the Dg_Group_Types table
+    # Step 2: Retrieve available group types from the Fall24_S003_T8_Group_Types table
     logger.info("Retrieving available group types...")
-    cursor.execute("SELECT Group_Type_ID FROM Dg_Group_Types")
+    cursor.execute("SELECT Group_Type_ID FROM Fall24_S003_T8_Group_Types")
     group_type_ids = [row[0] for row in cursor.fetchall()]
     logger.info(f"Retrieved {len(group_type_ids)} group types.")
 
@@ -54,9 +54,9 @@ try:
         group_leader = selected_leaders[i]
         group_data.append((group_id, group_name, group_leader, group_type_id))
 
-    # Insert fake group data into the Dg_Groups table
+    # Insert fake group data into the Fall24_S003_T8_Groups table
     cursor.executemany("""
-    INSERT INTO Dg_Groups (Group_ID, Group_Name, Group_Leader_T_ID, Group_Type_ID)
+    INSERT INTO Fall24_S003_T8_Groups (Group_ID, Group_Name, Group_Leader_T_ID, Group_Type_ID)
     VALUES (:1, :2, :3, :4)
     """, group_data)
     logger.info(f"Inserted {len(group_data)} groups.")
@@ -82,22 +82,22 @@ try:
                 group_members_data.append((group_id, t_id))
                 assigned_travelers.add(t_id)
 
-    # Insert group members data into the Dg_Group_Members table
+    # Insert group members data into the Fall24_S003_T8_Group_Members table
     if group_members_data:
         cursor.executemany("""
-        INSERT INTO Dg_Group_Members (Group_ID, T_ID) 
+        INSERT INTO Fall24_S003_T8_Group_Members (Group_ID, T_ID) 
         VALUES (:1, :2)
         """, group_members_data)
         logger.info(f"Inserted {len(group_members_data)} group members.")
 
-    # Step 6: Update group sizes in the Dg_Groups table
+    # Step 6: Update group sizes in the Fall24_S003_T8_Groups table
     for group_id, _, leader_id, _ in group_data:
         # Count the number of members in the group
-        cursor.execute("SELECT COUNT(*) FROM Dg_Group_Members WHERE Group_ID = :1", (group_id,))
+        cursor.execute("SELECT COUNT(*) FROM Fall24_S003_T8_Group_Members WHERE Group_ID = :1", (group_id,))
         group_size = cursor.fetchone()[0] + 1  # Include the leader in the group size
 
         # Update the group size
-        cursor.execute("UPDATE Dg_Groups SET Group_Size = :1 WHERE Group_ID = :2", (group_size, group_id))
+        cursor.execute("UPDATE Fall24_S003_T8_Groups SET Group_Size = :1 WHERE Group_ID = :2", (group_size, group_id))
 
     # Commit the changes
     connection.commit()

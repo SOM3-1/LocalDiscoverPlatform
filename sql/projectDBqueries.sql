@@ -4,15 +4,15 @@ SELECT
     ic.Category_Name AS Experience_Category,
     SUM(b.Amount_Paid) AS Total_Revenue
 FROM 
-    Dg_Bookings b
+    Fall24_S003_T8_Bookings b
 JOIN 
-    Dg_Experience e ON b.Experience_ID = e.Experience_ID
+    Fall24_S003_T8_Experience e ON b.Experience_ID = e.Experience_ID
 JOIN 
-    Dg_Service_Provider sp ON e.Service_Provider_ID = sp.Service_Provider_ID
+    Fall24_S003_T8_Service_Provider sp ON e.Service_Provider_ID = sp.Service_Provider_ID
 JOIN 
-    Dg_Service_Provider_Activities spa ON sp.Service_Provider_ID = spa.Service_Provider_ID
+    Fall24_S003_T8_Service_Provider_Activities spa ON sp.Service_Provider_ID = spa.Service_Provider_ID
 JOIN 
-    Dg_Interest_Categories ic ON spa.Activity_ID = ic.Category_ID
+    Fall24_S003_T8_Interest_Categories ic ON spa.Activity_ID = ic.Category_ID
 GROUP BY ROLLUP (sp.Service_Provider_ID, ic.Category_Name);
 
 -- Query 2: Total Bookings and Revenue by Service Provider and Month
@@ -23,11 +23,11 @@ SELECT
     COUNT(b.Booking_ID) AS Total_Bookings,
     SUM(b.Amount_Paid) AS Total_Revenue
 FROM 
-    Dg_Bookings b
+    Fall24_S003_T8_Bookings b
 JOIN 
-    Dg_Experience e ON b.Experience_ID = e.Experience_ID
+    Fall24_S003_T8_Experience e ON b.Experience_ID = e.Experience_ID
 JOIN 
-    Dg_Service_Provider sp ON e.Service_Provider_ID = sp.Service_Provider_ID
+    Fall24_S003_T8_Service_Provider sp ON e.Service_Provider_ID = sp.Service_Provider_ID
 WHERE 
     sp.City LIKE '%est%'  -- Adjust this to any pattern as needed
 GROUP BY 
@@ -44,15 +44,15 @@ ORDER BY
     leader.First_Name || ' ' || leader.Last_Name AS Leader_Full_Name,
     LISTAGG(member.First_Name || ' ' || member.Last_Name, ', ') WITHIN GROUP (ORDER BY member.Last_Name) AS Member_Full_Names
 FROM 
-    Dg_Groups g
+    Fall24_S003_T8_Groups g
 JOIN 
-    Dg_Travelers leader ON g.Group_Leader_T_ID = leader.T_ID
+    Fall24_S003_T8_Travelers leader ON g.Group_Leader_T_ID = leader.T_ID
 LEFT JOIN 
-    Dg_Group_Members gm ON g.Group_ID = gm.Group_ID
+    Fall24_S003_T8_Group_Members gm ON g.Group_ID = gm.Group_ID
 LEFT JOIN 
-    Dg_Travelers member ON gm.T_ID = member.T_ID
+    Fall24_S003_T8_Travelers member ON gm.T_ID = member.T_ID
 JOIN
-    Dg_Group_Types gt ON g.Group_Type_ID = gt.Group_Type_ID
+    Fall24_S003_T8_Group_Types gt ON g.Group_Type_ID = gt.Group_Type_ID
 GROUP BY 
     g.Group_ID,
     g.Group_Name,
@@ -69,13 +69,13 @@ SELECT
     l.Location_Name,
     COUNT(b.Booking_ID) AS NumberOfBookings
 FROM 
-    Dg_Experience e
+    Fall24_S003_T8_Experience e
 JOIN 
-    Dg_Bookings b ON e.Experience_ID = b.Experience_ID
+    Fall24_S003_T8_Bookings b ON e.Experience_ID = b.Experience_ID
 JOIN 
-    Dg_Schedule_Locations sl ON e.Schedule_ID = sl.Schedule_ID
+    Fall24_S003_T8_Schedule_Locations sl ON e.Schedule_ID = sl.Schedule_ID
 JOIN 
-    Dg_Locations l ON sl.Location_ID = l.Location_ID
+    Fall24_S003_T8_Locations l ON sl.Location_ID = l.Location_ID
 GROUP BY 
     e.Experience_ID, e.Title, l.Location_Name
 ORDER BY 
@@ -88,11 +88,11 @@ SELECT
     sp.Name AS Service_Provider_Name,
     AVG(r.Rating_Value) AS Average_Rating
 FROM 
-    Dg_Service_Provider sp
+    Fall24_S003_T8_Service_Provider sp
 JOIN 
-    Dg_Experience e ON sp.Service_Provider_ID = e.Service_Provider_ID
+    Fall24_S003_T8_Experience e ON sp.Service_Provider_ID = e.Service_Provider_ID
 JOIN 
-    Dg_Ratings r ON e.Experience_ID = r.Experience_ID
+    Fall24_S003_T8_Ratings r ON e.Experience_ID = r.Experience_ID
 GROUP BY 
     sp.Service_Provider_ID, sp.Name
 HAVING 
@@ -106,15 +106,15 @@ SELECT
     ic.Category_Name AS Experience_Category,
     SUM(b.Amount_Paid) AS Total_Earnings
 FROM 
-    Dg_Bookings b
+    Fall24_S003_T8_Bookings b
 JOIN 
-    Dg_Experience e ON b.Experience_ID = e.Experience_ID
+    Fall24_S003_T8_Experience e ON b.Experience_ID = e.Experience_ID
 JOIN 
-    Dg_Service_Provider sp ON e.Service_Provider_ID = sp.Service_Provider_ID
+    Fall24_S003_T8_Service_Provider sp ON e.Service_Provider_ID = sp.Service_Provider_ID
 JOIN 
-    Dg_Service_Provider_Activities spa ON spa.Service_Provider_ID = sp.Service_Provider_ID
+    Fall24_S003_T8_Service_Provider_Activities spa ON spa.Service_Provider_ID = sp.Service_Provider_ID
 JOIN 
-    Dg_Interest_Categories ic ON spa.Activity_ID = ic.Category_ID
+    Fall24_S003_T8_Interest_Categories ic ON spa.Activity_ID = ic.Category_ID
 GROUP BY 
     ROLLUP (sp.Service_Provider_ID, ic.Category_Name);
 
@@ -125,13 +125,13 @@ SELECT
     COUNT(b.Booking_ID) AS Total_Bookings,
     SUM(b.Amount_Paid) AS Total_Revenue
 FROM 
-    Dg_Bookings b
+    Fall24_S003_T8_Bookings b
 JOIN 
-    Dg_Experience e ON b.Experience_ID = e.Experience_ID
+    Fall24_S003_T8_Experience e ON b.Experience_ID = e.Experience_ID
 JOIN 
-    Dg_Schedule_Locations sl ON e.Schedule_ID = sl.Schedule_ID
+    Fall24_S003_T8_Schedule_Locations sl ON e.Schedule_ID = sl.Schedule_ID
 JOIN 
-    Dg_Locations l ON sl.Location_ID = l.Location_ID
+    Fall24_S003_T8_Locations l ON sl.Location_ID = l.Location_ID
 GROUP BY CUBE (EXTRACT(MONTH FROM b.Date_Of_Booking), l.Location_Name)
 ORDER BY 
     Total_Bookings DESC;
@@ -142,9 +142,9 @@ SELECT
     sp.Name,
     COUNT(DISTINCT spa.Activity_ID) AS Categories_Covered
 FROM 
-    Dg_Service_Provider sp
+    Fall24_S003_T8_Service_Provider sp
 JOIN 
-    Dg_Service_Provider_Activities spa ON spa.Service_Provider_ID = sp.Service_Provider_ID
+    Fall24_S003_T8_Service_Provider_Activities spa ON spa.Service_Provider_ID = sp.Service_Provider_ID
 GROUP BY 
     sp.Service_Provider_ID, sp.Name
 HAVING 
@@ -160,13 +160,13 @@ SELECT
     AVG(r.Rating_Value) AS Average_Rating,
     AVG(AVG(r.Rating_Value)) OVER (PARTITION BY t.T_ID) AS Overall_Average_Rating
 FROM 
-    Dg_Travelers t
+    Fall24_S003_T8_Travelers t
 JOIN 
-    Dg_Bookings b ON t.T_ID = b.Traveler_ID
+    Fall24_S003_T8_Bookings b ON t.T_ID = b.Traveler_ID
 JOIN 
-    Dg_Ratings r ON b.Experience_ID = r.Experience_ID
+    Fall24_S003_T8_Ratings r ON b.Experience_ID = r.Experience_ID
 JOIN 
-    Dg_Experience e ON b.Experience_ID = e.Experience_ID
+    Fall24_S003_T8_Experience e ON b.Experience_ID = e.Experience_ID
 GROUP BY 
     t.T_ID, e.Experience_ID, e.Title
     ORDER BY Overall_Average_Rating DESC;
@@ -182,11 +182,11 @@ SELECT * FROM (
         AVG(r.Rating_Value) AS AverageRating,
         'Top 10 Highest' AS RatingCategory
     FROM 
-        Dg_Service_Provider sp
+        Fall24_S003_T8_Service_Provider sp
     JOIN 
-        Dg_Experience e ON sp.Service_Provider_ID = e.Service_Provider_ID
+        Fall24_S003_T8_Experience e ON sp.Service_Provider_ID = e.Service_Provider_ID
     JOIN 
-        Dg_Ratings r ON e.Experience_ID = r.Experience_ID
+        Fall24_S003_T8_Ratings r ON e.Experience_ID = r.Experience_ID
     GROUP BY 
         sp.Service_Provider_ID, sp.Name, sp.Email, sp.Phone, sp.City
     ORDER BY 
@@ -205,11 +205,11 @@ SELECT * FROM (
         AVG(r.Rating_Value) AS AverageRating,
         'Top 10 Lowest' AS RatingCategory
     FROM 
-        Dg_Service_Provider sp
+        Fall24_S003_T8_Service_Provider sp
     JOIN 
-        Dg_Experience e ON sp.Service_Provider_ID = e.Service_Provider_ID
+        Fall24_S003_T8_Experience e ON sp.Service_Provider_ID = e.Service_Provider_ID
     JOIN 
-        Dg_Ratings r ON e.Experience_ID = r.Experience_ID
+        Fall24_S003_T8_Ratings r ON e.Experience_ID = r.Experience_ID
     GROUP BY 
         sp.Service_Provider_ID, sp.Name, sp.Email, sp.Phone, sp.City
     ORDER BY 

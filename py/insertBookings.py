@@ -46,23 +46,23 @@ try:
     logger.info("Database connection established.")
 
     # Step 1: Fetch all necessary data with minimal database calls
-    cursor.execute("SELECT T_ID FROM Dg_Travelers")
+    cursor.execute("SELECT T_ID FROM Fall24_S003_T8_Travelers")
     travelers = [row[0] for row in cursor.fetchall()]
 
-    cursor.execute("SELECT Experience_ID, Schedule_ID, Pricing FROM Dg_Experience")
+    cursor.execute("SELECT Experience_ID, Schedule_ID, Pricing FROM Fall24_S003_T8_Experience")
     experiences = cursor.fetchall()
 
-    cursor.execute("SELECT Method_ID FROM Dg_Booking_Methods")
+    cursor.execute("SELECT Method_ID FROM Fall24_S003_T8_Booking_Methods")
     booking_methods = [row[0] for row in cursor.fetchall()]
 
-    cursor.execute("SELECT Status_ID, Status_Name FROM Dg_Booking_Status")
+    cursor.execute("SELECT Status_ID, Status_Name FROM Fall24_S003_T8_Booking_Status")
     booking_statuses = {row[1]: row[0] for row in cursor.fetchall()}
 
-    cursor.execute("SELECT Payment_Status_ID, Payment_Status_Name FROM Dg_Payment_Status")
+    cursor.execute("SELECT Payment_Status_ID, Payment_Status_Name FROM Fall24_S003_T8_Payment_Status")
     payment_statuses = {row[1]: row[0] for row in cursor.fetchall()}
 
     # Fetch existing bookings and store in a nested dictionary to avoid duplicates
-    cursor.execute("SELECT Traveler_ID, Experience_ID, Experience_Date FROM Dg_Bookings")
+    cursor.execute("SELECT Traveler_ID, Experience_ID, Experience_Date FROM Fall24_S003_T8_Bookings")
     bookings_dict = {traveler_id: {} for traveler_id in travelers}
     for traveler_id, experience_id, experience_date in cursor.fetchall():
         if experience_id not in bookings_dict[traveler_id]:
@@ -70,7 +70,7 @@ try:
         bookings_dict[traveler_id][experience_id].add(experience_date)
 
     # Step 2: Fetch all available dates by schedule in one go
-    cursor.execute("SELECT Schedule_ID, Available_Date FROM Dg_Availability_Schedule")
+    cursor.execute("SELECT Schedule_ID, Available_Date FROM Fall24_S003_T8_Availability_Schedule")
     available_dates_dict = {}
     for schedule_id, available_date in cursor.fetchall():
         if schedule_id not in available_dates_dict:
@@ -102,16 +102,18 @@ try:
                 if random.random() < 0.7:
                     payment_status = 'Completed'
                     booking_status = 'Confirmed'
+                    amount_paid = pricing
                 else:
                     payment_status = random.choice(['Pending', 'Failed', 'Refunded'])
                     booking_status = 'Cancelled' if payment_status in ['Failed', 'Refunded'] else 'Pending'
+                    amount_paid=0
 
                 # Add this booking to the booking data
                 booking_id = generate_unique_booking_id()
                 booking_data.append((
                     booking_id, traveler_id, experience_id,
                     date_of_booking.strftime('%Y-%m-%d %H:%M:%S'), experience_date.strftime('%Y-%m-%d'),
-                    pricing, booking_statuses[booking_status], random.choice(booking_methods), payment_statuses[payment_status]
+                    amount_paid, booking_statuses[booking_status], random.choice(booking_methods), payment_statuses[payment_status]
                 ))
 
                 # Update the bookings_dict to avoid duplicates
@@ -121,10 +123,10 @@ try:
 
                 break  # Exit retry loop after a valid booking is found
 
-    # Step 4: Insert bookings into Dg_Bookings
-    logger.info("Inserting bookings into the Dg_Bookings table...")
+    # Step 4: Insert bookings into Fall24_S003_T8_Bookings
+    logger.info("Inserting bookings into the Fall24_S003_T8_Bookings table...")
     insert_query = """
-    INSERT INTO Dg_Bookings (
+    INSERT INTO Fall24_S003_T8_Bookings (
         Booking_ID, Traveler_ID, Experience_ID, Date_Of_Booking, Experience_Date,
         Amount_Paid, Booking_Status_ID, Booking_Method_ID, Payment_Status_ID
     ) VALUES (

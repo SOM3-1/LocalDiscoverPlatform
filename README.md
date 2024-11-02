@@ -142,7 +142,7 @@ Make sure that:
    - Drops the views from the database, removing any virtual tables created with `createViews.py`.
 
 #### 6. `insertExperiences.py`
-   - Inserts data into the `Dg_Experience` table. This script adds records for different experiences using data generated from the `mocks.py` file or other sources.
+   - Inserts data into the `Fall24_S003_T8_Experience` table. This script adds records for different experiences using data generated from the `mocks.py` file or other sources.
 
 #### 7. `insertGroups.py`
    - Adds data to the table that manages group-related information, such as group bookings or categories.
@@ -151,16 +151,16 @@ Make sure that:
    - Populates the lookup tables with reference data used across different tables. The data for these tables is typically provided in `mocks.py`.
 
 #### 9. `insertServiceProviders.py`
-   - Inserts records into the `Dg_Service_Providers` table, which stores information about service providers who offer various experiences.
+   - Inserts records into the `Fall24_S003_T8_Service_Providers` table, which stores information about service providers who offer various experiences.
 
 #### 10. `insertTravellers.py`
-   - Adds records to the `Dg_Travelers` table, representing travelers or users who participate in the experiences.
+   - Adds records to the `Fall24_S003_T8_Travelers` table, representing travelers or users who participate in the experiences.
 
 #### 11. `insertBookings.py`
-   - Adds records to the `Dg_Bookings` table, representing bookings done by travelers.
+   - Adds records to the `Fall24_S003_T8_Bookings` table, representing bookings done by travelers.
 
 #### 12. `insertRatings.py`
-   - Adds records to the `Dg_Ratings` table, representing reviews recorded by travelers.
+   - Adds records to the `Fall24_S003_T8_Ratings` table, representing reviews recorded by travelers.
 
 #### 13. `mocks.py`
    - Contains mock data used for populating the database. Includes lists of sample data such as city names, experience tags, categories, and other reference data.

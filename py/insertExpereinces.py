@@ -54,7 +54,7 @@ try:
     logger.info("Database connection established.")
 
     # Step 1: Retrieve the number of travelers
-    cursor.execute("SELECT COUNT(*) FROM Dg_Travelers")
+    cursor.execute("SELECT COUNT(*) FROM Fall24_S003_T8_Travelers")
     traveler_count = cursor.fetchone()[0]
     logger.info(f"Retrieved traveler count: {traveler_count}")
 
@@ -64,8 +64,8 @@ try:
     # Step 2: Retrieve Service Provider IDs and their activities
     cursor.execute("""
         SELECT SPA.Service_Provider_ID, IC.Category_Name
-        FROM Dg_Service_Provider_Activities SPA
-        JOIN Dg_Interest_Categories IC ON SPA.Activity_ID = IC.Category_ID
+        FROM Fall24_S003_T8_Service_Provider_Activities SPA
+        JOIN Fall24_S003_T8_Interest_Categories IC ON SPA.Activity_ID = IC.Category_ID
     """)
     service_provider_activities = cursor.fetchall()
     available_activities = len(service_provider_activities)
@@ -79,14 +79,14 @@ try:
     logger.info(f"Number of experiences to create: {num_experiences}")
 
     # Step 3: Retrieve Schedule IDs
-    cursor.execute("SELECT Schedule_ID FROM Dg_Availability_Schedule")
+    cursor.execute("SELECT Schedule_ID FROM Fall24_S003_T8_Availability_Schedule")
     schedule_ids = [row[0] for row in cursor.fetchall()]
     if not schedule_ids:
         raise ValueError("No schedules found. Cannot create experiences.")
     logger.info(f"Retrieved {len(schedule_ids)} schedules.")
 
     # Step 4: Retrieve all available tags
-    cursor.execute("SELECT Tag_ID, Tag_Name FROM Dg_Tags")
+    cursor.execute("SELECT Tag_ID, Tag_Name FROM Fall24_S003_T8_Tags")
     tags = cursor.fetchall()
     if not tags:
         raise ValueError("No tags found. Cannot create experience tags.")
@@ -119,9 +119,9 @@ try:
         for tag_id, _ in selected_tags:
             experience_tags_data.append((experience_id, tag_id))
 
-    # Insert the generated experiences into the Dg_Experience table
+    # Insert the generated experiences into the Fall24_S003_T8_Experience table
     cursor.executemany("""
-    INSERT INTO Dg_Experience (
+    INSERT INTO Fall24_S003_T8_Experience (
         Experience_ID, Title, Description, Group_Availability,
         Min_Group_Size, Max_Group_Size, Pricing,
         Service_Provider_ID, Schedule_ID
@@ -129,14 +129,14 @@ try:
         :1, :2, :3, :4, :5, :6, :7, :8, :9
     )
     """, experiences_data)
-    logger.info(f"Inserted {len(experiences_data)} experiences into the Dg_Experience table.")
+    logger.info(f"Inserted {len(experiences_data)} experiences into the Fall24_S003_T8_Experience table.")
 
-    # Insert the experience tags into the Dg_Experience_Tags table
+    # Insert the experience tags into the Fall24_S003_T8_Experience_Tags table
     cursor.executemany("""
-    INSERT INTO Dg_Experience_Tags (Experience_ID, Tag_ID)
+    INSERT INTO Fall24_S003_T8_Experience_Tags (Experience_ID, Tag_ID)
     VALUES (:1, :2)
     """, experience_tags_data)
-    logger.info(f"Inserted {len(experience_tags_data)} tags into the Dg_Experience_Tags table.")
+    logger.info(f"Inserted {len(experience_tags_data)} tags into the Fall24_S003_T8_Experience_Tags table.")
 
     # Commit the changes
     connection.commit()
