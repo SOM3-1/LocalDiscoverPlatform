@@ -37,10 +37,11 @@
 ### 4. **Run the SQL Scripts:**
 
 - Use the provided `.sql` files to set up and manage the database:
-  - `dropAll.sql`: Drops existing tables, views, and triggers to reset the database.
-  - `createAll.sql`: Creates the necessary tables, views, and triggers for the project.
+  - `projectDBdrop.sql`: Drops existing tables, views, and triggers to reset the database.
+  - `projectDBcreate.sql`: Creates the necessary tables, views, and triggers for the project.
   - `adhocQueries.sql`: Contains ad-hoc queries for various data operations and testing.
   - `projectDBqueries.sql`: Contains queries required for project submission.
+  - `businessGoals.sql`: Contains queries related to buisness goals.
 
 - Open each `.sql` file in your SQL tool and execute them as needed to perform the required operations. 
 

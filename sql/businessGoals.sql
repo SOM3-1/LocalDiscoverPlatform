@@ -2,6 +2,7 @@
 SELECT 
     sp.Service_Provider_ID,
     ic.Category_Name AS Experience_Category,
+    l.Location_Name AS Destination,
     SUM(b.Amount_Paid) AS Total_Revenue
 FROM 
     Fall24_S003_T8_Bookings b
@@ -13,7 +14,17 @@ JOIN
     Fall24_S003_T8_Service_Provider_Activities spa ON sp.Service_Provider_ID = spa.Service_Provider_ID
 JOIN 
     Fall24_S003_T8_Interest_Categories ic ON spa.Activity_ID = ic.Category_ID
-GROUP BY ROLLUP (sp.Service_Provider_ID, ic.Category_Name);
+JOIN 
+    Fall24_S003_T8_Schedule_Locations sl ON e.Schedule_ID = sl.Schedule_ID
+JOIN 
+    Fall24_S003_T8_Locations l ON sl.Location_ID = l.Location_ID
+GROUP BY 
+    sp.Service_Provider_ID, ic.Category_Name, l.Location_Name
+HAVING 
+    SUM(b.Amount_Paid) > 0
+ORDER BY 
+    Total_Revenue DESC
+FETCH FIRST 10 ROWS ONLY;
 
 -- Query 2: Top Monthly Demographic, Location, and Activity by Bookings
 SELECT 
@@ -85,6 +96,7 @@ ORDER BY
 FETCH FIRST 10 ROWS ONLY;
 
 -- Query 4: Customer Retention and Loyalty Analysis
+
 SELECT 
     t.T_ID AS Traveler_ID,
     t.First_Name || ' ' || t.Last_Name AS Traveler_Name,
@@ -103,11 +115,11 @@ JOIN
     Fall24_S003_T8_Interest_Categories ic ON spa.Activity_ID = ic.Category_ID
 WHERE 
     b.Booking_Status_ID = (SELECT Status_ID FROM Fall24_S003_T8_Booking_Status WHERE Status_Name = 'Confirmed') 
-    AND b.Amount_Paid > 0  
+    AND b.Amount_Paid > 0  -- Only include non-zero payments
 GROUP BY 
     t.T_ID, t.First_Name, t.Last_Name, ic.Category_Name
 HAVING 
-    COUNT(b.Booking_ID) > 1
+    COUNT(b.Booking_ID) > 1  -- Focus on repeat customers
 ORDER BY 
     Repeat_Bookings DESC,
     Average_Spend DESC;
@@ -133,12 +145,31 @@ JOIN
 GROUP BY 
     sp.Service_Provider_ID, ic.Category_Name
 HAVING 
-    SUM(b.Amount_Paid) > 0 
+    SUM(b.Amount_Paid) > 0  -- Only providers with bookings
 ORDER BY 
     Total_Revenue DESC
 FETCH FIRST 10 ROWS ONLY;
 
--- Query 6: Expereince diversity Analysis using rollup
+-- Query 6: Location with most bookings
+SELECT 
+    l.Location_Name AS Destination,
+    COUNT(b.Booking_ID) AS Total_Bookings,
+    SUM(b.Amount_Paid) AS Total_Revenue
+FROM 
+    Fall24_S003_T8_Bookings b
+JOIN 
+    Fall24_S003_T8_Experience e ON b.Experience_ID = e.Experience_ID
+JOIN 
+    Fall24_S003_T8_Schedule_Locations sl ON e.Schedule_ID = sl.Schedule_ID
+JOIN 
+    Fall24_S003_T8_Locations l ON sl.Location_ID = l.Location_ID
+GROUP BY 
+    l.Location_Name
+ORDER BY 
+    Total_Bookings DESC, Total_Revenue DESC
+FETCH FIRST 10 ROWS ONLY;
+
+-- Query 7: Epereince diversity Analysis using rollup
 SELECT 
     l.Location_Name AS Destination,
     ic.Category_Name AS Experience_Category,
@@ -158,107 +189,8 @@ GROUP BY
 ORDER BY 
     Destination, Experience_Category;
 
--- Query 7: Confirmed Bookings Lacking Ratings with Traveler's Total Booking Count
-SELECT t.T_ID,
-       t.First_Name,
-       t.Last_Name,
-       COUNT(b.Booking_ID) OVER(PARTITION BY t.T_ID) AS Total_Bookings,
-       t.Email,
-       b.Booking_ID,
-       b.Experience_ID,
-       e.Title AS Experience_Title,
-       b.Date_Of_Booking,
-       b.Experience_Date,
-       b.Amount_Paid
-FROM Fall24_S003_T8_Travelers t
-JOIN Fall24_S003_T8_Bookings b ON t.T_ID = b.Traveler_ID
-JOIN Fall24_S003_T8_Experience e ON b.Experience_ID = e.Experience_ID
-JOIN Fall24_S003_T8_Booking_Status bs ON b.Booking_Status_ID = bs.Status_ID
-WHERE bs.Status_Name = 'Confirmed'
-  AND NOT EXISTS (
-      -- Check if there is no rating for this specific booking's experience
-      SELECT 1
-      FROM Fall24_S003_T8_Ratings r
-      WHERE r.Traveler_ID = t.T_ID
-        AND r.Experience_ID = b.Experience_ID
-  )
-ORDER BY Total_Bookings, t.T_ID, b.Booking_ID;
+-- Query 8: Seasonal trends and spendings
 
--- Query 8: Average Rating per Service Provider with Minimum 8 Ratings
-SELECT 
-    sp.Service_Provider_ID,
-    sp.Name AS Service_Provider_Name,
-    AVG(r.Rating_Value) AS Average_Rating
-FROM 
-    Fall24_S003_T8_Service_Provider sp
-JOIN 
-    Fall24_S003_T8_Experience e ON sp.Service_Provider_ID = e.Service_Provider_ID
-JOIN 
-    Fall24_S003_T8_Ratings r ON e.Experience_ID = r.Experience_ID
-GROUP BY 
-    sp.Service_Provider_ID, sp.Name
-HAVING 
-    COUNT(r.Rating_ID) >= 8
-ORDER BY 
-    Average_Rating DESC;
-
--- Query 9: Quarterly and Yearly Booking and Revenue Analysis by Location
-SELECT 
-    EXTRACT(YEAR FROM b.Date_Of_Booking) AS Year,
-    TO_CHAR(b.Date_Of_Booking, 'Q') AS Quarter,
-    l.Location_Name,
-    COUNT(b.Booking_ID) AS Total_Bookings,
-    SUM(b.Amount_Paid) AS Total_Revenue
-FROM 
-    Fall24_S003_T8_Bookings b
-JOIN 
-    Fall24_S003_T8_Experience e ON b.Experience_ID = e.Experience_ID
-JOIN 
-    Fall24_S003_T8_Schedule_Locations sl ON e.Schedule_ID = sl.Schedule_ID
-JOIN 
-    Fall24_S003_T8_Locations l ON sl.Location_ID = l.Location_ID
-GROUP BY CUBE (EXTRACT(YEAR FROM b.Date_Of_Booking), TO_CHAR(b.Date_Of_Booking, 'Q'), l.Location_Name)
-ORDER BY 
-    Year DESC, Quarter DESC, Total_Bookings DESC;
-
--- Query 10: Experience Distribution by Location and Category with Totals
-SELECT
-    l.Location_Name AS Destination,
-    ic.Category_Name AS Experience_Category,
-    COUNT(e.Experience_ID) AS Total_Experiences
-FROM 
-    Fall24_S003_T8_Experience e
-JOIN 
-    Fall24_S003_T8_Service_Provider_Activities spa ON e.Service_Provider_ID = spa.Service_Provider_ID
-JOIN 
-    Fall24_S003_T8_Interest_Categories ic ON spa.Activity_ID = ic.Category_ID
-JOIN 
-    Fall24_S003_T8_Schedule_Locations sl ON e.Schedule_ID = sl.Schedule_ID
-JOIN 
-    Fall24_S003_T8_Locations l ON sl.Location_ID = l.Location_ID
-GROUP BY 
-    CUBE (l.Location_Name, ic.Category_Name);
-
--- Query 11: Average Rating per Experience and Overall Average Rating per Traveler
-SELECT 
-    t.T_ID AS Traveler_ID,
-    e.Experience_ID,
-    e.Title AS Experience_Title,
-    AVG(r.Rating_Value) AS Average_Rating,
-    AVG(AVG(r.Rating_Value)) OVER (PARTITION BY t.T_ID) AS Overall_Average_Rating
-FROM 
-    Fall24_S003_T8_Travelers t
-JOIN 
-    Fall24_S003_T8_Bookings b ON t.T_ID = b.Traveler_ID
-JOIN 
-    Fall24_S003_T8_Ratings r ON b.Experience_ID = r.Experience_ID
-JOIN 
-    Fall24_S003_T8_Experience e ON b.Experience_ID = e.Experience_ID
-GROUP BY 
-    t.T_ID, e.Experience_ID, e.Title
-    ORDER BY Overall_Average_Rating DESC;
-
--- Query 12: Seasonal trends and spendings
 SELECT 
     EXTRACT(YEAR FROM b.Date_Of_Booking) AS Booking_Year,
     CASE 
@@ -289,87 +221,43 @@ GROUP BY
 ORDER BY 
     Booking_Year DESC, Booking_Season;
 
--- Query 13: Top 10 Highest and Lowest Rated Service Providers
-SELECT * FROM (
-    SELECT 
-        sp.Service_Provider_ID,
-        sp.Name AS ServiceProviderName,
-        sp.Email AS ServiceProviderEmail,
-        sp.Phone AS ServiceProviderPhone,
-        sp.City AS ServiceProviderCity,
-        AVG(r.Rating_Value) AS AverageRating,
-        'Top 10 Highest' AS RatingCategory
-    FROM 
-        Fall24_S003_T8_Service_Provider sp
-    JOIN 
-        Fall24_S003_T8_Experience e ON sp.Service_Provider_ID = e.Service_Provider_ID
-    JOIN 
-        Fall24_S003_T8_Ratings r ON e.Experience_ID = r.Experience_ID
-    GROUP BY 
-        sp.Service_Provider_ID, sp.Name, sp.Email, sp.Phone, sp.City
-    ORDER BY 
-        AverageRating DESC
-) WHERE ROWNUM <= 10
 
-UNION ALL
-
-SELECT * FROM (
-    SELECT 
-        sp.Service_Provider_ID,
-        sp.Name AS ServiceProviderName,
-        sp.Email AS ServiceProviderEmail,
-        sp.Phone AS ServiceProviderPhone,
-        sp.City AS ServiceProviderCity,
-        AVG(r.Rating_Value) AS AverageRating,
-        'Top 10 Lowest' AS RatingCategory
-    FROM 
-        Fall24_S003_T8_Service_Provider sp
-    JOIN 
-        Fall24_S003_T8_Experience e ON sp.Service_Provider_ID = e.Service_Provider_ID
-    JOIN 
-        Fall24_S003_T8_Ratings r ON e.Experience_ID = r.Experience_ID
-    GROUP BY 
-        sp.Service_Provider_ID, sp.Name, sp.Email, sp.Phone, sp.City
-    ORDER BY 
-        AverageRating ASC
-) WHERE ROWNUM <= 10;
-
--- Query 14: Location with most bookings
+-- Query 9: Time Between Booking and Experience Date
 SELECT 
-    l.Location_Name AS Destination,
-    COUNT(b.Booking_ID) AS Total_Bookings,
-    SUM(b.Amount_Paid) AS Total_Revenue
+    t.T_ID AS Traveler_ID,
+    t.First_Name || ' ' || t.Last_Name AS Traveler_Name,
+    AVG(EXTRACT(DAY FROM (b.Experience_Date - b.Date_Of_Booking))) AS Avg_Planning_Days,
+    MIN(EXTRACT(DAY FROM (b.Experience_Date - b.Date_Of_Booking))) AS Min_Planning_Days,
+    MAX(EXTRACT(DAY FROM (b.Experience_Date - b.Date_Of_Booking))) AS Max_Planning_Days
 FROM 
-    Fall24_S003_T8_Bookings b
+    Fall24_S003_T8_Travelers t
 JOIN 
-    Fall24_S003_T8_Experience e ON b.Experience_ID = e.Experience_ID
-JOIN 
-    Fall24_S003_T8_Schedule_Locations sl ON e.Schedule_ID = sl.Schedule_ID
-JOIN 
-    Fall24_S003_T8_Locations l ON sl.Location_ID = l.Location_ID
+    Fall24_S003_T8_Bookings b ON t.T_ID = b.Traveler_ID
 GROUP BY 
-    l.Location_Name
+    t.T_ID, t.First_Name || ' ' || t.Last_Name
 ORDER BY 
-    Total_Bookings DESC, Total_Revenue DESC
-FETCH FIRST 10 ROWS ONLY;
+    Avg_Planning_Days DESC;
 
-
--- Query 15: Top 5 Most Booked Experiences with Location Details
+-- Query 10: Guide Engagement and Support Needs
 SELECT 
-    e.Experience_ID,
-    e.Title AS ExperienceTitle,
-    l.Location_Name,
-    COUNT(b.Booking_ID) AS NumberOfBookings
+    sp.Name AS Guide_Name,
+    ic.Category_Name AS Activity_Category,
+    AVG(r.Rating_Value) AS Avg_Rating,
+    COUNT(r.Rating_ID) AS Total_Ratings,
+    COUNT(CASE WHEN r.Rating_Value < 5 THEN 1 END) AS Low_Ratings
 FROM 
-    Fall24_S003_T8_Experience e
+    Fall24_S003_T8_Service_Provider sp
 JOIN 
-    Fall24_S003_T8_Bookings b ON e.Experience_ID = b.Experience_ID
+    Fall24_S003_T8_Service_Provider_Activities spa ON sp.Service_Provider_ID = spa.Service_Provider_ID
 JOIN 
-    Fall24_S003_T8_Schedule_Locations sl ON e.Schedule_ID = sl.Schedule_ID
+    Fall24_S003_T8_Interest_Categories ic ON spa.Activity_ID = ic.Category_ID
 JOIN 
-    Fall24_S003_T8_Locations l ON sl.Location_ID = l.Location_ID
+    Fall24_S003_T8_Experience e ON sp.Service_Provider_ID = e.Service_Provider_ID
+JOIN 
+    Fall24_S003_T8_Ratings r ON e.Experience_ID = r.Experience_ID
 GROUP BY 
-    e.Experience_ID, e.Title, l.Location_Name
+    sp.Name, ic.Category_Name
+HAVING 
+    AVG(r.Rating_Value) < 6 OR COUNT(CASE WHEN r.Rating_Value < 5 THEN 1 END) > 0
 ORDER BY 
-    NumberOfBookings DESC
-FETCH FIRST 5 ROWS ONLY;
+    Avg_Rating ASC, Low_Ratings DESC;
