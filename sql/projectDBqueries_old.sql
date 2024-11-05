@@ -408,5 +408,5 @@ JOIN Fall24_S003_T8_Interest_Categories C ON TP.Preference_ID = C.Category_ID
 JOIN Fall24_S003_T8_Bookings B ON T.T_ID = B.Traveler_ID
 JOIN Fall24_S003_T8_Experience E ON B.Experience_ID = E.Experience_ID
 JOIN Fall24_S003_T8_Service_Provider SP ON E.Service_Provider_ID = SP.Service_Provider_ID
-WHERE C.Category_Name = 'Adventure'
+WHERE C.Category_Name like '%Adventure%'
 ORDER BY T.Last_Name, T.First_Name;
