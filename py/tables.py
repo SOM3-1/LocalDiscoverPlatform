@@ -1503,8 +1503,47 @@ create_view_statements = [
         Fall24_S003_T8_Experience e ON b.Experience_ID = e.Experience_ID
     GROUP BY 
         e.Title
+    """,
     """
-    ]
+    CREATE VIEW VW_Fall24_S003_T8_LOC_WITH_MOST_BOOKINGS AS SELECT 
+        l.Location_Name AS Destination,
+        COUNT(b.Booking_ID) AS Total_Bookings,
+        SUM(b.Amount_Paid) AS Total_Revenue
+    FROM 
+        Fall24_S003_T8_Bookings b
+    JOIN 
+        Fall24_S003_T8_Experience e ON b.Experience_ID = e.Experience_ID
+    JOIN 
+        Fall24_S003_T8_Schedule_Locations sl ON e.Schedule_ID = sl.Schedule_ID
+    JOIN 
+        Fall24_S003_T8_Locations l ON sl.Location_ID = l.Location_ID
+    GROUP BY 
+        l.Location_Name
+    ORDER BY 
+        Total_Bookings DESC, Total_Revenue DESC
+    FETCH FIRST 10 ROWS ONLY
+    """,
+    """
+    CREATE VIEW VW_Fall24_S003_T8_TOP_5_MOST_BOOKED_EXPEREINCE AS SELECT 
+        e.Experience_ID,
+        e.Title AS ExperienceTitle,
+        l.Location_Name,
+        COUNT(b.Booking_ID) AS NumberOfBookings
+    FROM 
+        Fall24_S003_T8_Experience e
+    JOIN 
+        Fall24_S003_T8_Bookings b ON e.Experience_ID = b.Experience_ID
+    JOIN 
+        Fall24_S003_T8_Schedule_Locations sl ON e.Schedule_ID = sl.Schedule_ID
+    JOIN 
+        Fall24_S003_T8_Locations l ON sl.Location_ID = l.Location_ID
+    GROUP BY 
+        e.Experience_ID, e.Title, l.Location_Name
+    ORDER BY 
+        NumberOfBookings DESC
+    FETCH FIRST 5 ROWS ONLY
+    """
+]
 
 drop_view_statements = [
     "DROP VIEW VW_Fall24_S003_T8_TRAVELERS_LOCATION_PREFERENCES",
@@ -1568,5 +1607,7 @@ drop_view_statements = [
     "DROP VIEW VW_Fall24_S003_T8_REPEAT_TRAVELERS_PREFERENCES",
     "DROP VIEW VW_Fall24_S003_T8_EXPERIENCE_DIVERSITY",
     "DROP VIEW VW_Fall24_S003_T8_MONTHLY_BOOKING_COUNT_BY_EXPERIENCE",
-    "DROP VIEW VW_Fall24_S003_T8_AVG_DAYS_BETWEEN_BOOKING_EXPERIENCE"
+    "DROP VIEW VW_Fall24_S003_T8_AVG_DAYS_BETWEEN_BOOKING_EXPERIENCE",
+    "DROP VIEW VW_Fall24_S003_T8_LOC_WITH_MOST_BOOKINGS",
+    "DROP VIEW VW_Fall24_S003_T8_TOP_5_MOST_BOOKED_EXPEREINCE"
 ]

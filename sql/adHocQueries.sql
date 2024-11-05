@@ -1268,3 +1268,42 @@ JOIN
     Fall24_S003_T8_Experience e ON b.Experience_ID = e.Experience_ID
 GROUP BY 
     e.Title;
+
+-- Query: Location with most bookings - VW_Fall24_S003_T8_LOC_WITH_MOST_BOOKINGS
+SELECT 
+    l.Location_Name AS Destination,
+    COUNT(b.Booking_ID) AS Total_Bookings,
+    SUM(b.Amount_Paid) AS Total_Revenue
+FROM 
+    Fall24_S003_T8_Bookings b
+JOIN 
+    Fall24_S003_T8_Experience e ON b.Experience_ID = e.Experience_ID
+JOIN 
+    Fall24_S003_T8_Schedule_Locations sl ON e.Schedule_ID = sl.Schedule_ID
+JOIN 
+    Fall24_S003_T8_Locations l ON sl.Location_ID = l.Location_ID
+GROUP BY 
+    l.Location_Name
+ORDER BY 
+    Total_Bookings DESC, Total_Revenue DESC
+FETCH FIRST 10 ROWS ONLY;
+
+-- Query: Top 5 Most Booked Experiences with Location Details - VW_Fall24_S003_T8_TOP_5_MOST_BOOKED_EXPEREINCE
+SELECT 
+    e.Experience_ID,
+    e.Title AS ExperienceTitle,
+    l.Location_Name,
+    COUNT(b.Booking_ID) AS NumberOfBookings
+FROM 
+    Fall24_S003_T8_Experience e
+JOIN 
+    Fall24_S003_T8_Bookings b ON e.Experience_ID = b.Experience_ID
+JOIN 
+    Fall24_S003_T8_Schedule_Locations sl ON e.Schedule_ID = sl.Schedule_ID
+JOIN 
+    Fall24_S003_T8_Locations l ON sl.Location_ID = l.Location_ID
+GROUP BY 
+    e.Experience_ID, e.Title, l.Location_Name
+ORDER BY 
+    NumberOfBookings DESC
+FETCH FIRST 5 ROWS ONLY;

@@ -244,7 +244,7 @@ SELECT
     t.T_ID AS Traveler_ID,
     e.Experience_ID,
     e.Title AS Experience_Title,
-    AVG(r.Rating_Value) AS Average_Rating,
+    AVG(r.Rating_Value) AS Rating,
     AVG(AVG(r.Rating_Value)) OVER (PARTITION BY t.T_ID) AS Overall_Average_Rating
 FROM 
     Fall24_S003_T8_Travelers t
@@ -289,51 +289,6 @@ GROUP BY
 ORDER BY 
     Booking_Year DESC, Booking_Season;
 
--- Query 13: Top 10 Highest and Lowest Rated Service Providers
-SELECT * FROM (
-    SELECT 
-        sp.Service_Provider_ID,
-        sp.Name AS ServiceProviderName,
-        sp.Email AS ServiceProviderEmail,
-        sp.Phone AS ServiceProviderPhone,
-        sp.City AS ServiceProviderCity,
-        AVG(r.Rating_Value) AS AverageRating,
-        'Top 10 Highest' AS RatingCategory
-    FROM 
-        Fall24_S003_T8_Service_Provider sp
-    JOIN 
-        Fall24_S003_T8_Experience e ON sp.Service_Provider_ID = e.Service_Provider_ID
-    JOIN 
-        Fall24_S003_T8_Ratings r ON e.Experience_ID = r.Experience_ID
-    GROUP BY 
-        sp.Service_Provider_ID, sp.Name, sp.Email, sp.Phone, sp.City
-    ORDER BY 
-        AverageRating DESC
-) WHERE ROWNUM <= 10
-
-UNION ALL
-
-SELECT * FROM (
-    SELECT 
-        sp.Service_Provider_ID,
-        sp.Name AS ServiceProviderName,
-        sp.Email AS ServiceProviderEmail,
-        sp.Phone AS ServiceProviderPhone,
-        sp.City AS ServiceProviderCity,
-        AVG(r.Rating_Value) AS AverageRating,
-        'Top 10 Lowest' AS RatingCategory
-    FROM 
-        Fall24_S003_T8_Service_Provider sp
-    JOIN 
-        Fall24_S003_T8_Experience e ON sp.Service_Provider_ID = e.Service_Provider_ID
-    JOIN 
-        Fall24_S003_T8_Ratings r ON e.Experience_ID = r.Experience_ID
-    GROUP BY 
-        sp.Service_Provider_ID, sp.Name, sp.Email, sp.Phone, sp.City
-    ORDER BY 
-        AverageRating ASC
-) WHERE ROWNUM <= 10;
-
 -- Query 14: Location with most bookings
 SELECT 
     l.Location_Name AS Destination,
@@ -373,3 +328,71 @@ GROUP BY
 ORDER BY 
     NumberOfBookings DESC
 FETCH FIRST 5 ROWS ONLY;
+
+-- Query 16: Top 10 service provider based on weightage(70& to rating and remaining 30% to total bookings)
+-- Score=(Average Rating×0.7)+((Total Bookings/Max Total Bookings)​×10×0.3)
+WITH ServiceProviderRatings AS (
+    SELECT 
+        e.Service_Provider_ID,
+        AVG(r.Rating_Value) AS Average_Rating,
+        COUNT(b.Booking_ID) AS Total_Bookings
+    FROM 
+        Fall24_S003_T8_Experience e
+    LEFT JOIN 
+        Fall24_S003_T8_Ratings r ON e.Experience_ID = r.Experience_ID
+    LEFT JOIN 
+        Fall24_S003_T8_Bookings b ON e.Experience_ID = b.Experience_ID
+    GROUP BY 
+        e.Service_Provider_ID
+    HAVING 
+        AVG(r.Rating_Value) IS NOT NULL
+        AND COUNT(b.Booking_ID) > 10 
+),
+MaxBookings AS (
+    SELECT 
+        MAX(Total_Bookings) AS Max_Total_Bookings
+    FROM 
+        ServiceProviderRatings
+),
+RankedProviders AS (
+    SELECT 
+        sp.Service_Provider_ID,
+        sp.Average_Rating,
+        sp.Total_Bookings,
+        (sp.Average_Rating * 0.7) + ((sp.Total_Bookings / mb.Max_Total_Bookings) * 10 * 0.3) AS Score,
+        DENSE_RANK() OVER (
+            ORDER BY (sp.Average_Rating * 0.7) + ((sp.Total_Bookings / mb.Max_Total_Bookings) * 10 * 0.3) DESC
+        ) AS Rank
+    FROM 
+        ServiceProviderRatings sp,
+        MaxBookings mb
+),
+ProviderWithSingleLocation AS (
+    SELECT 
+        sch.Service_Provider_ID,
+        loc.Location_Name,
+        ROW_NUMBER() OVER (PARTITION BY sch.Service_Provider_ID ORDER BY loc.Location_Name) AS LocationRank
+    FROM 
+        Fall24_S003_T8_Availability_Schedule sch
+    JOIN 
+        Fall24_S003_T8_Schedule_Locations sl ON sch.Schedule_ID = sl.Schedule_ID
+    JOIN 
+        Fall24_S003_T8_Locations loc ON sl.Location_ID = loc.Location_ID
+)
+SELECT 
+    rp.Service_Provider_ID,
+    sp.Name AS Service_Provider_Name,
+    loc.Location_Name AS Location,
+    rp.Average_Rating,
+    rp.Total_Bookings,
+    rp.Score
+FROM 
+    RankedProviders rp
+JOIN 
+    Fall24_S003_T8_Service_Provider sp ON rp.Service_Provider_ID = sp.Service_Provider_ID
+LEFT JOIN 
+    ProviderWithSingleLocation loc ON rp.Service_Provider_ID = loc.Service_Provider_ID AND loc.LocationRank = 1  -- Only first location
+WHERE 
+    rp.Rank <= 10
+ORDER BY 
+    rp.Score DESC;
