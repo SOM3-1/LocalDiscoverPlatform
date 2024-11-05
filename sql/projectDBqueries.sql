@@ -396,3 +396,17 @@ WHERE
     rp.Rank <= 10
 ORDER BY 
     rp.Score DESC;
+
+-- Query 17: Adventure-Seeking Travelers and Their Booked Experiences with Service Providers
+SELECT T.First_Name || ' ' || T.Last_Name AS Traveler_Name,
+       T.Email AS Traveler_Email,
+       SP.Name AS Service_Provider_Name,
+       E.Title AS Experience_Title
+FROM Fall24_S003_T8_Travelers T
+JOIN Fall24_S003_T8_Traveler_Preferences TP ON T.T_ID = TP.T_ID
+JOIN Fall24_S003_T8_Interest_Categories C ON TP.Preference_ID = C.Category_ID
+JOIN Fall24_S003_T8_Bookings B ON T.T_ID = B.Traveler_ID
+JOIN Fall24_S003_T8_Experience E ON B.Experience_ID = E.Experience_ID
+JOIN Fall24_S003_T8_Service_Provider SP ON E.Service_Provider_ID = SP.Service_Provider_ID
+WHERE C.Category_Name = 'Adventure'
+ORDER BY T.Last_Name, T.First_Name;
