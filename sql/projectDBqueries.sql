@@ -71,33 +71,7 @@ ORDER BY
     Repeat_Bookings DESC,
     Average_Spend DESC;
 
--- Query 3: Expereince quality
-SELECT 
-    sp.Service_Provider_ID,
-    ic.Category_Name AS Experience_Category,
-    SUM(b.Amount_Paid) AS Total_Revenue,
-    AVG(r.Rating_Value) AS Average_Rating
-FROM 
-    Fall24_S003_T8_Service_Provider sp
-JOIN 
-    Fall24_S003_T8_Experience e ON sp.Service_Provider_ID = e.Service_Provider_ID
-LEFT JOIN 
-    Fall24_S003_T8_Bookings b ON e.Experience_ID = b.Experience_ID
-LEFT JOIN 
-    Fall24_S003_T8_Ratings r ON e.Experience_ID = r.Experience_ID
-JOIN 
-    Fall24_S003_T8_Service_Provider_Activities spa ON sp.Service_Provider_ID = spa.Service_Provider_ID
-JOIN 
-    Fall24_S003_T8_Interest_Categories ic ON spa.Activity_ID = ic.Category_ID
-GROUP BY 
-    sp.Service_Provider_ID, ic.Category_Name
-HAVING 
-    SUM(b.Amount_Paid) > 0 
-ORDER BY 
-    Total_Revenue DESC
-FETCH FIRST 10 ROWS ONLY;
-
--- Query 4: Expereince diversity Analysis using rollup
+-- Query 3: Expereince diversity Analysis using rollup
 SELECT 
     l.Location_Name AS Destination,
     ic.Category_Name AS Experience_Category,
@@ -117,7 +91,7 @@ GROUP BY
 ORDER BY 
     Destination, Experience_Category;
 
--- Query 5: Confirmed Bookings Lacking Ratings with Traveler's Total Booking Count
+-- Query 4: Confirmed Bookings Lacking Ratings with Traveler's Total Booking Count
 SELECT t.T_ID,
        t.First_Name,
        t.Last_Name,
@@ -143,13 +117,13 @@ WHERE bs.Status_Name = 'Confirmed'
   )
 ORDER BY Total_Bookings, t.T_ID, b.Booking_ID;
 
--- Query 6: Quarterly and Yearly Booking and Revenue Analysis by Location
+-- Query 5: Quarterly and Yearly Booking and Revenue Analysis by Location
 SELECT 
     EXTRACT(YEAR FROM b.Date_Of_Booking) AS Year,
     TO_CHAR(b.Date_Of_Booking, 'Q') AS Quarter,
     l.Location_Name,
     COUNT(b.Booking_ID) AS Total_Bookings,
-    SUM(b.Amount_Paid) AS Total_Revenue
+    SUM(COALESCE(b.Amount_Paid, 0)) AS Total_Revenue
 FROM 
     Fall24_S003_T8_Bookings b
 JOIN 
@@ -158,11 +132,16 @@ JOIN
     Fall24_S003_T8_Schedule_Locations sl ON e.Schedule_ID = sl.Schedule_ID
 JOIN 
     Fall24_S003_T8_Locations l ON sl.Location_ID = l.Location_ID
-GROUP BY CUBE (EXTRACT(YEAR FROM b.Date_Of_Booking), TO_CHAR(b.Date_Of_Booking, 'Q'), l.Location_Name)
+JOIN 
+    Fall24_S003_T8_Booking_Status bs ON b.Booking_Status_ID = bs.Status_ID
+WHERE 
+    bs.Status_Name = 'Confirmed'
+GROUP BY 
+    CUBE (EXTRACT(YEAR FROM b.Date_Of_Booking), TO_CHAR(b.Date_Of_Booking, 'Q'), l.Location_Name)
 ORDER BY 
     Year DESC, Quarter DESC, Total_Bookings DESC;
 
--- Query 7: Experience Distribution by Location and Category with Totals
+-- Query 6: Experience Distribution by Location and Category with Totals
 SELECT
     l.Location_Name AS Destination,
     ic.Category_Name AS Experience_Category,
@@ -180,7 +159,7 @@ JOIN
 GROUP BY 
     CUBE (l.Location_Name, ic.Category_Name);
 
--- Query 8: Seasonal trends and spendings
+-- Query 7: Seasonal trends and spendings
 SELECT 
     EXTRACT(YEAR FROM b.Date_Of_Booking) AS Booking_Year,
     CASE 
@@ -211,7 +190,7 @@ GROUP BY
 ORDER BY 
     Booking_Year DESC, Booking_Season;
 
--- Query 9: Top 10 service provider based on weightage(70& to rating and remaining 30% to total bookings)
+-- Query 8: Top 10 service provider based on weightage(70& to rating and remaining 30% to total bookings)
 -- Score=(Average Rating×0.7)+((Total Bookings/Max Total Bookings)​×10×0.3)
 WITH ServiceProviderRatings AS (
     SELECT 
@@ -279,7 +258,7 @@ WHERE
 ORDER BY 
     rp.Score DESC;
 
--- Query 10: Adventure-Seeking Travelers and Their Booked Experiences with Service Providers
+-- Query 9: Adventure-Seeking Travelers and Their Booked Experiences with Service Providers
 SELECT T.First_Name || ' ' || T.Last_Name AS Traveler_Name,
        T.Email AS Traveler_Email,
        SP.Name AS Service_Provider_Name,
