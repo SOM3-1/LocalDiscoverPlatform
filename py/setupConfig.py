@@ -15,3 +15,5 @@ num_activities = random.randint(1, 6)
 
 # Range for the number of tags
 num_tags = random.randint(1, 3)
+
+tax_rate = 0.10

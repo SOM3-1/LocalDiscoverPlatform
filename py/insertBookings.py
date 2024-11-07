@@ -5,6 +5,7 @@ import random
 from faker import Faker
 from datetime import datetime, timedelta
 from credentials import netid, pwd, connection
+from setupConfig import tax_rate
 
 # Configure logging
 logging.basicConfig(
@@ -102,7 +103,7 @@ try:
                 if random.random() < 0.7:
                     payment_status = 'Completed'
                     booking_status = 'Confirmed'
-                    amount_paid = pricing
+                    amount_paid = pricing * (1 + tax_rate)
                 else:
                     payment_status = random.choice(['Pending', 'Failed', 'Refunded'])
                     booking_status = 'Cancelled' if payment_status in ['Failed', 'Refunded'] else 'Pending'
