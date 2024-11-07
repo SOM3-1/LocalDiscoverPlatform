@@ -6278,8 +6278,7 @@ VALUES
         'BS003',
         'BM004',
         'PS003'
-    )
-    INTO Fall24_S003_T8_Bookings (
+    ) INTO Fall24_S003_T8_Bookings (
         Booking_ID,
         Traveler_ID,
         Experience_ID,
@@ -6301,8 +6300,7 @@ VALUES
         'BS001',
         'BM001',
         'PS002'
-    )
-    INTO Fall24_S003_T8_Bookings (
+    ) INTO Fall24_S003_T8_Bookings (
         Booking_ID,
         Traveler_ID,
         Experience_ID,
@@ -6324,8 +6322,7 @@ VALUES
         'BS001',
         'BM002',
         'PS002'
-    )
-    INTO Fall24_S003_T8_Bookings (
+    ) INTO Fall24_S003_T8_Bookings (
         Booking_ID,
         Traveler_ID,
         Experience_ID,
@@ -6347,8 +6344,7 @@ VALUES
         'BS001',
         'BM002',
         'PS002'
-    )
-      INTO Fall24_S003_T8_Bookings (
+    ) INTO Fall24_S003_T8_Bookings (
         Booking_ID,
         Traveler_ID,
         Experience_ID,
@@ -6364,14 +6360,13 @@ VALUES
         'B00042',
         'T00036',
         'E00006',
-       TO_TIMESTAMP('2024-07-30 20:05:38', 'YYYY-MM-DD HH24:MI:SS'),
+        TO_TIMESTAMP('2024-07-30 20:05:38', 'YYYY-MM-DD HH24:MI:SS'),
         TO_DATE('2024-07-31', 'YYYY-MM-DD'),
         3249.18,
         'BS001',
         'BM002',
         'PS002'
-    )
-    INTO Fall24_S003_T8_Bookings (
+    ) INTO Fall24_S003_T8_Bookings (
         Booking_ID,
         Traveler_ID,
         Experience_ID,
@@ -6387,14 +6382,13 @@ VALUES
         'B00043',
         'T00013',
         'E00011',
-         TO_DATE('2024-03-01', 'YYYY-MM-DD'),
+        TO_DATE('2024-03-01', 'YYYY-MM-DD'),
         TO_DATE('2024-12-19', 'YYYY-MM-DD'),
         2300.00,
         'BS001',
         'BM004',
         'PS002'
-    )
-    INTO Fall24_S003_T8_Bookings (
+    ) INTO Fall24_S003_T8_Bookings (
         Booking_ID,
         Traveler_ID,
         Experience_ID,
@@ -6410,14 +6404,13 @@ VALUES
         'B00044',
         'T00013',
         'E00016',
-         TO_TIMESTAMP('2024-05-28 20:21:50', 'YYYY-MM-DD HH24:MI:SS'),
+        TO_TIMESTAMP('2024-05-28 20:21:50', 'YYYY-MM-DD HH24:MI:SS'),
         TO_DATE('2024-06-15', 'YYYY-MM-DD'),
         1066.68,
         'BS001',
         'BM004',
         'PS002'
-    )
-     INTO Fall24_S003_T8_Bookings (
+    ) INTO Fall24_S003_T8_Bookings (
         Booking_ID,
         Traveler_ID,
         Experience_ID,
@@ -6439,8 +6432,7 @@ VALUES
         'BS001',
         'BM004',
         'PS002'
-    )
-    INTO Fall24_S003_T8_Bookings (
+    ) INTO Fall24_S003_T8_Bookings (
         Booking_ID,
         Traveler_ID,
         Experience_ID,
@@ -6462,6 +6454,182 @@ VALUES
         'BS001',
         'BM004',
         'PS002'
+    ) INTO Fall24_S003_T8_Bookings (
+        Booking_ID,
+        Traveler_ID,
+        Experience_ID,
+        Date_Of_Booking,
+        Experience_Date,
+        Amount_Paid,
+        Booking_Status_ID,
+        Booking_Method_ID,
+        Payment_Status_ID
+    )
+VALUES
+    (
+        'B00047',
+        'T00035',
+        'E00049',
+        TO_TIMESTAMP('2024-05-25 22:40:19', 'YYYY-MM-DD HH24:MI:SS'),
+        TO_DATE('2024-06-15', 'YYYY-MM-DD'),
+        108.52,
+        'BS001',
+        'BM004',
+        'PS002'
+    ) INTO Fall24_S003_T8_Bookings (
+        Booking_ID,
+        Traveler_ID,
+        Experience_ID,
+        Date_Of_Booking,
+        Experience_Date,
+        Amount_Paid,
+        Booking_Status_ID,
+        Booking_Method_ID,
+        Payment_Status_ID
+    )
+VALUES
+    (
+        'B00048',
+        'T00004',
+        'E00049',
+        TO_TIMESTAMP('2024-05-25 22:40:19', 'YYYY-MM-DD HH24:MI:SS'),
+        TO_DATE('2024-06-15', 'YYYY-MM-DD'),
+        108.52,
+        'BS001',
+        'BM004',
+        'PS002'
+    ) INTO Fall24_S003_T8_Bookings (
+        Booking_ID,
+        Traveler_ID,
+        Experience_ID,
+        Date_Of_Booking,
+        Experience_Date,
+        Amount_Paid,
+        Booking_Status_ID,
+        Booking_Method_ID,
+        Payment_Status_ID
+    )
+VALUES
+    (
+        'B00049',
+        'T00005',
+        'E00049',
+        TO_TIMESTAMP('2024-05-25 22:40:19', 'YYYY-MM-DD HH24:MI:SS'),
+        TO_DATE('2024-06-15', 'YYYY-MM-DD'),
+        0,
+        'BS002',
+        'BM002',
+        'PS004'
+    ) INTO Fall24_S003_T8_Bookings (
+        Booking_ID,
+        Traveler_ID,
+        Experience_ID,
+        Date_Of_Booking,
+        Experience_Date,
+        Amount_Paid,
+        Booking_Status_ID,
+        Booking_Method_ID,
+        Payment_Status_ID
+    )
+VALUES
+    (
+        'B00050',
+        'T00005',
+        'E00024',
+        TO_TIMESTAMP('2024-07-05 03:42:52', 'YYYY-MM-DD HH24:MI:SS'),
+        TO_DATE('2024-07-31', 'YYYY-MM-DD'),
+        1911.31,
+        'BS002',
+        'BM002',
+        'PS004'
+    ) INTO Fall24_S003_T8_Bookings (
+        Booking_ID,
+        Traveler_ID,
+        Experience_ID,
+        Date_Of_Booking,
+        Experience_Date,
+        Amount_Paid,
+        Booking_Status_ID,
+        Booking_Method_ID,
+        Payment_Status_ID
+    )
+VALUES
+    (
+        'B00051',
+        'T00006',
+        'E00041',
+        TO_TIMESTAMP('2024-05-26 06:53:47', 'YYYY-MM-DD HH24:MI:SS'),
+        TO_DATE('2024-06-15', 'YYYY-MM-DD'),
+        989.1,
+        'BS002',
+        'BM002',
+        'PS004'
+    ) INTO Fall24_S003_T8_Bookings (
+        Booking_ID,
+        Traveler_ID,
+        Experience_ID,
+        Date_Of_Booking,
+        Experience_Date,
+        Amount_Paid,
+        Booking_Status_ID,
+        Booking_Method_ID,
+        Payment_Status_ID
+    )
+VALUES
+    (
+        'B00052',
+        'T00006',
+        'E00002',
+        TO_DATE('2024-07-01', 'YYYY-MM-DD'),
+        TO_DATE('2024-12-19', 'YYYY-MM-DD'),
+        1500.00,
+        'BS002',
+        'BM002',
+        'PS004'
+    ) INTO Fall24_S003_T8_Bookings (
+        Booking_ID,
+        Traveler_ID,
+        Experience_ID,
+        Date_Of_Booking,
+        Experience_Date,
+        Amount_Paid,
+        Booking_Status_ID,
+        Booking_Method_ID,
+        Payment_Status_ID
+    )
+VALUES
+    (
+        'B00053',
+        'T00006',
+        'E00015',
+        TO_DATE('2024-08-10', 'YYYY-MM-DD'),
+        TO_DATE('2024-12-19', 'YYYY-MM-DD'),
+        2650.00,
+        'BS002',
+        'BM002',
+        'PS004'
+    ) INTO Fall24_S003_T8_Bookings (
+        Booking_ID,
+        Traveler_ID,
+        Experience_ID,
+        Date_Of_Booking,
+        Experience_Date,
+        Amount_Paid,
+        Booking_Status_ID,
+        Booking_Method_ID,
+        Payment_Status_ID
+    )
+VALUES
+    (
+        'B00054',
+        'T00006',
+        'E00016',
+        TO_TIMESTAMP('2024-05-28 20:21:50', 'YYYY-MM-DD HH24:MI:SS'),
+        TO_DATE('2024-06-15', 'YYYY-MM-DD'),
+        1066.68,
+        'BS002',
+        'BM002',
+        'PS004'
     )
 Select
     1
