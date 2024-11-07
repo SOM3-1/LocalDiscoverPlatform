@@ -207,7 +207,7 @@ WITH ServiceProviderRatings AS (
         e.Service_Provider_ID
     HAVING 
         AVG(r.Rating_Value) IS NOT NULL
-        AND COUNT(b.Booking_ID) > 10 
+        AND COUNT(b.Booking_ID) > 1
 ),
 MaxBookings AS (
     SELECT 
