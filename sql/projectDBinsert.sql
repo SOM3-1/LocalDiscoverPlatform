@@ -6279,11 +6279,6 @@ VALUES
         'BM004',
         'PS003'
     )
-SELECT
-    *
-FROM
-    DUAL;
-
 Select
     1
 from
