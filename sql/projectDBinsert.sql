@@ -6062,7 +6062,228 @@ VALUES
         'BS001',
         'BM003',
         'PS002'
+    ) INTO Fall24_S003_T8_Bookings
+VALUES
+    (
+        'B78043',
+        'T00017',
+        'E00002',
+        TO_DATE('2024-07-01', 'YYYY-MM-DD'),
+        TO_DATE('2024-12-19', 'YYYY-MM-DD'),
+        1500.00,
+        'BS001',
+        'BM001',
+        'PS001'
+    ) INTO Fall24_S003_T8_Bookings
+VALUES
+    (
+        'B41509',
+        'T00020',
+        'E00004',
+        TO_DATE('2024-05-01', 'YYYY-MM-DD'),
+        TO_DATE('2024-12-19', 'YYYY-MM-DD'),
+        2900.00,
+        'BS001',
+        'BM002',
+        'PS001'
+    ) INTO Fall24_S003_T8_Bookings
+VALUES
+    (
+        'B32748',
+        'T00021',
+        'E00005',
+        TO_DATE('2024-04-15', 'YYYY-MM-DD'),
+        TO_DATE('2024-12-19', 'YYYY-MM-DD'),
+        2400.00,
+        'BS001',
+        'BM003',
+        'PS001'
+    ) INTO Fall24_S003_T8_Bookings
+VALUES
+    (
+        'B49279',
+        'T00022',
+        'E00007',
+        TO_DATE('2024-06-20', 'YYYY-MM-DD'),
+        TO_DATE('2024-12-19', 'YYYY-MM-DD'),
+        3200.00,
+        'BS001',
+        'BM003',
+        'PS001'
+    ) INTO Fall24_S003_T8_Bookings
+VALUES
+    (
+        'B19118',
+        'T00023',
+        'E00008',
+        TO_DATE('2024-03-20', 'YYYY-MM-DD'),
+        TO_DATE('2024-12-19', 'YYYY-MM-DD'),
+        950.00,
+        'BS001',
+        'BM004',
+        'PS001'
+    ) INTO Fall24_S003_T8_Bookings
+VALUES
+    (
+        'B05054',
+        'T00027',
+        'E00009',
+        TO_DATE('2024-01-15', 'YYYY-MM-DD'),
+        TO_DATE('2024-12-19', 'YYYY-MM-DD'),
+        2700.00,
+        'BS001',
+        'BM001',
+        'PS001'
+    ) INTO Fall24_S003_T8_Bookings
+VALUES
+    (
+        'B80397',
+        'T00036',
+        'E00010',
+        TO_DATE('2024-02-10', 'YYYY-MM-DD'),
+        TO_DATE('2024-12-19', 'YYYY-MM-DD'),
+        1780.00,
+        'BS001',
+        'BM002',
+        'PS001'
+    ) INTO Fall24_S003_T8_Bookings
+VALUES
+    (
+        'B65960',
+        'T00037',
+        'E00011',
+        TO_DATE('2024-03-01', 'YYYY-MM-DD'),
+        TO_DATE('2024-12-19', 'YYYY-MM-DD'),
+        2300.00,
+        'BS001',
+        'BM003',
+        'PS001'
+    ) INTO Fall24_S003_T8_Bookings
+VALUES
+    (
+        'B35984',
+        'T00040',
+        'E00012',
+        TO_DATE('2024-05-30', 'YYYY-MM-DD'),
+        TO_DATE('2024-12-19', 'YYYY-MM-DD'),
+        1850.00,
+        'BS001',
+        'BM002',
+        'PS001'
+    ) INTO Fall24_S003_T8_Bookings
+VALUES
+    (
+        'B51552',
+        'T00041',
+        'E00013',
+        TO_DATE('2024-06-15', 'YYYY-MM-DD'),
+        TO_DATE('2024-12-19', 'YYYY-MM-DD'),
+        980.00,
+        'BS001',
+        'BM003',
+        'PS001'
+    ) INTO Fall24_S003_T8_Bookings
+VALUES
+    (
+        'B32749',
+        'T00021',
+        'E00014',
+        TO_DATE('2024-04-12', 'YYYY-MM-DD'),
+        TO_DATE('2024-12-19', 'YYYY-MM-DD'),
+        2100.00,
+        'BS001',
+        'BM001',
+        'PS001'
+    ) INTO Fall24_S003_T8_Bookings
+VALUES
+    (
+        'B78044',
+        'T00017',
+        'E00015',
+        TO_DATE('2024-08-10', 'YYYY-MM-DD'),
+        TO_DATE('2024-12-19', 'YYYY-MM-DD'),
+        2650.00,
+        'BS001',
+        'BM004',
+        'PS001'
+    ) INTO Fall24_S003_T8_Bookings
+VALUES
+    (
+        'B78045',
+        'T00017',
+        'E00016',
+        TO_DATE('2024-06-20', 'YYYY-MM-DD'),
+        TO_DATE('2024-12-19', 'YYYY-MM-DD'),
+        0,
+        'BS002',
+        'BM002',
+        'PS002'
+    ) INTO Fall24_S003_T8_Bookings
+VALUES
+    (
+        'B41510',
+        'T00020',
+        'E00017',
+        TO_DATE('2024-07-10', 'YYYY-MM-DD'),
+        TO_DATE('2024-12-19', 'YYYY-MM-DD'),
+        0,
+        'BS003',
+        'BM003',
+        'PS003'
+    ) INTO Fall24_S003_T8_Bookings
+VALUES
+    (
+        'B32750',
+        'T00021',
+        'E00018',
+        TO_DATE('2024-04-25', 'YYYY-MM-DD'),
+        TO_DATE('2024-12-19', 'YYYY-MM-DD'),
+        0,
+        'BS002',
+        'BM001',
+        'PS003'
+    ) INTO Fall24_S003_T8_Bookings
+VALUES
+    (
+        'B49280',
+        'T00022',
+        'E00019',
+        TO_DATE('2024-03-15', 'YYYY-MM-DD'),
+        TO_DATE('2024-12-19', 'YYYY-MM-DD'),
+        0,
+        'BS003',
+        'BM002',
+        'PS002'
+    ) INTO Fall24_S003_T8_Bookings
+VALUES
+    (
+        'B19119',
+        'T00023',
+        'E00020',
+        TO_DATE('2024-02-20', 'YYYY-MM-DD'),
+        TO_DATE('2024-12-19', 'YYYY-MM-DD'),
+        0,
+        'BS002',
+        'BM003',
+        'PS002'
+    ) INTO Fall24_S003_T8_Bookings
+VALUES
+    (
+        'B05055',
+        'T00027',
+        'E00021',
+        TO_DATE('2024-01-20', 'YYYY-MM-DD'),
+        TO_DATE('2024-12-19', 'YYYY-MM-DD'),
+        0,
+        'BS003',
+        'BM004',
+        'PS003'
     )
+SELECT
+    *
+FROM
+    DUAL;
+
 Select
     1
 from
