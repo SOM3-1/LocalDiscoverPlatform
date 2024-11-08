@@ -89,7 +89,7 @@ SELECT
     t.T_ID AS Traveler_ID,
     t.First_Name || ' ' || t.Last_Name AS Traveler_Name,
     ic.Category_Name AS Preference_Category,
-    COUNT(b.Booking_ID) AS Repeat_Bookings,
+    COUNT(DISTINCT b.Booking_ID) AS Repeat_Bookings,
     ROUND(AVG(b.Amount_Paid), 2) AS Average_Spend
 FROM 
     Fall24_S003_T8_Travelers t

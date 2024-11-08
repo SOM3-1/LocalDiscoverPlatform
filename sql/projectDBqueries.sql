@@ -47,8 +47,7 @@ ORDER BY
 SELECT 
     t.T_ID AS Traveler_ID,
     t.First_Name || ' ' || t.Last_Name AS Traveler_Name,
-    ic.Category_Name AS Preference_Category,
-    COUNT(b.Booking_ID) AS Repeat_Bookings,
+    COUNT(DISTINCT b.Booking_ID) AS Repeat_Bookings,
     ROUND(AVG(b.Amount_Paid), 2) AS Average_Spend
 FROM 
     Fall24_S003_T8_Travelers t
@@ -58,18 +57,16 @@ JOIN
     Fall24_S003_T8_Experience e ON b.Experience_ID = e.Experience_ID
 JOIN 
     Fall24_S003_T8_Service_Provider_Activities spa ON e.Service_Provider_ID = spa.Service_Provider_ID
-JOIN 
-    Fall24_S003_T8_Interest_Categories ic ON spa.Activity_ID = ic.Category_ID
 WHERE 
     b.Booking_Status_ID = (SELECT Status_ID FROM Fall24_S003_T8_Booking_Status WHERE Status_Name = 'Confirmed') 
     AND b.Amount_Paid > 0  
 GROUP BY 
-    t.T_ID, t.First_Name, t.Last_Name, ic.Category_Name
+    t.T_ID, t.First_Name, t.Last_Name
 HAVING 
     COUNT(b.Booking_ID) > 1
 ORDER BY 
     Repeat_Bookings DESC,
-    Average_Spend DESC;
+    Average_Spend DESC FETCH first 10 rows only;
 
 -- Query 3: Expereince diversity Analysis using rollup
 SELECT 
