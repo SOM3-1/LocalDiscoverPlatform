@@ -65,32 +65,39 @@ try:
     ratings_data = []
     eligible_reviews = {(traveler_id, experience_id): experience_date for traveler_id, experience_id, experience_date in completed_bookings}
 
-    for i in range(num_ratings):
-        # Select a random (Traveler_ID, Experience_ID) pair
-        traveler_experience_pair = random.choice(list(eligible_reviews.keys()))
-        traveler_id, experience_id = traveler_experience_pair
-        experience_date = eligible_reviews[traveler_experience_pair]
+    with open("ratings_insert_statements.txt", "w") as file:
+        file.write("INSERT ALL\n")
 
-        rating_value = round(random.uniform(2, 10), 1)  # Generate a rating between 2 and 10
-        review_title, feedback = generate_rating_data(rating_value)  # Generate title and feedback based on rating
+        for i in range(num_ratings):
+            traveler_experience_pair = random.choice(list(eligible_reviews.keys()))
+            traveler_id, experience_id = traveler_experience_pair
+            experience_date = eligible_reviews[traveler_experience_pair]
 
-        # Ensure the review date is after the experience date
-        days_after = random.randint(1, 30)  # Randomly add 1-30 days after experience
-        review_date_time = experience_date + timedelta(days=days_after)
-        review_date_time = datetime.combine(review_date_time, datetime.min.time()) + timedelta(
-            hours=random.randint(0, 23), minutes=random.randint(0, 59), seconds=random.randint(0, 59)
-        )
+            rating_value = round(random.uniform(2, 10), 1)
+            review_title, feedback = generate_rating_data(rating_value)
 
-        # Use a pre-generated unique Rating ID
-        rating_id = rating_ids[i]
+            days_after = random.randint(1, 30)
+            review_date_time = experience_date + timedelta(days=days_after)
+            review_date_time = datetime.combine(review_date_time, datetime.min.time()) + timedelta(
+                hours=random.randint(0, 23), minutes=random.randint(0, 59), seconds=random.randint(0, 59)
+            )
 
-        ratings_data.append((
-            rating_id, traveler_id, experience_id, rating_value, review_date_time.strftime('%Y-%m-%d %H:%M:%S'),
-            feedback, review_title
-        ))
+            rating_id = rating_ids[i]
 
-        # Remove the used traveler-experience pair to avoid duplicate ratings
-        del eligible_reviews[traveler_experience_pair]
+            ratings_data.append((
+                rating_id, traveler_id, experience_id, rating_value, review_date_time.strftime('%Y-%m-%d %H:%M:%S'),
+                feedback, review_title
+            ))
+
+            # Write each `INTO` statement for the `INSERT ALL` block
+            file.write(f"INTO Fall24_S003_T8_Ratings (Rating_ID, Traveler_ID, Experience_ID, Rating_Value, Review_Date_Time, Feedback, Review_Title) "
+                       f"VALUES ('{rating_id}', '{traveler_id}', '{experience_id}', {rating_value}, "
+                       f"TO_TIMESTAMP('{review_date_time.strftime('%Y-%m-%d %H:%M:%S')}', 'YYYY-MM-DD HH24:MI:SS'), '{feedback}', '{review_title}')\n")
+
+            # Remove the used traveler-experience pair to avoid duplicate ratings
+            del eligible_reviews[traveler_experience_pair]
+
+        file.write("SELECT * FROM dual;\n")
 
     # Insert ratings into Fall24_S003_T8_Ratings
     logger.info("Inserting ratings into the Fall24_S003_T8_Ratings table...")
@@ -113,7 +120,6 @@ except cx_Oracle.DatabaseError as e:
     if connection:
         connection.rollback()
 finally:
-    # Clean up by closing the cursor and connection
     if cursor:
         cursor.close()
         logger.info("Cursor closed.")

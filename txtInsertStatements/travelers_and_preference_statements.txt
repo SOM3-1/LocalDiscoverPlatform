@@ -1,0 +1,150 @@
+INSERT ALL
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00001', 'Max', 'Perez', TO_DATE('1945-07-03', 'YYYY-MM-DD'), 'Senior Citizen', 'M', 'L00063', 'susanheath@example.org', '001-709-921-775')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00002', 'Nancy', 'Taylor', TO_DATE('1952-02-26', 'YYYY-MM-DD'), 'Senior Citizen', 'O', 'L00095', 'millstammy@example.com', '001-517-692-832')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00003', 'Sarah', 'Stephenson', TO_DATE('1961-01-09', 'YYYY-MM-DD'), 'Senior Citizen', 'M', 'L00043', 'gregory37@example.net', '+1-954-238-3330')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00004', 'Tracy', 'Ross', TO_DATE('1963-09-30', 'YYYY-MM-DD'), 'Senior Citizen', 'M', 'L00011', 'tim26@example.org', '621-575-4073x49')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00005', 'Michele', 'Duncan', TO_DATE('1947-02-19', 'YYYY-MM-DD'), 'Senior Citizen', 'F', 'L00086', 'anthonyevans@example.com', '696-395-1881x74')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00006', 'Victoria', 'Rodriguez', TO_DATE('1973-05-03', 'YYYY-MM-DD'), 'Group', 'F', 'L00100', 'victor23@example.org', '001-624-394-222')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00007', 'Brian', 'Soto', TO_DATE('1976-01-20', 'YYYY-MM-DD'), 'Group', 'O', 'L00048', 'haleyjessica@example.net', '794-395-0333x83')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00008', 'Tina', 'Chavez', TO_DATE('1964-11-28', 'YYYY-MM-DD'), 'Senior Citizen', 'O', 'L00013', 'tsanchez@example.com', '660-829-1044x22')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00009', 'Daniel', 'Clarke', TO_DATE('1981-06-23', 'YYYY-MM-DD'), 'Group', 'O', 'L00012', 'njohnson@example.com', '(699)792-9305')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00010', 'James', 'Johnson', TO_DATE('1955-02-06', 'YYYY-MM-DD'), 'Senior Citizen', 'F', 'L00079', 'bcox@example.org', '314-781-3850')
+SELECT * FROM dual;
+
+COMMIT;
+
+INSERT ALL
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00011', 'Christopher', 'Rodriguez', TO_DATE('2001-05-31', 'YYYY-MM-DD'), 'Student', 'F', 'L00066', 'robinsonchristopher@example.net', '+1-935-352-5837')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00012', 'Michelle', 'Marsh', TO_DATE('1979-01-25', 'YYYY-MM-DD'), 'Group', 'M', 'L00091', 'michael84@example.com', '(880)807-0922x7')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00013', 'David', 'Gregory', TO_DATE('1956-02-08', 'YYYY-MM-DD'), 'Senior Citizen', 'F', 'L00049', 'cwhite@example.com', '+1-593-229-2967')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00014', 'Evan', 'Chapman', TO_DATE('1951-11-01', 'YYYY-MM-DD'), 'Senior Citizen', 'F', 'L00089', 'vthomas@example.org', '001-823-208-069')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00015', 'John', 'Gomez', TO_DATE('1956-09-15', 'YYYY-MM-DD'), 'Senior Citizen', 'F', 'L00040', 'reynoldswendy@example.com', '(363)634-8411x9')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00016', 'David', 'Bird', TO_DATE('1997-09-14', 'YYYY-MM-DD'), 'Couple', 'O', 'L00036', 'montgomerydonna@example.org', '+1-653-668-6959')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00017', 'Jared', 'Krause', TO_DATE('1951-01-09', 'YYYY-MM-DD'), 'Senior Citizen', 'O', 'L00038', 'tami90@example.com', '(326)316-8701')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00018', 'Derek', 'Rogers', TO_DATE('1981-07-25', 'YYYY-MM-DD'), 'Group', 'O', 'L00068', 'timothybradley@example.com', '403-418-6195')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00019', 'Michelle', 'Martinez', TO_DATE('1975-06-05', 'YYYY-MM-DD'), 'Group', 'O', 'L00020', 'pjenkins@example.com', '001-458-504-843')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00020', 'Edward', 'Deleon', TO_DATE('2005-07-16', 'YYYY-MM-DD'), 'Student', 'O', 'L00002', 'kochdebra@example.net', '573-887-1955x88')
+SELECT * FROM dual;
+
+COMMIT;
+
+INSERT ALL
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00021', 'Troy', 'Harris', TO_DATE('1990-06-03', 'YYYY-MM-DD'), 'Couple', 'M', 'L00066', 'gjohnson@example.org', '6176935784')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00022', 'Jonathan', 'Farley', TO_DATE('2001-04-20', 'YYYY-MM-DD'), 'Student', 'F', 'L00026', 'hdelgado@example.org', '+1-828-592-1024')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00023', 'Patricia', 'Cook', TO_DATE('1998-10-23', 'YYYY-MM-DD'), 'Couple', 'M', 'L00096', 'robertsbrandon@example.net', '(962)430-4832x0')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00024', 'Frank', 'Jordan', TO_DATE('1984-11-29', 'YYYY-MM-DD'), 'Couple', 'O', 'L00001', 'xsanchez@example.net', '605.917.9511x75')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00025', 'Anna', 'Richard', TO_DATE('1970-07-05', 'YYYY-MM-DD'), 'Group', 'F', 'L00036', 'juliemoore@example.net', '781.888.2279')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00026', 'Steven', 'Martinez', TO_DATE('1975-02-07', 'YYYY-MM-DD'), 'Group', 'F', 'L00025', 'bakerjames@example.net', '001-456-414-138')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00027', 'Lisa', 'Miller', TO_DATE('1962-02-21', 'YYYY-MM-DD'), 'Senior Citizen', 'F', 'L00038', 'tracimiller@example.org', '7947262647')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00028', 'William', 'Rowland', TO_DATE('1964-03-18', 'YYYY-MM-DD'), 'Senior Citizen', 'M', 'L00016', 'matthew98@example.com', '001-969-793-112')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00029', 'Erika', 'Martinez', TO_DATE('1978-08-30', 'YYYY-MM-DD'), 'Group', 'M', 'L00050', 'stephen10@example.net', '(577)311-7857x2')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00030', 'Nicole', 'Hill', TO_DATE('1996-01-25', 'YYYY-MM-DD'), 'Couple', 'M', 'L00026', 'dholmes@example.net', '+1-942-979-5400')
+SELECT * FROM dual;
+
+COMMIT;
+
+INSERT ALL
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00031', 'William', 'Coleman', TO_DATE('1999-12-09', 'YYYY-MM-DD'), 'Student', 'O', 'L00106', 'jsingleton@example.com', '001-829-877-956')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00032', 'David', 'Tate', TO_DATE('1943-12-27', 'YYYY-MM-DD'), 'Senior Citizen', 'F', 'L00015', 'kenneth37@example.org', '559.956.7022x05')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00033', 'Christopher', 'Mckinney', TO_DATE('1948-03-31', 'YYYY-MM-DD'), 'Senior Citizen', 'M', 'L00084', 'gilbertnicholas@example.net', '001-307-317-034')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00034', 'Robert', 'Williams', TO_DATE('1949-01-25', 'YYYY-MM-DD'), 'Senior Citizen', 'O', 'L00032', 'millerjoseph@example.org', '8687491143')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00035', 'Andrea', 'Mcintyre', TO_DATE('1959-11-27', 'YYYY-MM-DD'), 'Senior Citizen', 'F', 'L00095', 'evansrachael@example.com', '(927)897-5299x5')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00036', 'Nathaniel', 'Poole', TO_DATE('1944-04-28', 'YYYY-MM-DD'), 'Senior Citizen', 'M', 'L00010', 'wharris@example.org', '+1-843-310-6099')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00037', 'Anne', 'Goodwin', TO_DATE('1997-07-24', 'YYYY-MM-DD'), 'Couple', 'M', 'L00027', 'tmorrison@example.org', '345.449.5830x88')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00038', 'Sydney', 'Perry', TO_DATE('2003-10-24', 'YYYY-MM-DD'), 'Student', 'F', 'L00087', 'sylvia45@example.org', '872-574-1221x57')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00039', 'Joshua', 'Watkins', TO_DATE('1994-05-22', 'YYYY-MM-DD'), 'Couple', 'F', 'L00089', 'paulmorales@example.net', '7839716969')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00040', 'Sydney', 'Paul', TO_DATE('1951-07-13', 'YYYY-MM-DD'), 'Senior Citizen', 'M', 'L00053', 'timothyfisher@example.com', '(670)953-2309')
+SELECT * FROM dual;
+
+COMMIT;
+
+INSERT ALL
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00041', 'Mark', 'Soto', TO_DATE('1975-06-19', 'YYYY-MM-DD'), 'Group', 'O', 'L00045', 'fullertyler@example.org', '001-339-758-918')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00042', 'Mark', 'Smith', TO_DATE('1984-09-11', 'YYYY-MM-DD'), 'Couple', 'F', 'L00056', 'waltersrebecca@example.com', '+1-650-892-9077')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00043', 'Stephanie', 'Schroeder', TO_DATE('1988-07-06', 'YYYY-MM-DD'), 'Couple', 'M', 'L00102', 'brenda03@example.net', '706.241.1509x40')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00044', 'Morgan', 'Crawford', TO_DATE('1951-05-07', 'YYYY-MM-DD'), 'Senior Citizen', 'F', 'L00086', 'dennisblack@example.org', '001-995-608-927')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00045', 'Denise', 'Parks', TO_DATE('1952-10-13', 'YYYY-MM-DD'), 'Senior Citizen', 'O', 'L00047', 'vlamb@example.org', '738-232-2671x28')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00046', 'Alison', 'Smith', TO_DATE('1948-08-13', 'YYYY-MM-DD'), 'Senior Citizen', 'O', 'L00084', 'wrightbrandon@example.org', '455.891.3821x80')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00047', 'Ivan', 'Phelps', TO_DATE('1994-02-03', 'YYYY-MM-DD'), 'Couple', 'M', 'L00045', 'willisgloria@example.com', '+1-664-938-9256')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00048', 'Tyler', 'Vincent', TO_DATE('1966-11-20', 'YYYY-MM-DD'), 'Senior Citizen', 'M', 'L00078', 'derek32@example.com', '+1-772-299-5687')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00049', 'Drew', 'Myers', TO_DATE('1968-05-06', 'YYYY-MM-DD'), 'Senior Citizen', 'F', 'L00048', 'imolina@example.com', '+1-835-513-9482')
+INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00050', 'Michael', 'Anderson', TO_DATE('1981-07-08', 'YYYY-MM-DD'), 'Group', 'M', 'L00076', 'vtran@example.net', '(458)438-1897x5')
+SELECT * FROM dual;
+
+COMMIT;
+
+INSERT ALL
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00001', 'C00008')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00002', 'C00013')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00003', 'C00008')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00004', 'C00010')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00005', 'C00004')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00006', 'C00011')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00007', 'C00006')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00008', 'C00021')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00009', 'C00019')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00010', 'C00018')
+SELECT * FROM dual;
+
+COMMIT;
+
+INSERT ALL
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00011', 'C00007')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00012', 'C00003')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00013', 'C00002')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00014', 'C00001')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00015', 'C00014')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00016', 'C00019')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00017', 'C00019')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00018', 'C00008')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00019', 'C00003')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00020', 'C00013')
+SELECT * FROM dual;
+
+COMMIT;
+
+INSERT ALL
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00021', 'C00016')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00022', 'C00024')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00023', 'C00007')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00024', 'C00010')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00025', 'C00008')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00026', 'C00022')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00027', 'C00023')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00028', 'C00010')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00029', 'C00014')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00030', 'C00003')
+SELECT * FROM dual;
+
+COMMIT;
+
+INSERT ALL
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00031', 'C00022')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00032', 'C00024')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00033', 'C00006')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00034', 'C00024')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00035', 'C00020')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00036', 'C00011')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00037', 'C00021')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00038', 'C00013')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00039', 'C00002')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00040', 'C00025')
+SELECT * FROM dual;
+
+COMMIT;
+
+INSERT ALL
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00041', 'C00025')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00042', 'C00017')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00043', 'C00005')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00044', 'C00004')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00045', 'C00019')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00046', 'C00002')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00047', 'C00015')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00048', 'C00023')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00049', 'C00021')
+INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00050', 'C00011')
+SELECT * FROM dual;
+
+COMMIT;
+

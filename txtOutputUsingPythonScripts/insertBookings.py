@@ -62,7 +62,6 @@ try:
     cursor.execute("SELECT Payment_Status_ID, Payment_Status_Name FROM Fall24_S003_T8_Payment_Status")
     payment_statuses = {row[1]: row[0] for row in cursor.fetchall()}
 
-    # Fetch existing bookings and store in a nested dictionary to avoid duplicates
     cursor.execute("SELECT Traveler_ID, Experience_ID, Experience_Date FROM Fall24_S003_T8_Bookings")
     bookings_dict = {traveler_id: {} for traveler_id in travelers}
     for traveler_id, experience_id, experience_date in cursor.fetchall():
@@ -70,7 +69,6 @@ try:
             bookings_dict[traveler_id][experience_id] = set()
         bookings_dict[traveler_id][experience_id].add(experience_date)
 
-    # Step 2: Fetch all available dates by schedule in one go
     cursor.execute("SELECT Schedule_ID, Available_Date FROM Fall24_S003_T8_Availability_Schedule")
     available_dates_dict = {}
     for schedule_id, available_date in cursor.fetchall():
@@ -78,51 +76,59 @@ try:
             available_dates_dict[schedule_id] = []
         available_dates_dict[schedule_id].append(ensure_four_digit_year(available_date))
 
-    # Step 3: Generate bookings
+    # Step 3: Generate bookings and write to a file
     booking_data = []
     num_bookings = int(len(travelers) * num_of_bookings)  # Targeting 40% of travelers
 
-    for _ in range(num_bookings):
-        traveler_id = random.choice(travelers)
-        experience_id, schedule_id, pricing = random.choice(experiences)
-        available_dates = available_dates_dict.get(schedule_id, [])
+    with open("booking_insert_statements.txt", "w") as file:
+        file.write("INSERT ALL\n")
+        
+        for _ in range(num_bookings):
+            traveler_id = random.choice(travelers)
+            experience_id, schedule_id, pricing = random.choice(experiences)
+            available_dates = available_dates_dict.get(schedule_id, [])
 
-        if not available_dates:
-            continue
+            if not available_dates:
+                continue
 
-        for _ in range(10):  # Attempt up to 10 times to avoid duplicate bookings
-            experience_date = random.choice(available_dates)
-            if experience_date not in bookings_dict[traveler_id].get(experience_id, set()):
-                date_of_booking = experience_date - timedelta(days=random.randint(1, 30))
-                date_of_booking = ensure_four_digit_year(date_of_booking)
-                date_of_booking = datetime.combine(date_of_booking, datetime.min.time()) + timedelta(
-                    hours=random.randint(0, 23), minutes=random.randint(0, 59), seconds=random.randint(0, 59)
-                )
+            for _ in range(10):  # Attempt up to 10 times to avoid duplicate bookings
+                experience_date = random.choice(available_dates)
+                if experience_date not in bookings_dict[traveler_id].get(experience_id, set()):
+                    date_of_booking = experience_date - timedelta(days=random.randint(1, 30))
+                    date_of_booking = ensure_four_digit_year(date_of_booking)
+                    date_of_booking = datetime.combine(date_of_booking, datetime.min.time()) + timedelta(
+                        hours=random.randint(0, 23), minutes=random.randint(0, 59), seconds=random.randint(0, 59)
+                    )
 
-                # Assign booking and payment statuses
-                if random.random() < number_of_confirmed_bookings:
-                    payment_status = 'Completed'
-                    booking_status = 'Confirmed'
-                    amount_paid = pricing * (1 + tax_rate)
-                else:
-                    payment_status = random.choice(['Pending', 'Failed', 'Refunded'])
-                    booking_status = 'Cancelled' if payment_status in ['Failed', 'Refunded'] else 'Pending'
-                    amount_paid=0
+                    # Assign booking and payment statuses
+                    if random.random() < number_of_confirmed_bookings:
+                        payment_status = 'Completed'
+                        booking_status = 'Confirmed'
+                        amount_paid = pricing * (1 + tax_rate)
+                    else:
+                        payment_status = random.choice(['Pending', 'Failed', 'Refunded'])
+                        booking_status = 'Cancelled' if payment_status in ['Failed', 'Refunded'] else 'Pending'
+                        amount_paid = 0
 
-                # Add this booking to the booking data
-                booking_id = generate_unique_booking_id()
-                booking_data.append((
-                    booking_id, traveler_id, experience_id,
-                    date_of_booking.strftime('%Y-%m-%d %H:%M:%S'), experience_date.strftime('%Y-%m-%d'),
-                    amount_paid, booking_statuses[booking_status], random.choice(booking_methods), payment_statuses[payment_status]
-                ))
+                    booking_id = generate_unique_booking_id()
+                    booking_data.append((
+                        booking_id, traveler_id, experience_id,
+                        date_of_booking.strftime('%Y-%m-%d %H:%M:%S'), experience_date.strftime('%Y-%m-%d'),
+                        amount_paid, booking_statuses[booking_status], random.choice(booking_methods), payment_statuses[payment_status]
+                    ))
 
-                # Update the bookings_dict to avoid duplicates
-                if experience_id not in bookings_dict[traveler_id]:
-                    bookings_dict[traveler_id][experience_id] = set()
-                bookings_dict[traveler_id][experience_id].add(experience_date)
+                    file.write(f"INTO Fall24_S003_T8_Bookings (Booking_ID, Traveler_ID, Experience_ID, Date_Of_Booking, Experience_Date, "
+                               f"Amount_Paid, Booking_Status_ID, Booking_Method_ID, Payment_Status_ID) VALUES ('{booking_id}', '{traveler_id}', "
+                               f"'{experience_id}', TO_TIMESTAMP('{date_of_booking.strftime('%Y-%m-%d %H:%M:%S')}', 'YYYY-MM-DD HH24:MI:SS'), "
+                               f"TO_DATE('{experience_date.strftime('%Y-%m-%d')}', 'YYYY-MM-DD'), {amount_paid}, "
+                               f"'{booking_statuses[booking_status]}', '{random.choice(booking_methods)}', '{payment_statuses[payment_status]}')\n")
+                    
+                    if experience_id not in bookings_dict[traveler_id]:
+                        bookings_dict[traveler_id][experience_id] = set()
+                    bookings_dict[traveler_id][experience_id].add(experience_date)
+                    break
 
-                break  # Exit retry loop after a valid booking is found
+        file.write("SELECT * FROM dual;\n")
 
     # Step 4: Insert bookings into Fall24_S003_T8_Bookings
     logger.info("Inserting bookings into the Fall24_S003_T8_Bookings table...")

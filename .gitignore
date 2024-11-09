@@ -3,3 +3,6 @@ py/en
 py/my
 py/__pycache__
 py/credentials.py
+txtOutputUsingPythonScripts/myenv
+txtOutputUsingPythonScripts/__pycache__
+.DS_Store

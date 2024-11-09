@@ -1,0 +1,44 @@
+INSERT ALL
+INTO Fall24_S003_T8_Groups (Group_ID, Group_Name, Group_Leader_T_ID, Group_Type_ID) VALUES ('G00001', 'Hall LLC', 'T00045', 'GT006')
+INTO Fall24_S003_T8_Groups (Group_ID, Group_Name, Group_Leader_T_ID, Group_Type_ID) VALUES ('G00002', 'Thompson, Andersen and Smith', 'T00009', 'GT008')
+INTO Fall24_S003_T8_Groups (Group_ID, Group_Name, Group_Leader_T_ID, Group_Type_ID) VALUES ('G00003', 'Johnson-Harvey', 'T00047', 'GT005')
+INTO Fall24_S003_T8_Groups (Group_ID, Group_Name, Group_Leader_T_ID, Group_Type_ID) VALUES ('G00004', 'Andrews, Underwood and Wagner', 'T00013', 'GT006')
+INTO Fall24_S003_T8_Groups (Group_ID, Group_Name, Group_Leader_T_ID, Group_Type_ID) VALUES ('G00005', 'Orr Ltd', 'T00029', 'GT004')
+SELECT * FROM dual;
+
+COMMIT;
+
+INSERT ALL
+INTO Fall24_S003_T8_Group_Members (Group_ID, T_ID) VALUES ('G00001', 'T00019')
+INTO Fall24_S003_T8_Group_Members (Group_ID, T_ID) VALUES ('G00001', 'T00027')
+INTO Fall24_S003_T8_Group_Members (Group_ID, T_ID) VALUES ('G00001', 'T00021')
+INTO Fall24_S003_T8_Group_Members (Group_ID, T_ID) VALUES ('G00001', 'T00025')
+INTO Fall24_S003_T8_Group_Members (Group_ID, T_ID) VALUES ('G00001', 'T00016')
+INTO Fall24_S003_T8_Group_Members (Group_ID, T_ID) VALUES ('G00001', 'T00011')
+INTO Fall24_S003_T8_Group_Members (Group_ID, T_ID) VALUES ('G00002', 'T00002')
+INTO Fall24_S003_T8_Group_Members (Group_ID, T_ID) VALUES ('G00002', 'T00003')
+INTO Fall24_S003_T8_Group_Members (Group_ID, T_ID) VALUES ('G00002', 'T00030')
+INTO Fall24_S003_T8_Group_Members (Group_ID, T_ID) VALUES ('G00002', 'T00043')
+INTO Fall24_S003_T8_Group_Members (Group_ID, T_ID) VALUES ('G00003', 'T00048')
+INTO Fall24_S003_T8_Group_Members (Group_ID, T_ID) VALUES ('G00003', 'T00042')
+INTO Fall24_S003_T8_Group_Members (Group_ID, T_ID) VALUES ('G00003', 'T00024')
+INTO Fall24_S003_T8_Group_Members (Group_ID, T_ID) VALUES ('G00003', 'T00001')
+INTO Fall24_S003_T8_Group_Members (Group_ID, T_ID) VALUES ('G00003', 'T00036')
+INTO Fall24_S003_T8_Group_Members (Group_ID, T_ID) VALUES ('G00003', 'T00026')
+INTO Fall24_S003_T8_Group_Members (Group_ID, T_ID) VALUES ('G00003', 'T00039')
+INTO Fall24_S003_T8_Group_Members (Group_ID, T_ID) VALUES ('G00004', 'T00022')
+INTO Fall24_S003_T8_Group_Members (Group_ID, T_ID) VALUES ('G00004', 'T00014')
+INTO Fall24_S003_T8_Group_Members (Group_ID, T_ID) VALUES ('G00004', 'T00050')
+INTO Fall24_S003_T8_Group_Members (Group_ID, T_ID) VALUES ('G00004', 'T00037')
+INTO Fall24_S003_T8_Group_Members (Group_ID, T_ID) VALUES ('G00004', 'T00032')
+INTO Fall24_S003_T8_Group_Members (Group_ID, T_ID) VALUES ('G00004', 'T00035')
+INTO Fall24_S003_T8_Group_Members (Group_ID, T_ID) VALUES ('G00004', 'T00005')
+INTO Fall24_S003_T8_Group_Members (Group_ID, T_ID) VALUES ('G00005', 'T00041')
+INTO Fall24_S003_T8_Group_Members (Group_ID, T_ID) VALUES ('G00005', 'T00004')
+INTO Fall24_S003_T8_Group_Members (Group_ID, T_ID) VALUES ('G00005', 'T00038')
+INTO Fall24_S003_T8_Group_Members (Group_ID, T_ID) VALUES ('G00005', 'T00018')
+INTO Fall24_S003_T8_Group_Members (Group_ID, T_ID) VALUES ('G00005', 'T00031')
+SELECT * FROM dual;
+
+COMMIT;
+

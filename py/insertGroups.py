@@ -4,7 +4,7 @@ import random
 import sys
 from faker import Faker
 from credentials import netid, pwd, connection
-
+from setupConfig import travelers_to_group
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
@@ -40,7 +40,7 @@ try:
     logger.info(f"Retrieved {len(group_type_ids)} group types.")
 
     # Step 3: Calculate the number of groups (5% of total travelers)
-    num_groups = max(1, int(total_travelers * 0.05))  # Ensure at least one group
+    num_groups = max(1, int(total_travelers * travelers_to_group))  # Ensure at least one group
     logger.info(f"Generating {num_groups} groups (10% of travelers).")
 
     # Step 4: Generate fake group data

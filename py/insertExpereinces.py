@@ -5,7 +5,7 @@ import sys
 from faker import Faker
 from mocks import preference_options
 from credentials import netid, pwd, connection
-from setupConfig import num_tags
+from setupConfig import num_tags, travelers_for_expereinces
 
 # Configure logging
 logging.basicConfig(
@@ -59,7 +59,7 @@ try:
     logger.info(f"Retrieved traveler count: {traveler_count}")
 
     # Determine the number of experiences based on traveler count (e.g., 1 experience for every 5 travelers)
-    num_experiences = max(1, traveler_count // 5)
+    num_experiences = max(1, traveler_count // travelers_for_expereinces)
 
     # Step 2: Retrieve Service Provider IDs and their activities
     cursor.execute("""
