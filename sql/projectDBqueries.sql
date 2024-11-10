@@ -201,15 +201,17 @@ Result:
 */
 
 
--- Query 4: Confirmed Bookings Lacking Ratings with Traveler's Total Booking Count
--- This query identifies confirmed bookings that do not have a rating, along with each traveler's total booking count. It helps identify customers who have experienced a service but have not provided feedback, allowing for targeted follow-up actions.
-
-TTITLE LEFT "Confirmed Bookings Lacking Ratings with Travelers Total Booking Count"
+-- Query 4: Confirmed Bookings Without Ratings and Traveler's Total Booking Count
+-- This query retrieves confirmed bookings that lack a rating, along with the total number of bookings for each traveler.
+-- It helps identify customers who have experienced a service but have not provided feedback.
+SET PAGESIZE 1000
+SET LINESIZE 300
+TTITLE LEFT "Confirmed Bookings Without Ratings and Travelers Total Booking Count"
 COLUMN T_ID FORMAT A10
 COLUMN First_Name FORMAT A15
 COLUMN Last_Name FORMAT A15
 COLUMN Total_Bookings FORMAT 9999
-COLUMN Email FORMAT A25
+COLUMN Email FORMAT A28
 COLUMN Booking_ID FORMAT A10
 COLUMN Experience_ID FORMAT A10
 COLUMN Experience_Title FORMAT A40
@@ -235,47 +237,49 @@ WHERE bs.Status_Name = 'Confirmed'
   AND NOT EXISTS (
       SELECT 1
       FROM Fall24_S003_T8_Ratings r
-      WHERE r.Traveler_ID = t.T_ID
+      WHERE r.Traveler_ID = b.Traveler_ID
         AND r.Experience_ID = b.Experience_ID
   )
-ORDER BY Total_Bookings, t.T_ID, b.Booking_ID;
+  AND NOT EXISTS (
+      SELECT 1
+      FROM Fall24_S003_T8_Bookings b_inner
+      JOIN Fall24_S003_T8_Booking_Status bs_inner ON b_inner.Booking_Status_ID = bs_inner.Status_ID
+      WHERE b_inner.Traveler_ID = t.T_ID
+        AND bs_inner.Status_Name = 'Confirmed'
+        AND EXISTS (
+            SELECT 1
+            FROM Fall24_S003_T8_Ratings r_inner
+            WHERE r_inner.Traveler_ID = b_inner.Traveler_ID
+              AND r_inner.Experience_ID = b_inner.Experience_ID
+        )
+  )
+ORDER BY Total_Bookings DESC, t.T_ID, b.Booking_ID;
+
 
 /*
-Result:
--- T_ID    FIRST_NAME    LAST_NAME     TOTAL_BOOKINGS EMAIL                               BOOKING_ID  EXPERIENCE_ID  EXPERIENCE_TITLE                                       DATE_OF_BOOKING         EXPERIENCE DATE    AMOUNT_PAID
--- ------- ------------- -------------- --------------- ------------------------------------ ------------ -------------- ---------------------------------------------------- ------------------------ ------------------ ------------
--- T00002  Allison       Jensen         1               benjaminstewart@example.com         B00014      E00002          Guided Scuba Diving Experience                         19-AUG-24 03:43:52.000  14-SEP-24        529.4
--- T00004  Andrew        Taylor         1               matthewnelson@example.net          B00048      E00049          Ultimate Desert Safari Experience                      25-MAY-24 10:40:19.000  15-JUN-24        108.52
--- T00008  Stephen       Howell         1               wallaceadam@example.com            B00018      E00016          Desert Safari Discovery Tour                           28-MAY-24 08:21:50.000  15-JUN-24        1066.68
--- T00018  Travis        Lewis          1               xwhite@example.net                 B00046      E00001          Scuba Diving Escape                                    26-AUG-24 04:05:50.000  14-SEP-24        1869.68
--- T00023  Patrick       Bauer          1               kbright@example.com                B00025      E00008          Desert Safari Exploration Journey                      20-MAR-24 12:00:00.000  19-DEC-24        950
--- T00035  Taylor        Sanders        1               rwilson@example.org                B00047      E00049          Ultimate Desert Safari Experience                      25-MAY-24 10:40:19.000  15-JUN-24        108.52
--- T00041  Tammy         Garza          1               lecatherine@example.com           B00030      E00013          Unforgettable Nightlife Trip                           15-JUN-24 12:00:00.000  19-DEC-24        980
--- T00042  Erika         Johns          1               melissahill@example.org           B00045      E00001          Scuba Diving Escape                                    26-AUG-24 04:05:50.000  14-SEP-24        1869.68
--- T00013  David         Tran           2               lsmith@example.org                B00043      E00011          Exciting Desert Safari Adventure                       01-MAR-24 12:00:00.000  19-DEC-24        2300
--- T00013  David         Tran           2               lsmith@example.org                B00044      E00016          Desert Safari Discovery Tour                           28-MAY-24 08:21:50.000  15-JUN-24        1066.68
--- T00020  Sonya         Phillips       2               leediana@example.net              B00001      E00022          Unforgettable Desert Safari Trip                       18-MAY-24 01:04:27.000  15-JUN-24        3315.77
--- T00020  Sonya         Phillips       2               leediana@example.net              B00022      E00004          Nightlife Escape                                       01-MAY-24 12:00:00.000  19-DEC-24        2900
--- T00021  James         Thomas         2               madisonmclaughlin@example.com     B00023      E00005          Unforgettable Scuba Diving Trip                        15-APR-24 12:00:00.000  19-DEC-24        2400
--- T00021  James         Thomas         2               madisonmclaughlin@example.com     B00031      E00014          Unforgettable Scuba Diving Trip                        12-APR-24 12:00:00.000  19-DEC-24        2100
--- T00022  Veronica      Owen           2               nancyweeks@example.org           B00006      E00031          Guided Scuba Diving Experience                         17-MAY-24 01:01:24.000  15-JUN-24        3868.13
--- T00022  Veronica      Owen           2               nancyweeks@example.org           B00024      E00007          Ultimate Scuba Diving Experience                       20-JUN-24 12:00:00.000  19-DEC-24        3200
--- T00027  Andrea        Garcia         2               philip44@example.net              B00007      E00040          Guided Scuba Diving Experience                         08-SEP-24 07:15:16.000  14-SEP-24        4744.61
--- T00027  Andrea        Garcia         2               philip44@example.net              B00026      E00009          Ultimate Nightlife Experience                          15-JAN-24 12:00:00.000  19-DEC-24        2700
--- T00037  Erin          Watson         2               sara40@example.org                B00004      E00010          Unforgettable Scuba Diving Trip                        20-AUG-24 09:25:09.000  14-SEP-24        2180.14
--- T00037  Erin          Watson         2               sara40@example.org                B00028      E00011          Exciting Desert Safari Adventure                       01-MAR-24 12:00:00.000  19-DEC-24        2300
--- T00040  Steven        Sparks         2               patrickramsey@example.org         B00002      E00022          Unforgettable Desert Safari Trip                       31-MAY-24 10:24:13.000  15-JUN-24        3315.77
--- T00040  Steven        Sparks         2               patrickramsey@example.org         B00029      E00012          Desert Safari Discovery Tour                           30-MAY-24 12:00:00.000  19-DEC-24        1850
--- T00017  Mario         Wood           3               nicolelloyd@example.net           B00015      E00041          Exciting Desert Safari Adventure                       26-MAY-24 06:53:47.000  15-JUN-24        989.1
--- T00017  Mario         Wood           3               nicolelloyd@example.net           B00021      E00002          Guided Scuba Diving Experience                         01-JUL-24 12:00:00.000  19-DEC-24        1500
--- T00017  Mario         Wood           3               nicolelloyd@example.net           B00032      E00015          Scuba Diving Discovery Tour                            10-AUG-24 12:00:00.000  19-DEC-24        2650
--- T00036  Sarah         Williams       5               castillocarmen@example.net        B00027      E00010          Unforgettable Scuba Diving Trip                        10-FEB-24 12:00:00.000  19-DEC-24        1780
--- T00036  Sarah         Williams       5               castillocarmen@example.net        B00039      E00049          Ultimate Desert Safari Experience                      18-NOV-23 01:04:27.000  09-DEC-23        108.52
--- T00036  Sarah         Williams       5               castillocarmen@example.net        B00040      E00016          Desert Safari Discovery Tour                           28-MAY-24 08:21:50.000  15-JUN-24        1066.68
--- T00036  Sarah         Williams       5               castillocarmen@example.net        B00041      E00016          Desert Safari Discovery Tour                           05-JUL-24 09:37:57.000  31-JUL-24        834.13
--- T00036  Sarah         Williams       5               castillocarmen@example.net        B00042      E00006          Desert Safari Escape                                   30-JUL-24 08:05:38.000  31-JUL-24        3249.18
+T_ID       FIRST_NAME      LAST_NAME  TOTAL_BOOKINGS EMAIL                        BOOKING_ID EXPERIENCE EXPERIENCE_TITLE                         DATE_OF_BOOKING                     EXPERIENCE_DATE AMOUNT_PAID
+---------- --------------- ---------- -------------- ---------------------------- ---------- ---------- ---------------------------------------- ----------------------------------- --------------- -----------
+T00017     Mario           Wood                    3 nicolelloyd@example.net      B00015     E00041     Exciting Desert Safari Adventure         26-MAY-24 06.53.47.000000000 AM     15-JUN-24            989.10
+T00017     Mario           Wood                    3 nicolelloyd@example.net      B00021     E00002     Guided Scuba Diving Experience           01-JUL-24 12.00.00.000000000 AM     19-DEC-24           1500.00
+T00017     Mario           Wood                    3 nicolelloyd@example.net      B00032     E00015     Scuba Diving Discovery Tour              10-AUG-24 12.00.00.000000000 AM     19-DEC-24           2650.00
+T00020     Sonya           Phillips                2 leediana@example.net         B00001     E00022     Unforgettable Desert Safari Trip         18-MAY-24 01.04.27.000000000 AM     15-JUN-24           3315.77
+T00020     Sonya           Phillips                2 leediana@example.net         B00022     E00004     Nightlife Escape                         01-MAY-24 12.00.00.000000000 AM     19-DEC-24           2900.00
+T00022     Veronica        Owen                    2 nancyweeks@example.org       B00006     E00031     Guided Scuba Diving Experience           17-MAY-24 01.01.24.000000000 PM     15-JUN-24           3868.13
+T00022     Veronica        Owen                    2 nancyweeks@example.org       B00024     E00007     Ultimate Scuba Diving Experience         20-JUN-24 12.00.00.000000000 AM     19-DEC-24           3200.00
+T00027     Andrea          Garcia                  2 philip44@example.net         B00007     E00040     Guided Scuba Diving Experience           08-SEP-24 07.15.16.000000000 PM     14-SEP-24           4744.61
+T00027     Andrea          Garcia                  2 philip44@example.net         B00026     E00009     Ultimate Nightlife Experience            15-JAN-24 12.00.00.000000000 AM     19-DEC-24           2700.00
+T00037     Erin            Watson                  2 sara40@example.org           B00004     E00010     Unforgettable Scuba Diving Trip          20-AUG-24 09.25.09.000000000 PM     14-SEP-24           2180.14
+T00037     Erin            Watson                  2 sara40@example.org           B00028     E00011     Exciting Desert Safari Adventure         01-MAR-24 12.00.00.000000000 AM     19-DEC-24           2300.00
+T00040     Steven          Sparks                  2 patrickramsey@example.org    B00002     E00022     Unforgettable Desert Safari Trip         31-MAY-24 10.24.13.000000000 AM     15-JUN-24           3315.77
+T00040     Steven          Sparks                  2 patrickramsey@example.org    B00029     E00012     Desert Safari Discovery Tour             30-MAY-24 12.00.00.000000000 AM     19-DEC-24           1850.00
+T00002     Allison         Jensen                  1 benjaminstewart@example.com  B00014     E00002     Guided Scuba Diving Experience           19-AUG-24 03.43.52.000000000 AM     14-SEP-24            529.40
+T00004     Andrew          Taylor                  1 matthewnelson@example.net    B00048     E00049     Ultimate Desert Safari Experience        25-MAY-24 10.40.19.000000000 PM     15-JUN-24            108.52
+T00008     Stephen         Howell                  1 wallaceadam@example.com      B00018     E00016     Desert Safari Discovery Tour             28-MAY-24 08.21.50.000000000 PM     15-JUN-24           1066.68
+T00018     Travis          Lewis                   1 xwhite@example.net           B00046     E00001     Scuba Diving Escape                      26-AUG-24 04.05.50.000000000 PM     14-SEP-24           1869.68
+T00035     Taylor          Sanders                 1 rwilson@example.org          B00047     E00049     Ultimate Desert Safari Experience        25-MAY-24 10.40.19.000000000 PM     15-JUN-24            108.52
+T00042     Erika           Johns                   1 melissahill@example.org      B00045     E00001     Scuba Diving Escape                      26-AUG-24 04.05.50.000000000 PM     14-SEP-24           1869.68
 
--- 30 rows selected.
+19 rows selected
 */
 
 
