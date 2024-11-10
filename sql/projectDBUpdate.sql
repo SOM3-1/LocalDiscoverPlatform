@@ -1,3 +1,5 @@
+SET SERVEROUTPUT ON
+
 -- Step 1: Add bookings for January 2024 for Senior Citizens in a new experience and location
 BEGIN
     DBMS_OUTPUT.PUT_LINE('Inserting Booking for January 2024 for Senior Citizens in a new experience and location...');
