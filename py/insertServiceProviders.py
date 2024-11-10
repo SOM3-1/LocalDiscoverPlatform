@@ -4,7 +4,7 @@ import random
 from faker import Faker
 from datetime import datetime, timedelta
 from credentials import netid, pwd, connection
-from setupConfig import service_provider_percent, num_activities
+from setupConfig import service_provider_percent
 import sys
 
 # Configure logging
@@ -123,7 +123,7 @@ try:
     for service_provider in service_providers_data:
         sp_id = service_provider[0]
         location_id = random.choice(location_data)[0]
-
+        num_activities = random.randint(1, 5)
         schedules = generate_non_conflicting_schedule(existing_schedules, location_id, num_activities)
         for schedule in schedules:
             start_time, end_time = schedule

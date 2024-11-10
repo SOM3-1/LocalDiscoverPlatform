@@ -34,13 +34,13 @@ try:
             logger.error(f"An error occurred while creating the table: {e}")
 
     # Execute each CREATE VIEW statement
-    for create_view_sql in create_view_statements:
-        try:
-            logger.info(f"Executing: {create_view_sql.splitlines()[1].strip()}")
-            cursor.execute(create_view_sql)
-            logger.info("View created successfully.")
-        except cx_Oracle.DatabaseError as e:
-            logger.error(f"An error occurred while creating the view: {e}")
+    # for create_view_sql in create_view_statements:
+    #     try:
+    #         logger.info(f"Executing: {create_view_sql.splitlines()[1].strip()}")
+    #         cursor.execute(create_view_sql)
+    #         logger.info("View created successfully.")
+    #     except cx_Oracle.DatabaseError as e:
+    #         logger.error(f"An error occurred while creating the view: {e}")
 
     # Execute each CREATE TRIGGER statement
     for create_trigger_sql in create_trigger_statements:

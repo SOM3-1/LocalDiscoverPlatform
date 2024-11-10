@@ -478,6 +478,8 @@ WHERE
 ORDER BY 
     T.Last_Name, T.First_Name, SP.Name;
 
+    --
+
 SELECT
     l.Location_Name AS Destination,
     ic.Category_Name AS Experience_Category,

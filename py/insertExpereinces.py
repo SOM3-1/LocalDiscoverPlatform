@@ -5,7 +5,7 @@ import sys
 from faker import Faker
 from mocks import preference_options
 from credentials import netid, pwd, connection
-from setupConfig import num_tags, travelers_for_expereinces
+from setupConfig import travelers_for_expereinces
 
 # Configure logging
 logging.basicConfig(
@@ -115,6 +115,7 @@ try:
         ))
 
         # Step 6: Assign 1-n random tags to each experience
+        num_tags = random.randint(1, 3)
         selected_tags = random.sample(tags, num_tags)
         for tag_id, _ in selected_tags:
             experience_tags_data.append((experience_id, tag_id))

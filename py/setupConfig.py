@@ -2,7 +2,7 @@
 import random
 
 # Total number of travelers
-total_travelers = 3000;
+total_travelers = 3200;
 
 # Range for the number of preferences
 num_preferences = random.randint(1, 2)
