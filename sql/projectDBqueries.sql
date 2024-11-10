@@ -1,4 +1,6 @@
--- Query 1: Top Monthly Demographic, Location, and Activity by Bookings
+--Query 1: Top Monthly Demographic, Location, and Activity by Bookings
+-- This query identifies the most popular activity for each demographic group at various locations every month, based on the highest number of bookings. The purpose is to see which activities attract the most bookings per demographic, location, and month.
+
 SET PAGESIZE 1000
 SET LINESIZE 340
 TTITLE LEFT "Top Monthly Demographic, Location, and Activity by Bookings"
@@ -69,7 +71,9 @@ Result:
 -- 10 rows selected.
 */
 
--- Query 2: Customer Retention and Loyalty Analysis
+--Query 2: Customer Retention and Loyalty Analysis
+-- This query analyzes customer retention by identifying travelers who have made multiple bookings and calculating their average spending. The goal is to understand which customers are the most loyal (based on repeat bookings) and gauge their average spending levels.
+
 SET PAGESIZE 1000
 SET LINESIZE 100
 
@@ -120,7 +124,9 @@ Result:
 -- 10 rows selected.
 */
 
--- Query 3: Expereince diversity Analysis using rollup
+-- Query 3: Experience Diversity Analysis Using Rollup
+-- This query provides an analysis of the diversity of experiences offered across different locations and activity categories. It counts the total experiences for each location and category, along with subtotals and grand totals, allowing for a comprehensive view of experience offerings.
+
 SET PAGESIZE 1000
 SET LINESIZE 120
 TTITLE LEFT "Experience Distribution by Location and Category with Totals"
@@ -196,6 +202,7 @@ Result:
 
 
 -- Query 4: Confirmed Bookings Lacking Ratings with Traveler's Total Booking Count
+-- This query identifies confirmed bookings that do not have a rating, along with each traveler's total booking count. It helps identify customers who have experienced a service but have not provided feedback, allowing for targeted follow-up actions.
 
 TTITLE LEFT "Confirmed Bookings Lacking Ratings with Travelers Total Booking Count"
 COLUMN T_ID FORMAT A10
@@ -273,7 +280,8 @@ Result:
 
 
 -- Query 5: Quarterly and Yearly Booking and Revenue Analysis by Location
--- General settings for SQL Developer output
+-- This query provides an analysis of bookings and revenue by location across different quarters and years, giving insights into seasonal trends and revenue performance by location.
+
 SET PAGESIZE 1000
 SET LINESIZE 120
 
@@ -331,6 +339,8 @@ YEAR QUARTER  LOCATION_NAME   TOTAL_BOOKINGS TOTAL_REVENUE
 */
 
 -- Query 6: Experience Distribution by Location and Category with Totals
+-- This query provides a breakdown of the distribution of experiences by location and category, along with subtotals and a grand total. This analysis helps understand the variety and popularity of different experience categories across locations.
+
 TTITLE LEFT "Experience Distribution by Location and Category with Totals"
 COLUMN Destination FORMAT A15
 COLUMN Experience_Category FORMAT A20
@@ -405,7 +415,9 @@ Lexington       Cultural Experience                     3
 */
 
 
--- Query 7: Seasonal trends and spendings
+-- Query 7: Seasonal Trends and Spendings Analysis
+-- This query provides insights into seasonal booking trends and spending patterns, categorizing each booking into different seasons (Holiday, Spring Festival, Fall Event, and Regular) based on the month. The analysis focuses on total bookings, average spending, and total spending for each season.
+
 SET PAGESIZE 1000
 SET LINESIZE 120
 TTITLE LEFT "Seasonal Trends and Spendings Analysis"
@@ -453,8 +465,9 @@ ORDER BY
 -- 2023           Regular Season          2                108.52          217.04
 
 
--- Query 8: Top 10 service provider based on weightage(70& to rating and remaining 30% to total bookings)
--- Score=(Average Rating×0.7)+((Total Bookings/Max Total Bookings)​×10×0.3)
+-- Query 8: Top 10 Service Providers Based on Weighted Score
+-- This query identifies the top 10 service providers based on a weighted scoring system. The score is calculated by giving a 70% weight to the average rating and a 30% weight to the number of bookings, allowing a balanced view of quality and popularity.
+
 SET PAGESIZE 1000
 SET LINESIZE 150
 TTITLE LEFT "Top 10 Service Providers Based on Weighted Score"
@@ -544,6 +557,8 @@ ORDER BY
 -- 6 rows selected.
 
 -- Query 9: Adventure-Seeking Travelers and Their Booked Experiences with Service Providers
+-- This query identifies travelers interested in adventure-related experiences and lists the specific experiences they have booked along with the associated service providers. It includes travelers with preferences for categories like "Adventure," "Camping," "Mountain," and "Skiing," giving insights into their adventure-seeking behavior.
+
 SET PAGESIZE 1000
 SET LINESIZE 250
 BREAK ON Traveler_Name SKIP 1
