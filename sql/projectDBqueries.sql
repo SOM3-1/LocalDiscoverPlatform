@@ -125,32 +125,29 @@ Result:
 */
 
 -- Query 3: Experience Diversity Analysis Using Rollup
--- This query provides an analysis of the diversity of experiences offered across different locations and activity categories. It counts the total experiences for each location and category, along with subtotals and grand totals, allowing for a comprehensive view of experience offerings.
+-- This query provides an analysis of booking distribution across different locations. It counts the total bookings for each location, including subtotals for each location and a grand total across all locations. This enables a clear view of how bookings are spread geographically, helping to identify popular locations based on booking volume.
 
 SET PAGESIZE 1000
 SET LINESIZE 120
-TTITLE LEFT "Experience Distribution by Location and Category with Totals"
+TTITLE LEFT "Booking Distribution by Location with Totals"
 COLUMN Destination FORMAT A15
-COLUMN Experience_Category FORMAT A25
-COLUMN Total_Experiences FORMAT 99999
+COLUMN Total_Bookings FORMAT 99999
+
 SELECT 
     l.Location_Name AS Destination,
-    ic.Category_Name AS Experience_Category,
-    COUNT(e.Experience_ID) AS Total_Experiences
+    COUNT(b.Booking_ID) AS Total_Bookings
 FROM 
-    Fall24_S003_T8_Experience e
+    Fall24_S003_T8_Locations l
 JOIN 
-    Fall24_S003_T8_Service_Provider_Activities spa ON e.Service_Provider_ID = spa.Service_Provider_ID
+    Fall24_S003_T8_Schedule_Locations sl ON l.Location_ID = sl.Location_ID
 JOIN 
-    Fall24_S003_T8_Interest_Categories ic ON spa.Activity_ID = ic.Category_ID
-JOIN 
-    Fall24_S003_T8_Schedule_Locations sl ON e.Schedule_ID = sl.Schedule_ID
-JOIN 
-    Fall24_S003_T8_Locations l ON sl.Location_ID = l.Location_ID
+    Fall24_S003_T8_Experience e ON sl.Schedule_ID = e.Schedule_ID
+LEFT JOIN 
+    Fall24_S003_T8_Bookings b ON e.Experience_ID = b.Experience_ID
 GROUP BY 
-    ROLLUP (l.Location_Name, ic.Category_Name)
+    ROLLUP (l.Location_Name)
 ORDER BY 
-    Destination, Experience_Category;
+    Destination;
 
 
 /*
@@ -342,84 +339,9 @@ YEAR QUARTER  LOCATION_NAME   TOTAL_BOOKINGS TOTAL_REVENUE
 
 */
 
--- Query 6: Experience Distribution by Location and Category with Totals
--- This query provides a breakdown of the distribution of experiences by location and category, along with subtotals and a grand total. This analysis helps understand the variety and popularity of different experience categories across locations.
-
-TTITLE LEFT "Experience Distribution by Location and Category with Totals"
-COLUMN Destination FORMAT A15
-COLUMN Experience_Category FORMAT A20
-COLUMN Total_Experiences FORMAT A20
-
-SELECT
-    l.Location_Name AS Destination,
-    ic.Category_Name AS Experience_Category,
-    COUNT(e.Experience_ID) AS Total_Experiences
-FROM 
-    Fall24_S003_T8_Experience e
-JOIN 
-    Fall24_S003_T8_Service_Provider_Activities spa ON e.Service_Provider_ID = spa.Service_Provider_ID
-JOIN 
-    Fall24_S003_T8_Interest_Categories ic ON spa.Activity_ID = ic.Category_ID
-JOIN 
-    Fall24_S003_T8_Schedule_Locations sl ON e.Schedule_ID = sl.Schedule_ID
-JOIN 
-    Fall24_S003_T8_Locations l ON sl.Location_ID = l.Location_ID
-GROUP BY 
-    CUBE(l.Location_Name, ic.Category_Name)
-HAVING 
-    NOT (GROUPING(l.Location_Name) = 1 AND GROUPING(ic.Category_Name) = 1)
-    AND NOT (GROUPING(l.Location_Name) = 1 AND GROUPING(ic.Category_Name) = 0);
-/*
--- Result:
-DESTINATION     EXPERIENCE_CATEGORY     TOTAL_EXPERIENCES
---------------- -------------------- --------------------
-Plano                                                  30
-Plano           Skiing                                  2
-Plano           Camping                                 3
-Plano           Golfing                                 1
-Plano           Sailing                                 1
-Plano           Mountain                                2
-Plano           Shopping                                2
-Plano           Adventure                               2
-Plano           Road Trip                               3
-Plano           Photography                             1
-Plano           Scuba Diving                            1
-Plano           Yoga Retreat                            1
-Plano           Art and Craft                           1
-Plano           Desert Safari                           2
-Plano           Sports Events                           3
-Plano           Music Festival                          1
-Plano           Spa and Wellness                        3
-Plano           Cultural Experience                     1
-Lexington                                              65
-Lexington       Beach                                   1
-Lexington       Hiking                                  1
-Lexington       Skiing                                  3
-Lexington       Golfing                                 3
-Lexington       Sailing                                 3
-Lexington       Mountain                                3
-Lexington       Shopping                                4
-Lexington       Adventure                               2
-Lexington       Nightlife                               1
-Lexington       Road Trip                               2
-Lexington       Photography                             3
-Lexington       Scuba Diving                            3
-Lexington       Yoga Retreat                            1
-Lexington       Art and Craft                           5
-Lexington       Desert Safari                           4
-Lexington       Sports Events                           3
-Lexington       Food and Drink                          4
-Lexington       Music Festival                          6
-Lexington       Wildlife Safari                         3
-Lexington       Historical Sites                        5
-Lexington       Spa and Wellness                        2
-Lexington       Cultural Experience                     3
-
--- 41 rows selected.
-*/
 
 
--- Query 7: Seasonal Trends and Spendings Analysis
+-- Query 6: Seasonal Trends and Spendings Analysis
 -- This query provides insights into seasonal booking trends and spending patterns, categorizing each booking into different seasons (Holiday, Spring Festival, Fall Event, and Regular) based on the month. The analysis focuses on total bookings, average spending, and total spending for each season.
 
 SET PAGESIZE 1000
@@ -469,7 +391,7 @@ ORDER BY
 -- 2023           Regular Season          2                108.52          217.04
 
 
--- Query 8: Top 10 Service Providers Based on Weighted Score
+-- Query 7: Top 10 Service Providers Based on Weighted Score
 -- This query identifies the top 10 service providers based on a weighted scoring system. The score is calculated by giving a 70% weight to the average rating and a 30% weight to the number of bookings, allowing a balanced view of quality and popularity.
 
 SET PAGESIZE 1000
@@ -560,7 +482,7 @@ ORDER BY
 
 -- 6 rows selected.
 
--- Query 9: Adventure-Seeking Travelers and Their Booked Experiences with Service Providers
+-- Query 8: Adventure-Seeking Travelers and Their Booked Experiences with Service Providers
 -- This query identifies travelers interested in adventure-related experiences and lists the specific experiences they have booked along with the associated service providers. It includes travelers with preferences for categories like "Adventure," "Camping," "Mountain," and "Skiing," giving insights into their adventure-seeking behavior.
 
 SET PAGESIZE 1000

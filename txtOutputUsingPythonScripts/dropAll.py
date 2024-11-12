@@ -25,14 +25,14 @@ try:
     logger.info("Database connection established.")
 
 # Execute each DROP VIEWS statement
-    for drop_view_sql in drop_view_statements:
-        try:
-            logger.info(f"Executing: {drop_view_sql}")
-            cursor.execute(drop_view_sql)
-            logger.info("View dropped successfully.")
-        except cx_Oracle.DatabaseError as e:
-            logger.error(f"An error occurred while dropping the views: {e}")
-            # Continue to the next view even if one fails\
+    # for drop_view_sql in drop_view_statements:
+    #     try:
+    #         logger.info(f"Executing: {drop_view_sql}")
+    #         cursor.execute(drop_view_sql)
+    #         logger.info("View dropped successfully.")
+    #     except cx_Oracle.DatabaseError as e:
+    #         logger.error(f"An error occurred while dropping the views: {e}")
+    #         # Continue to the next view even if one fails\
 
     # Execute each DROP TRIGGER statement
     for drop_trigger_sql in drop_trigger_statements:

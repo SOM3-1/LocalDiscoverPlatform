@@ -6,7 +6,7 @@ from mocks import preference_options, city_names
 from faker import Faker
 from datetime import date
 from credentials import netid, pwd, connection
-from setupConfig import total_travelers, num_preferences
+from setupConfig import total_travelers
 
 # Configure logging
 logging.basicConfig(
@@ -104,6 +104,7 @@ try:
         
         traveler_preferences_data = []
         for traveler_id in range(1, total_travelers + 1):
+            num_preferences = random.randint(1, 2)
             t_id = f"T{traveler_id:05d}"
             selected_preferences = random.sample(preference_ids, num_preferences)
             for pref_id in selected_preferences:

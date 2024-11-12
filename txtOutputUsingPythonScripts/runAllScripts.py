@@ -7,7 +7,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 # List of scripts to execute
-scripts = ['insertLookupTables.py', 'insertTravellers.py', 'insertGroups.py', 'insertServiceProviders.py', 'insertExpereinces.py', 'insertBookings.py', 'insertRatings.py'] 
+scripts = ['dropAll.py', 'createAll.py','insertLookupTables.py', 'insertTravellers.py', 'insertGroups.py', 'insertServiceProviders.py', 'insertExpereinces.py', 'insertBookings.py', 'insertRatings.py'] 
 
 # Execute each script one by one
 for script in scripts:
