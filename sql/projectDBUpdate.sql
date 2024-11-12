@@ -296,7 +296,7 @@ END;
 BEGIN
     DBMS_OUTPUT.PUT_LINE('Adding a new rating for the "Scuba Diving" experience...');
     INSERT INTO Fall24_S003_T8_Ratings (Rating_ID, Traveler_ID, Experience_ID, Rating_Value, REVIEW_DATE_TIME, FEEDBACK, REVIEW_TITLE)
-    VALUES ('R10013', 'T00558', 'E00014', 9, SYSDATE, 'Great experience, would love to go again!', 'Amazing Scuba Diving Experience');
+    VALUES ('R10013', 'T00531', 'E00037', 9, SYSDATE, 'Great experience, would love to go again!', 'Amazing Scuba Diving Experience');
     DBMS_OUTPUT.PUT_LINE('New rating for Scuba Diving experience added successfully.');
 EXCEPTION
     WHEN OTHERS THEN
