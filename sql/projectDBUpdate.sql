@@ -53,7 +53,7 @@ END;
 BEGIN
     DBMS_OUTPUT.PUT_LINE('Inserting new experience for "Scuba Diving" activity...');
     INSERT INTO Fall24_S003_T8_Experience (Experience_ID, Title, Description, Group_Availability, Min_Group_Size, Max_Group_Size, Pricing, Service_Provider_ID, Schedule_ID)
-    VALUES ('E10051', 'Coral Reef Exploration', 'Scuba Diving at Coral Reefs', 'Y', 5, 20, 2500, 'SP00005', 'SCH00004');
+    VALUES ('E10501', 'Coral Reef Exploration', 'Scuba Diving at Coral Reefs', 'Y', 5, 20, 2500, 'SP00005', 'SCH00004');
     DBMS_OUTPUT.PUT_LINE('New experience E10051 added for Scuba Diving.');
 EXCEPTION
     WHEN OTHERS THEN
@@ -180,11 +180,54 @@ END;
 BEGIN
     DBMS_OUTPUT.PUT_LINE('Removing booking B00042 for T00036...');
     DELETE FROM Fall24_S003_T8_Bookings
-    WHERE Booking_ID = 'B00042' AND Traveler_ID = 'T00036';
+    WHERE Booking_ID = 'B00042';
     DBMS_OUTPUT.PUT_LINE('Booking B00042 removed for T00036.');
 EXCEPTION
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('Error in deleting booking for T00036: ' || SQLERRM);
+END;
+/
+
+-- Step 16: Remove a booking B00042 --
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('Removing booking B00042 for T00036...');
+    DELETE FROM Fall24_S003_T8_Bookings
+    WHERE Booking_ID = 'B40517';
+    DBMS_OUTPUT.PUT_LINE('Booking B00042 removed.');
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Error in deleting booking ' || SQLERRM);
+END;
+/
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('Removing booking B00042 for T00036...');
+    DELETE FROM Fall24_S003_T8_Bookings
+    WHERE Booking_ID = 'B02511';
+    DBMS_OUTPUT.PUT_LINE('Booking B00042 removed.');
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Error in deleting booking ' || SQLERRM);
+END;
+/
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('Removing booking B00042 for T00036...');
+    DELETE FROM Fall24_S003_T8_Bookings
+    WHERE Booking_ID = 'B35029';
+    DBMS_OUTPUT.PUT_LINE('Booking B00042 removed.');
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Error in deleting booking ' || SQLERRM);
+END;
+/
+
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('Removing booking B00042 for T00036...');
+    DELETE FROM Fall24_S003_T8_Bookings
+    WHERE Booking_ID = 'B74936';
+    DBMS_OUTPUT.PUT_LINE('Booking B00042 removed.');
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Error in deleting booking ' || SQLERRM);
 END;
 /
 
@@ -253,7 +296,7 @@ END;
 BEGIN
     DBMS_OUTPUT.PUT_LINE('Adding a new rating for the "Scuba Diving" experience...');
     INSERT INTO Fall24_S003_T8_Ratings (Rating_ID, Traveler_ID, Experience_ID, Rating_Value, REVIEW_DATE_TIME, FEEDBACK, REVIEW_TITLE)
-    VALUES ('R10013', 'T00050', 'E00012', 9, SYSDATE, 'Great experience, would love to go again!', 'Amazing Scuba Diving Experience');
+    VALUES ('R10013', 'T0055', 'E00014', 9, SYSDATE, 'Great experience, would love to go again!', 'Amazing Scuba Diving Experience');
     DBMS_OUTPUT.PUT_LINE('New rating for Scuba Diving experience added successfully.');
 EXCEPTION
     WHEN OTHERS THEN
@@ -312,6 +355,17 @@ EXCEPTION
         DBMS_OUTPUT.PUT_LINE('Error in adding high-value bookings: ' || SQLERRM);
 END;
 /
-
+   
+    BEGIN
+    UPDATE Fall24_S003_T8_Travelers
+        SET Demographic_Type = 'Senior Adult'
+        WHERE 
+        TRUNC(MONTHS_BETWEEN(SYSDATE, DOB) / 12) BETWEEN 55 AND 65;
+        DBMS_OUTPUT.PUT_LINE('demographic type updated successfully.');
+        EXCEPTION
+            WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Error in updating demographic type ' || SQLERRM);
+END;
+/
 -- Final Commit
 COMMIT;

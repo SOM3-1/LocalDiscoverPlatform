@@ -8163,7 +8163,7 @@ INTO Fall24_S003_T8_Bookings (Booking_ID, Traveler_ID, Experience_ID, Date_Of_Bo
 INTO Fall24_S003_T8_Bookings (Booking_ID, Traveler_ID, Experience_ID, Date_Of_Booking, Experience_Date, Amount_Paid, Booking_Status_ID, Booking_Method_ID, Payment_Status_ID) VALUES ('B19066', 'T00504', 'E00272', TO_TIMESTAMP('2024-11-29 11:25:21', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2024-12-18', 'YYYY-MM-DD'), 0, 'BS003', 'BM004', 'PS001')
 INTO Fall24_S003_T8_Bookings (Booking_ID, Traveler_ID, Experience_ID, Date_Of_Booking, Experience_Date, Amount_Paid, Booking_Status_ID, Booking_Method_ID, Payment_Status_ID) VALUES ('B24804', 'T00231', 'E00455', TO_TIMESTAMP('2024-12-06 01:46:15', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2024-12-19', 'YYYY-MM-DD'), 1250.513, 'BS001', 'BM001', 'PS002')
 SELECT * FROM dual;
-
+COMMIT; 
 --ratings table--
 
 INSERT ALL
@@ -8455,4 +8455,4 @@ INTO Fall24_S003_T8_Ratings (Rating_ID, Traveler_ID, Experience_ID, Rating_Value
 INTO Fall24_S003_T8_Ratings (Rating_ID, Traveler_ID, Experience_ID, Rating_Value, Review_Date_Time, Feedback, Review_Title) VALUES ('R73081', 'T00676', 'E00119', 2.1, TO_TIMESTAMP('2023-12-24 08:31:57', 'YYYY-MM-DD HH24:MI:SS'), 'Cell production even wear quality. Unfortunately, the experience did not meet my expectations. The wind part was underwhelming and needs improvement.', 'Not worth it')
 INTO Fall24_S003_T8_Ratings (Rating_ID, Traveler_ID, Experience_ID, Rating_Value, Review_Date_Time, Feedback, Review_Title) VALUES ('R64227', 'T00693', 'E00022', 8.1, TO_TIMESTAMP('2024-05-12 12:16:51', 'YYYY-MM-DD HH24:MI:SS'), 'Year them standard relationship security indicate. The experience exceeded my expectations! I particularly enjoyed the minute aspect and would recommend it to others.', 'Amazing experience!')
 SELECT * FROM dual;
-
+COMMIT;
