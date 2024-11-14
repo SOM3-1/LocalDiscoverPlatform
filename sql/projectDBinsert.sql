@@ -1,4 +1,5 @@
 --Lokup tables--
+Begin 
 INSERT ALL
 INTO Fall24_S003_T8_Locations (Location_ID, Location_Name) VALUES ('L00001', 'New York')
 INTO Fall24_S003_T8_Locations (Location_ID, Location_Name) VALUES ('L00002', 'Los Angeles')
@@ -215,10 +216,14 @@ INTO Fall24_S003_T8_Payment_Status (Payment_Status_ID, Payment_Status_Name) VALU
 INTO Fall24_S003_T8_Payment_Status (Payment_Status_ID, Payment_Status_Name) VALUES ('PS003', 'Failed')
 INTO Fall24_S003_T8_Payment_Status (Payment_Status_ID, Payment_Status_Name) VALUES ('PS004', 'Refunded')
 SELECT * FROM dual;
+DBMS_OUTPUT.PUT_LINE('Successfully Inserted into Lookup tables.' || SQLERRM);
+END;
+/   
 
 COMMIT;
 
 -- Travelers Table--
+BEGIN
 INSERT ALL
 INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00001', 'Valerie', 'Dominguez', TO_DATE('1995-06-20', 'YYYY-MM-DD'), 'Couple', 'O', 'L00053', 'robertwilliams@example.org', '808-871-7463x82')
 INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00002', 'Angela', 'Shelton', TO_DATE('1951-09-21', 'YYYY-MM-DD'), 'Senior Citizen', 'O', 'L00092', 'michellejohnson@example.org', '(579)420-2663')
@@ -421,9 +426,13 @@ INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Typ
 INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00199', 'Mckenzie', 'Bush', TO_DATE('1988-08-14', 'YYYY-MM-DD'), 'Couple', 'O', 'L00082', 'danielpatel@example.net', '001-237-730-570')
 INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00200', 'Courtney', 'Kennedy', TO_DATE('1958-04-09', 'YYYY-MM-DD'), 'Senior Citizen', 'M', 'L00064', 'moorebrianna@example.net', '329-674-3010x78')
 SELECT * FROM dual;
+DBMS_OUTPUT.PUT_LINE('Successfully Inserted into Travelers tables (1/5).' || SQLERRM);
+END;
+/   
 
 COMMIT;
 
+BEGIN
 INSERT ALL
 INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00201', 'Andres', 'Wilson', TO_DATE('2000-05-13', 'YYYY-MM-DD'), 'Student', 'F', 'L00051', 'roberthenderson@example.net', '(232)396-7999')
 INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00202', 'Elizabeth', 'Davis', TO_DATE('1953-07-25', 'YYYY-MM-DD'), 'Senior Citizen', 'O', 'L00069', 'stanleyyoder@example.com', '469-450-3173')
@@ -626,9 +635,13 @@ INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Typ
 INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00399', 'Katherine', 'Kent', TO_DATE('1986-08-01', 'YYYY-MM-DD'), 'Couple', 'O', 'L00001', 'alicia98@example.org', '(260)986-5526x4')
 INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00400', 'Jessica', 'Miranda', TO_DATE('1947-08-12', 'YYYY-MM-DD'), 'Senior Citizen', 'O', 'L00065', 'joshuataylor@example.com', '(355)420-1378x2')
 SELECT * FROM dual;
+DBMS_OUTPUT.PUT_LINE('Successfully Inserted into Travelers tables (2/5).' || SQLERRM);
+END;
+/   
 
 COMMIT;
 
+BEGIN
 INSERT ALL
 INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00401', 'Lisa', 'Kelley', TO_DATE('2004-06-08', 'YYYY-MM-DD'), 'Student', 'M', 'L00081', 'psanchez@example.net', '(772)763-3745x7')
 INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00402', 'Scott', 'Gutierrez', TO_DATE('1988-09-30', 'YYYY-MM-DD'), 'Couple', 'F', 'L00034', 'johnsonjonathan@example.net', '977.605.5191')
@@ -831,9 +844,13 @@ INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Typ
 INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00599', 'Victoria', 'Price', TO_DATE('1970-08-29', 'YYYY-MM-DD'), 'Group', 'O', 'L00066', 'medinacharles@example.org', '779.869.7264')
 INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00600', 'Raven', 'Villarreal', TO_DATE('2002-01-25', 'YYYY-MM-DD'), 'Student', 'O', 'L00006', 'heather23@example.net', '682.464.1416x04')
 SELECT * FROM dual;
+DBMS_OUTPUT.PUT_LINE('Successfully Inserted into Travelers tables (3/5).' || SQLERRM);
+END;
+/   
 
 COMMIT;
 
+BEGIN
 INSERT ALL
 INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00601', 'Grace', 'Williams', TO_DATE('1980-12-29', 'YYYY-MM-DD'), 'Group', 'M', 'L00025', 'brittany25@example.org', '+1-699-755-3842')
 INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00602', 'Joshua', 'Turner', TO_DATE('1984-03-12', 'YYYY-MM-DD'), 'Couple', 'F', 'L00057', 'jhoward@example.org', '+1-725-751-3341')
@@ -1036,9 +1053,12 @@ INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Typ
 INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00799', 'Mark', 'Cook', TO_DATE('1966-08-17', 'YYYY-MM-DD'), 'Senior Citizen', 'F', 'L00093', 'hklein@example.net', '+1-479-860-0895')
 INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00800', 'Olivia', 'Walsh', TO_DATE('1977-03-22', 'YYYY-MM-DD'), 'Group', 'O', 'L00040', 'angela80@example.com', '(860)855-9725')
 SELECT * FROM dual;
-
+DBMS_OUTPUT.PUT_LINE('Successfully Inserted into Travelers tables (4/5).' || SQLERRM);
+END;
+/   
 COMMIT;
 
+BEGIN
 INSERT ALL
 INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00801', 'Arthur', 'Howe', TO_DATE('2003-02-20', 'YYYY-MM-DD'), 'Student', 'F', 'L00097', 'fjacobs@example.com', '778-947-8127')
 INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00802', 'Pamela', 'Anderson', TO_DATE('1963-12-29', 'YYYY-MM-DD'), 'Senior Citizen', 'O', 'L00074', 'antonioharris@example.org', '685-798-0531x19')
@@ -1241,9 +1261,13 @@ INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Typ
 INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T00999', 'Jennifer', 'Lawrence', TO_DATE('1964-02-14', 'YYYY-MM-DD'), 'Senior Citizen', 'F', 'L00042', 'derrickmiles@example.net', '+1-971-614-9792')
 INTO Fall24_S003_T8_Travelers (T_ID, First_Name, Last_Name, DOB, Demographic_Type, Sex, Location_ID, Email, Phone) VALUES ('T01000', 'Matthew', 'Cunningham', TO_DATE('2003-06-05', 'YYYY-MM-DD'), 'Student', 'O', 'L00044', 'williskyle@example.org', '001-720-917-965')
 SELECT * FROM dual;
+DBMS_OUTPUT.PUT_LINE('Successfully Inserted into Travelers tables (5/5).' || SQLERRM);
+END;
+/   
 
 COMMIT;
 
+BEGIN
 INSERT ALL
 INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00001', 'C00005')
 INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00002', 'C00002')
@@ -1539,9 +1563,12 @@ INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00199',
 INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00200', 'C00013')
 INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00200', 'C00025')
 SELECT * FROM dual;
-
+DBMS_OUTPUT.PUT_LINE('Successfully Inserted into Travelers Preference tables (1/5).' || SQLERRM);
+END;
+/   
 COMMIT;
 
+BEGIN
 INSERT ALL
 INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00201', 'C00015')
 INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00201', 'C00021')
@@ -1837,9 +1864,12 @@ INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00399',
 INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00400', 'C00025')
 INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00400', 'C00009')
 SELECT * FROM dual;
-
+DBMS_OUTPUT.PUT_LINE('Successfully Inserted into Travelers Preference tables (2/5).' || SQLERRM);
+END;
+/   
 COMMIT;
 
+BEGIN
 INSERT ALL
 INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00401', 'C00020')
 INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00401', 'C00014')
@@ -2139,9 +2169,12 @@ INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00598',
 INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00599', 'C00023')
 INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00600', 'C00003')
 SELECT * FROM dual;
-
+DBMS_OUTPUT.PUT_LINE('Successfully Inserted into Travelers Preference tables (3/5).' || SQLERRM);
+END;
+/   
 COMMIT;
 
+BEGIN
 INSERT ALL
 INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00601', 'C00008')
 INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00602', 'C00017')
@@ -2442,9 +2475,12 @@ INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00799',
 INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00800', 'C00009')
 INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00800', 'C00006')
 SELECT * FROM dual;
-
+DBMS_OUTPUT.PUT_LINE('Successfully Inserted into Travelers Preference tables (4/5).' || SQLERRM);
+END;
+/   
 COMMIT;
 
+BEGIN
 INSERT ALL
 INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00801', 'C00019')
 INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00802', 'C00011')
@@ -2742,10 +2778,13 @@ INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T00999',
 INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T01000', 'C00009')
 INTO Fall24_S003_T8_Traveler_Preferences (T_ID, Preference_ID) VALUES ('T01000', 'C00018')
 SELECT * FROM dual;
-
+DBMS_OUTPUT.PUT_LINE('Successfully Inserted into Travelers Preference tables (5/5).' || SQLERRM);
+END;
+/   
 COMMIT;
 
 --- groups table--
+BEGIN
 INSERT ALL
 INTO Fall24_S003_T8_Groups (Group_ID, Group_Name, Group_Leader_T_ID, Group_Type_ID) VALUES ('G00001', 'Hall-Rodriguez', 'T00882', 'GT014')
 INTO Fall24_S003_T8_Groups (Group_ID, Group_Name, Group_Leader_T_ID, Group_Type_ID) VALUES ('G00002', 'Webster Inc', 'T00075', 'GT003')
@@ -2848,9 +2887,12 @@ INTO Fall24_S003_T8_Groups (Group_ID, Group_Name, Group_Leader_T_ID, Group_Type_
 INTO Fall24_S003_T8_Groups (Group_ID, Group_Name, Group_Leader_T_ID, Group_Type_ID) VALUES ('G00099', 'Pitts Inc', 'T00398', 'GT017')
 INTO Fall24_S003_T8_Groups (Group_ID, Group_Name, Group_Leader_T_ID, Group_Type_ID) VALUES ('G00100', 'Wilson-Petersen', 'T00859', 'GT013')
 SELECT * FROM dual;
-
+DBMS_OUTPUT.PUT_LINE('Successfully Inserted into Travelers Groups tables.' || SQLERRM);
+END;
+/   
 COMMIT;
 
+BEGIN
 INSERT ALL
 INTO Fall24_S003_T8_Group_Members (Group_ID, T_ID) VALUES ('G00001', 'T00496')
 INTO Fall24_S003_T8_Group_Members (Group_ID, T_ID) VALUES ('G00001', 'T00504')
@@ -3318,10 +3360,13 @@ INTO Fall24_S003_T8_Group_Members (Group_ID, T_ID) VALUES ('G00100', 'T00096')
 INTO Fall24_S003_T8_Group_Members (Group_ID, T_ID) VALUES ('G00100', 'T00167')
 INTO Fall24_S003_T8_Group_Members (Group_ID, T_ID) VALUES ('G00100', 'T00411')
 SELECT * FROM dual;
-
+DBMS_OUTPUT.PUT_LINE('Successfully Inserted into Travelers Group Members tables.' || SQLERRM);
+END;
+/   
 COMMIT;
 
 ---service provider table--
+BEGIN
 INSERT ALL
 INTO Fall24_S003_T8_Service_Provider (Service_Provider_ID, Name, Email, Phone, Bio, Street, City, Zip, Country) VALUES ('SP00001', 'Adams-Cooper', 'campbelllori@example.org', '4402665036', 'You others local him billion account. North store able wind public single.', '40834 King Streets Apt. 348', 'East Eugene', '76296', 'Niue')
 INTO Fall24_S003_T8_Service_Provider (Service_Provider_ID, Name, Email, Phone, Bio, Street, City, Zip, Country) VALUES ('SP00002', 'Boyer, Flores and Taylor', 'pmeadows@example.net', '568.482.0285x25', 'Top understand like decision strong. Tend head later recently pressure.
@@ -3854,9 +3899,12 @@ World sense drive sit money. Resource especially plan program away charge.', '46
 INTO Fall24_S003_T8_Service_Provider (Service_Provider_ID, Name, Email, Phone, Bio, Street, City, Zip, Country) VALUES ('SP00300', 'Wilcox, Greene and Shaw', 'trosario@example.net', '889.780.8154x15', 'Born onto market big yourself meet. For less approach game run movie.
 Now put step. Leave painting current happy tax court owner. Get television common child consumer fish success.', '887 Jones Island', 'West Katherine', '94047', 'Gambia')
 SELECT * FROM dual;
+DBMS_OUTPUT.PUT_LINE('Successfully Inserted into Service Provider table.' || SQLERRM);
+END;
+/  
 
 COMMIT;
-
+BEGIN
 INSERT ALL
 INTO Fall24_S003_T8_Service_Provider_Activities (Service_Provider_ID, Activity_ID) VALUES ('SP00001', 'C00004')
 INTO Fall24_S003_T8_Service_Provider_Activities (Service_Provider_ID, Activity_ID) VALUES ('SP00001', 'C00020')
@@ -4469,9 +4517,12 @@ INTO Fall24_S003_T8_Service_Provider_Activities (Service_Provider_ID, Activity_I
 INTO Fall24_S003_T8_Service_Provider_Activities (Service_Provider_ID, Activity_ID) VALUES ('SP00299', 'C00002')
 INTO Fall24_S003_T8_Service_Provider_Activities (Service_Provider_ID, Activity_ID) VALUES ('SP00300', 'C00002')
 SELECT * FROM dual;
-
+DBMS_OUTPUT.PUT_LINE('Successfully Inserted into Service Provider Activities table.' || SQLERRM);
+END;
+/  
 COMMIT;
 
+BEGIN
 INSERT ALL
 INTO Fall24_S003_T8_Availability_Schedule (Schedule_ID, Service_Provider_ID, Available_Date) VALUES ('SCH00001', 'SP00001', TO_TIMESTAMP('2024-10-27', 'YYYY-MM-DD'))
 INTO Fall24_S003_T8_Availability_Schedule (Schedule_ID, Service_Provider_ID, Available_Date) VALUES ('SCH00002', 'SP00001', TO_TIMESTAMP('2024-04-02', 'YYYY-MM-DD'))
@@ -5084,9 +5135,12 @@ INTO Fall24_S003_T8_Availability_Schedule (Schedule_ID, Service_Provider_ID, Ava
 INTO Fall24_S003_T8_Availability_Schedule (Schedule_ID, Service_Provider_ID, Available_Date) VALUES ('SCH00609', 'SP00299', TO_TIMESTAMP('2024-09-07', 'YYYY-MM-DD'))
 INTO Fall24_S003_T8_Availability_Schedule (Schedule_ID, Service_Provider_ID, Available_Date) VALUES ('SCH00610', 'SP00300', TO_TIMESTAMP('2024-06-02', 'YYYY-MM-DD'))
 SELECT * FROM dual;
-
+DBMS_OUTPUT.PUT_LINE('Successfully Inserted into Activity Schedule table.' || SQLERRM);
+END;
+/  
 COMMIT;
 
+BEGIN
 INSERT ALL
 INTO Fall24_S003_T8_Schedule_Times (Schedule_ID, Start_Time, End_Time) VALUES ('SCH00001', TO_TIMESTAMP('2024-10-27 19:34:09', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2024-10-28 23:34:09', 'YYYY-MM-DD HH24:MI:SS'))
 INTO Fall24_S003_T8_Schedule_Times (Schedule_ID, Start_Time, End_Time) VALUES ('SCH00002', TO_TIMESTAMP('2024-04-02 23:52:07', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2024-04-09 03:52:07', 'YYYY-MM-DD HH24:MI:SS'))
@@ -5699,9 +5753,12 @@ INTO Fall24_S003_T8_Schedule_Times (Schedule_ID, Start_Time, End_Time) VALUES ('
 INTO Fall24_S003_T8_Schedule_Times (Schedule_ID, Start_Time, End_Time) VALUES ('SCH00609', TO_TIMESTAMP('2024-09-07 13:40:43', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2024-09-10 01:40:43', 'YYYY-MM-DD HH24:MI:SS'))
 INTO Fall24_S003_T8_Schedule_Times (Schedule_ID, Start_Time, End_Time) VALUES ('SCH00610', TO_TIMESTAMP('2024-06-02 15:41:32', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2024-06-04 10:41:32', 'YYYY-MM-DD HH24:MI:SS'))
 SELECT * FROM dual;
-
+DBMS_OUTPUT.PUT_LINE('Successfully Inserted into Schedule Times table.' || SQLERRM);
+END;
+/  
 COMMIT;
 
+BEGIN
 INSERT ALL
 INTO Fall24_S003_T8_Schedule_Locations (Schedule_ID, Location_ID) VALUES ('SCH00001', 'L00106')
 INTO Fall24_S003_T8_Schedule_Locations (Schedule_ID, Location_ID) VALUES ('SCH00002', 'L00106')
@@ -6314,10 +6371,13 @@ INTO Fall24_S003_T8_Schedule_Locations (Schedule_ID, Location_ID) VALUES ('SCH00
 INTO Fall24_S003_T8_Schedule_Locations (Schedule_ID, Location_ID) VALUES ('SCH00609', 'L00017')
 INTO Fall24_S003_T8_Schedule_Locations (Schedule_ID, Location_ID) VALUES ('SCH00610', 'L00015')
 SELECT * FROM dual;
-
+DBMS_OUTPUT.PUT_LINE('Successfully Inserted into Schedule Locations table.' || SQLERRM);
+END;
+/  
 COMMIT;
 
 ---experience table--
+BEGIN
 INSERT ALL
 INTO Fall24_S003_T8_Experience (Experience_ID, Title, Description, Group_Availability, Min_Group_Size, Max_Group_Size, Pricing, Service_Provider_ID, Schedule_ID) VALUES ('E00001', 'Ultimate Sailing Experience', 'Join us for an amazing sailing where you will Environmental state decade easy miss book position behavior..', 'N', 0, 0, 2648.64, 'SP00053', 'SCH00495')
 INTO Fall24_S003_T8_Experience_Tags (Experience_ID, Tag_ID) VALUES ('E00001', 'T033')
@@ -6432,6 +6492,14 @@ INTO Fall24_S003_T8_Experience (Experience_ID, Title, Description, Group_Availab
 INTO Fall24_S003_T8_Experience_Tags (Experience_ID, Tag_ID) VALUES ('E00045', 'T006')
 INTO Fall24_S003_T8_Experience_Tags (Experience_ID, Tag_ID) VALUES ('E00045', 'T015')
 INTO Fall24_S003_T8_Experience (Experience_ID, Title, Description, Group_Availability, Min_Group_Size, Max_Group_Size, Pricing, Service_Provider_ID, Schedule_ID) VALUES ('E00046', 'Unforgettable Hiking Trip', 'Join us for an amazing hiking where you will Source executive discussion response check low establish structure democratic idea near..', 'N', 0, 0, 359.9, 'SP00225', 'SCH00589')
+SELECT * FROM dual;
+DBMS_OUTPUT.PUT_LINE('Successfully Inserted into Experience table.' || SQLERRM);
+END;
+/  
+COMMIT;
+
+BEGIN
+INSERT ALL
 INTO Fall24_S003_T8_Experience_Tags (Experience_ID, Tag_ID) VALUES ('E00046', 'T018')
 INTO Fall24_S003_T8_Experience_Tags (Experience_ID, Tag_ID) VALUES ('E00046', 'T003')
 INTO Fall24_S003_T8_Experience (Experience_ID, Title, Description, Group_Availability, Min_Group_Size, Max_Group_Size, Pricing, Service_Provider_ID, Schedule_ID) VALUES ('E00047', 'Unforgettable Adventure Trip', 'Join us for an amazing adventure where you will Hand ground me approach purpose its the scientist matter..', 'Y', 8, 18, 4057.17, 'SP00035', 'SCH00558')
@@ -7062,6 +7130,14 @@ INTO Fall24_S003_T8_Experience_Tags (Experience_ID, Tag_ID) VALUES ('E00297', 'T
 INTO Fall24_S003_T8_Experience (Experience_ID, Title, Description, Group_Availability, Min_Group_Size, Max_Group_Size, Pricing, Service_Provider_ID, Schedule_ID) VALUES ('E00298', 'Shopping Discovery Tour', 'Join us for an amazing shopping where you will Fill current purpose push something high exactly always nice..', 'Y', 3, 4, 1985.47, 'SP00217', 'SCH00444')
 INTO Fall24_S003_T8_Experience_Tags (Experience_ID, Tag_ID) VALUES ('E00298', 'T020')
 INTO Fall24_S003_T8_Experience (Experience_ID, Title, Description, Group_Availability, Min_Group_Size, Max_Group_Size, Pricing, Service_Provider_ID, Schedule_ID) VALUES ('E00299', 'Exciting Wildlife Safari Adventure', 'Join us for an amazing wildlife safari where you will Leg for her however need seek central accept method operation pass..', 'Y', 9, 12, 3401.23, 'SP00276', 'SCH00074')
+SELECT * FROM dual;
+DBMS_OUTPUT.PUT_LINE('Successfully Inserted into Experience Tags table (1/2).' || SQLERRM);
+END;
+/  
+COMMIT;
+
+BEGIN
+INSERT ALL
 INTO Fall24_S003_T8_Experience_Tags (Experience_ID, Tag_ID) VALUES ('E00299', 'T010')
 INTO Fall24_S003_T8_Experience (Experience_ID, Title, Description, Group_Availability, Min_Group_Size, Max_Group_Size, Pricing, Service_Provider_ID, Schedule_ID) VALUES ('E00300', 'Music Festival Escape', 'Join us for an amazing music festival where you will Cover concern onto want moment wall race move..', 'N', 0, 0, 4053.41, 'SP00130', 'SCH00192')
 INTO Fall24_S003_T8_Experience_Tags (Experience_ID, Tag_ID) VALUES ('E00300', 'T028')
@@ -7557,10 +7633,13 @@ INTO Fall24_S003_T8_Experience_Tags (Experience_ID, Tag_ID) VALUES ('E00499', 'T
 INTO Fall24_S003_T8_Experience (Experience_ID, Title, Description, Group_Availability, Min_Group_Size, Max_Group_Size, Pricing, Service_Provider_ID, Schedule_ID) VALUES ('E00500', 'Guided Road Trip Experience', 'Join us for an amazing road trip where you will Product deep exist discover national adult season officer degree office..', 'Y', 6, 19, 3776.61, 'SP00193', 'SCH00428')
 INTO Fall24_S003_T8_Experience_Tags (Experience_ID, Tag_ID) VALUES ('E00500', 'T035')
 SELECT * FROM dual;
-
+DBMS_OUTPUT.PUT_LINE('Successfully Inserted into Experience Tags table(2/2).' || SQLERRM);
+END;
+/  
 COMMIT;
 
 ---bookings table--
+BEGIN
 INSERT ALL
 INTO Fall24_S003_T8_Bookings (Booking_ID, Traveler_ID, Experience_ID, Date_Of_Booking, Experience_Date, Amount_Paid, Booking_Status_ID, Booking_Method_ID, Payment_Status_ID) VALUES ('B09523', 'T00340', 'E00340', TO_TIMESTAMP('2024-05-17 23:03:11', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2024-06-02', 'YYYY-MM-DD'), 5119.202, 'BS001', 'BM002', 'PS002')
 INTO Fall24_S003_T8_Bookings (Booking_ID, Traveler_ID, Experience_ID, Date_Of_Booking, Experience_Date, Amount_Paid, Booking_Status_ID, Booking_Method_ID, Payment_Status_ID) VALUES ('B21664', 'T00508', 'E00302', TO_TIMESTAMP('2024-12-13 14:54:39', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2025-01-10', 'YYYY-MM-DD'), 3900.842, 'BS001', 'BM005', 'PS002')
@@ -7896,6 +7975,14 @@ INTO Fall24_S003_T8_Bookings (Booking_ID, Traveler_ID, Experience_ID, Date_Of_Bo
 INTO Fall24_S003_T8_Bookings (Booking_ID, Traveler_ID, Experience_ID, Date_Of_Booking, Experience_Date, Amount_Paid, Booking_Status_ID, Booking_Method_ID, Payment_Status_ID) VALUES ('B60685', 'T00569', 'E00176', TO_TIMESTAMP('2024-02-16 10:35:36', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2024-02-21', 'YYYY-MM-DD'), 814.88, 'BS001', 'BM004', 'PS002')
 INTO Fall24_S003_T8_Bookings (Booking_ID, Traveler_ID, Experience_ID, Date_Of_Booking, Experience_Date, Amount_Paid, Booking_Status_ID, Booking_Method_ID, Payment_Status_ID) VALUES ('B53751', 'T00879', 'E00498', TO_TIMESTAMP('2024-10-31 07:40:32', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2024-11-17', 'YYYY-MM-DD'), 940.5990000000002, 'BS001', 'BM001', 'PS002')
 INTO Fall24_S003_T8_Bookings (Booking_ID, Traveler_ID, Experience_ID, Date_Of_Booking, Experience_Date, Amount_Paid, Booking_Status_ID, Booking_Method_ID, Payment_Status_ID) VALUES ('B17840', 'T00996', 'E00028', TO_TIMESTAMP('2024-03-09 05:26:30', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2024-03-11', 'YYYY-MM-DD'), 5038.374000000001, 'BS001', 'BM003', 'PS002')
+SELECT * FROM dual;
+DBMS_OUTPUT.PUT_LINE('Successfully Inserted into Bookings table (1/2).' || SQLERRM);
+END;
+/  
+COMMIT;
+
+BEGIN
+INSERT ALL
 INTO Fall24_S003_T8_Bookings (Booking_ID, Traveler_ID, Experience_ID, Date_Of_Booking, Experience_Date, Amount_Paid, Booking_Status_ID, Booking_Method_ID, Payment_Status_ID) VALUES ('B99792', 'T00414', 'E00191', TO_TIMESTAMP('2024-12-23 11:16:51', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2024-12-29', 'YYYY-MM-DD'), 0, 'BS002', 'BM003', 'PS003')
 INTO Fall24_S003_T8_Bookings (Booking_ID, Traveler_ID, Experience_ID, Date_Of_Booking, Experience_Date, Amount_Paid, Booking_Status_ID, Booking_Method_ID, Payment_Status_ID) VALUES ('B73778', 'T00143', 'E00477', TO_TIMESTAMP('2024-11-27 23:33:44', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2024-12-16', 'YYYY-MM-DD'), 801.6250000000001, 'BS001', 'BM001', 'PS002')
 INTO Fall24_S003_T8_Bookings (Booking_ID, Traveler_ID, Experience_ID, Date_Of_Booking, Experience_Date, Amount_Paid, Booking_Status_ID, Booking_Method_ID, Payment_Status_ID) VALUES ('B68678', 'T00818', 'E00393', TO_TIMESTAMP('2024-08-09 00:40:01', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2024-08-23', 'YYYY-MM-DD'), 2511.0580000000004, 'BS001', 'BM004', 'PS002')
@@ -8163,9 +8250,13 @@ INTO Fall24_S003_T8_Bookings (Booking_ID, Traveler_ID, Experience_ID, Date_Of_Bo
 INTO Fall24_S003_T8_Bookings (Booking_ID, Traveler_ID, Experience_ID, Date_Of_Booking, Experience_Date, Amount_Paid, Booking_Status_ID, Booking_Method_ID, Payment_Status_ID) VALUES ('B19066', 'T00504', 'E00272', TO_TIMESTAMP('2024-11-29 11:25:21', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2024-12-18', 'YYYY-MM-DD'), 0, 'BS003', 'BM004', 'PS001')
 INTO Fall24_S003_T8_Bookings (Booking_ID, Traveler_ID, Experience_ID, Date_Of_Booking, Experience_Date, Amount_Paid, Booking_Status_ID, Booking_Method_ID, Payment_Status_ID) VALUES ('B24804', 'T00231', 'E00455', TO_TIMESTAMP('2024-12-06 01:46:15', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2024-12-19', 'YYYY-MM-DD'), 1250.513, 'BS001', 'BM001', 'PS002')
 SELECT * FROM dual;
+DBMS_OUTPUT.PUT_LINE('Successfully Inserted into Bookings table (2/2).' || SQLERRM);
+END;
+/  
 COMMIT; 
 --ratings table--
 
+BEGIN
 INSERT ALL
 INTO Fall24_S003_T8_Ratings (Rating_ID, Traveler_ID, Experience_ID, Rating_Value, Review_Date_Time, Feedback, Review_Title) VALUES ('R03713', 'T00279', 'E00051', 3.1, TO_TIMESTAMP('2025-01-18 22:13:38', 'YYYY-MM-DD HH24:MI:SS'), 'Around along politics table rock than. Unfortunately, the experience did not meet my expectations. The respond part was underwhelming and needs improvement.', 'Disappointing experience')
 INTO Fall24_S003_T8_Ratings (Rating_ID, Traveler_ID, Experience_ID, Rating_Value, Review_Date_Time, Feedback, Review_Title) VALUES ('R60586', 'T00599', 'E00163', 2.7, TO_TIMESTAMP('2024-01-25 12:49:09', 'YYYY-MM-DD HH24:MI:SS'), 'Pressure affect effort get bad. Unfortunately, the experience did not meet my expectations. The structure part was underwhelming and needs improvement.', 'Disappointing experience')
@@ -8455,4 +8546,7 @@ INTO Fall24_S003_T8_Ratings (Rating_ID, Traveler_ID, Experience_ID, Rating_Value
 INTO Fall24_S003_T8_Ratings (Rating_ID, Traveler_ID, Experience_ID, Rating_Value, Review_Date_Time, Feedback, Review_Title) VALUES ('R73081', 'T00676', 'E00119', 2.1, TO_TIMESTAMP('2023-12-24 08:31:57', 'YYYY-MM-DD HH24:MI:SS'), 'Cell production even wear quality. Unfortunately, the experience did not meet my expectations. The wind part was underwhelming and needs improvement.', 'Not worth it')
 INTO Fall24_S003_T8_Ratings (Rating_ID, Traveler_ID, Experience_ID, Rating_Value, Review_Date_Time, Feedback, Review_Title) VALUES ('R64227', 'T00693', 'E00022', 8.1, TO_TIMESTAMP('2024-05-12 12:16:51', 'YYYY-MM-DD HH24:MI:SS'), 'Year them standard relationship security indicate. The experience exceeded my expectations! I particularly enjoyed the minute aspect and would recommend it to others.', 'Amazing experience!')
 SELECT * FROM dual;
+DBMS_OUTPUT.PUT_LINE('Successfully Inserted into Ratings table.' || SQLERRM);
+END;
+/  
 COMMIT;
