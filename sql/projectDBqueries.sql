@@ -4,8 +4,8 @@
 SET PAGESIZE 1000
 SET LINESIZE 340
 TTITLE LEFT "Top Monthly Demographic, Location, and Activity by Bookings"
-COLUMN "Year" FORMAT A40
-COLUMN "Month" FORMAT A40
+COLUMN "Year" FORMAT 9999
+COLUMN "Month" FORMAT 99
 COLUMN "Demographic_Type" FORMAT A40
 COLUMN "Location_Name" FORMAT A40
 COLUMN "Activity_Category" FORMAT A40
@@ -804,6 +804,7 @@ COLUMN Traveler_Email FORMAT A30
 COLUMN Service_Provider_Name FORMAT A30
 COLUMN Experience_Title FORMAT A40
 COLUMN Category FORMAT A20
+BREAK ON Traveler_Name SKIP 1
 
 SELECT 
     CASE WHEN ROW_NUMBER() OVER (PARTITION BY T.T_ID ORDER BY SP.Name) = 1 

@@ -1,3 +1,7 @@
+SET SERVEROUTPUT ON;
+SET ECHO ON
+ALTER SESSION SET NLS_DATE_FORMAT = 'YYYY-MM-DD';
+
 -- Creating the Fall24_S003_T8_Interest_Categories
 CREATE TABLE Fall24_S003_T8_Interest_Categories (
     Category_ID VARCHAR2(20) PRIMARY KEY,
@@ -164,8 +168,11 @@ CREATE TABLE Fall24_S003_T8_Ratings (
     Review_Title VARCHAR2(100),
     CONSTRAINT unique_traveler_experience UNIQUE (Traveler_ID, Experience_ID)
 );
-
-
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('All tables created successfully');
+END;
+/
+COMMIT;
 -- Consolidated Trigger: Validate Review Eligibility - trg_Review_Eligibility
 CREATE OR REPLACE TRIGGER trg_Review_Eligibility
 BEFORE INSERT ON Fall24_S003_T8_Ratings
@@ -277,3 +284,8 @@ BEGIN
     END IF;
 END;
 /
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('All triggers created successfully');
+END;
+/
+COMMIT;
